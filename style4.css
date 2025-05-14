@@ -1,0 +1,30 @@
+h1{
+
+  font: italic 26px arial, sans-serif;
+  color: black;
+  background: ghostwhite;
+  border: 2px solid black;
+  padding: 20px;
+  width: 650px;
+  height: 440px;
+  border-radius: 8px;
+
+}
+img {
+
+
+  position: relative;
+  top: -500px;
+  left: 720px;
+
+  background: cornsilk;
+border: 2px solid black;
+border-radius: 8px;
+padding: 20px;
+width: 320px;
+height: 440px;
+object-fit: cover;
+
+}
+
+

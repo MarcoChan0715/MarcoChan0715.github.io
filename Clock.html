@@ -1,0 +1,118 @@
+<DOCTYPE html>
+<html>
+<head>
+  <title>Coursework Website for Introduction to Multimedia</title>
+  <link rel="stylesheet" href="Coursework.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Coursework.css">
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="Coursework.js"></script>
+</head>
+<body>
+<section id="banner">
+   <a href="Home.html">
+   <img src="images/Coursework/Untitled_Artwork.png" width="500px" height="210px" class="logo" href="Home.html">
+   </a>
+
+   <div class="navbar">
+    <ul>
+      <li><a href="Home.html">Home</a></li>
+      <li><a href="Hobbies.html">Hobbies</a></li>
+      <li><a href="Video.html">Video</a></li>
+      <li><a href="Portfolio.html">Portfolio</a></li>
+      <li><a href="Clock.html">Clock</a></li>
+      </ul>
+
+       <ul id="clock">
+         <li id="sec" ></li>
+         <li id="hour" ></li>
+         <li id="min" ></li>
+    </ul>
+   </div>
+   <div class="clock-text">
+    <h1 style="text-align: center;">Scroll down for more tools</h1>
+</div>
+</section>
+
+
+
+
+<section class="clock-section">Tools:</section>
+
+ <div class="container">
+    <p>The time now is:</p>
+   <h1 id="current-time"></h1>
+    <h2>Current date:</h2>
+    <h3 id="date-today"></h3>
+    <h4>Stopwatch:</h4>
+<script>
+    let time = document.getElementById("current-time");
+    setInterval(() =>{
+    d = new Date();
+    time.innerHTML = d.toLocaleTimeString();
+    },1000)
+</script>
+
+<script>
+    let dateToday = document.getElementById("date-today");
+
+    let today = new date();
+    let day = '${today.getDate() < 10 ? "0" : ""}${today.getDate()}';
+    let month = '${today.getMonth() + 1) < 10 ? "0" : ""}${today.getMonth() + 1}';
+    let year = today.getFullYear();
+
+    dateToday.textContent = '${day}/${month}/${year}';
+</script>
+
+<script>
+    n =  new Date();
+    y = n.getFullYear();
+    m = n.getMonth() + 1;
+    d = n.getDate();
+    document.getElementById("date-today").innerHTML = d + "/" + m + "/" + y;
+    </script>
+
+<div class="stopwatch">
+    <h1 id="displayTime">00:00:00</h1>
+    <div class="buttons">
+        
+        <button onclick="Stop()"><span></span>Stop</button>
+       
+
+       
+        <button onclick="Start()"><span></span>Start</button>
+       
+
+        
+        <button onclick="Reset()"><span></span>Reset</button>
+        
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+
+
+
+
+
+   <a href="#" class="to-top">
+    <i class="fa fa-circle-up fa-2xl"></i>
+</a>
+
+
+
+
+ </div>
+
+
+
+
+</body>
+</html>

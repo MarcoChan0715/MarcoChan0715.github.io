@@ -2,125 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Subscription Manager - Marco's Site</title>
 
-  <!-- Your site CSS first -->
+  <!-- Your site CSS first so our scoped styles can override safely -->
   <link rel="stylesheet" href="Coursework.css" />
 
-  <!-- Fonts (optional) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- App styles: placed AFTER Coursework.css so these take precedence -->
   <style>
-    /* Scope everything under #sm so global rules won’t leak */
-    #sm, #sm * { box-sizing: border-box; font-family: 'Poppins', system-ui, Arial, sans-serif; }
+    /* ===== Scoped styles to avoid conflicts with Coursework.css ===== */
+    #sm, #sm * { box-sizing: border-box; font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Arial, sans-serif; }
+    :root { --bg: #f6f7f9; --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; --ring:#818cf8; }
+    #sm.sm-dark { --bg:#0b1220; --ink:#eef2ff; --muted:#cbd5e1; --card:#0f172a; --border:#23304a; --ring:#60a5fa; }
 
-    /* Page background spacing (keeps your banner) */
-    #sm {
-      padding: 24px 16px 48px;
-      background: #f6f7f9;
-    }
+    #sm { background: var(--bg); color: var(--ink); padding: 24px 16px 56px; }
+    #sm .sm-container { max-width: 1100px; margin: 0 auto; }
 
-    /* Layout container */
-    #sm .sm-container {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
+    #sm h1 { margin: 0 0 12px; text-align:left; font-size: clamp(22px, 2.4vw, 26px); font-weight:700; }
+    #sm p.sm-sub { margin:0; color: var(--muted); font-size:12px; }
 
-    /* Headings (override any huge global h1/h2) */
-    #sm h1 {
-      margin: 0 0 16px;
-      font-weight: 700;
-      line-height: 1.2;
-      font-size: clamp(28px, 4.2vw, 48px);
-      text-align: center;
-      color: #111827;
-    }
-    #sm h2 {
-      margin: 0 0 12px;
-      font-weight: 600;
-      line-height: 1.3;
-      font-size: clamp(18px, 2.4vw, 24px);
-      color: #111827;
-    }
+    /* top controls row */
+    #sm .sm-top { display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin:14px 0 18px; }
+    #sm .sm-chip { background: linear-gradient(135deg, #23a6d5, #23d5ab); width:40px; height:40px; border-radius:14px; box-shadow:0 10px 18px rgba(35,166,213,.25); }
+    #sm .sm-group { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 
-    /* Card */
-    #sm .sm-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 18px;
-      margin: 14px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      border: 1px solid #e5e7eb;
+    /* select & input */
+    #sm .sm-input, #sm .sm-select, #sm .sm-textarea {
+      background: var(--card); color: var(--ink);
+      border:1px solid var(--border); border-radius:12px; padding:10px 12px; font-size:14px;
+      outline:none; min-height:40px;
     }
+    #sm .sm-input:focus, #sm .sm-select:focus, #sm .sm-textarea:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 35%, transparent); border-color: var(--ring); }
 
-    /* Inputs */
-    #sm .sm-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    #sm .sm-input, #sm .sm-select {
-      appearance: none;
-      -webkit-appearance: none;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 16px;
-      background: #fff;
-      color: #111827;
-      min-width: 180px;
-      flex: 1 1 220px;
-      outline: none;
-    }
-    #sm .sm-input:focus, #sm .sm-select:focus {
-      border-color: #818cf8;
-      box-shadow: 0 0 0 3px rgba(129,140,248,.25);
-    }
+    #sm .sm-card { background: var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:0 8px 18px rgba(2,6,23,.06); }
+    #sm .sm-card + .sm-card { margin-top:16px; }
 
-    /* Buttons */
-    #sm .sm-btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 15px;
-    }
-    #sm .sm-btn-primary { background: #6366f1; color: #fff; }
-    #sm .sm-btn-danger { background: #ef4444; color: #fff; }
+    #sm .sm-btn { border:1px solid var(--border); background: var(--card); color: var(--ink); border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer; }
+    #sm .sm-btn:hover { filter: brightness(0.98); }
+    #sm .sm-btn.primary { background: linear-gradient(90deg, #ec4899, #06b6d4); color:#fff; border:0; }
+    #sm .sm-btn.red { background:#fee2e2; color:#b91c1c; border-color:#fecaca; }
+    #sm .sm-tag { display:inline-flex; gap:6px; align-items:center; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600; border:1px solid var(--border); background:color-mix(in srgb, var(--card) 80%, white 20%); }
 
-    /* Subscription list */
-    #sm .sm-sub {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 10px 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    #sm .sm-sub:last-child { border-bottom: 0; }
-    #sm .sm-sub-name { font-weight: 600; color: #111827; }
-    #sm .sm-sub-meta { color: #6b7280; font-size: 14px; }
+    #sm .sm-row { display:grid; grid-template-columns: repeat(12, 1fr); gap:10px; }
+    #sm .col-12 { grid-column: span 12; }
+    #sm .col-6 { grid-column: span 6; }
+    #sm .col-4 { grid-column: span 4; }
+    #sm .col-3 { grid-column: span 3; }
+    @media (max-width: 800px) { #sm .col-6, #sm .col-4, #sm .col-3 { grid-column: span 12; } }
 
-    /* Totals */
-    #sm .sm-totals strong { color: #111827; }
-    #sm .sm-amount { font-weight: 700; color: #111827; }
+    #sm .sm-label { font-size:12px; color: var(--muted); margin-bottom:6px; display:block; }
 
-    /* Upcoming card */
-    #sm .sm-upcoming-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-    #sm .sm-chip {
-      display:inline-flex; align-items:center; gap:6px;
-      padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600;
-      background:#FEF3C7; color:#92400E; border:1px solid #FDE68A;
-    }
-    #sm .sm-up-empty { color:#6b7280; font-size:14px; }
+    /* list cards */
+    #sm .sm-subcard { position:relative; overflow:hidden; border-radius:16px; border:1px solid var(--border); background:var(--card); padding:14px; }
+    #sm .sm-subline { position:absolute; left:0; top:0; right:0; height:3px; background: #38bdf8; }
+    #sm .sm-subname { font-weight:700; }
+    #sm .sm-submeta { color: var(--muted); font-size:12px; }
 
-    /* Make sure images/iframes don’t overflow */
-    #sm img, #sm iframe { max-width: 100%; display: block; }
+    #sm .sm-section-title { font-weight:700; margin:10px 0 8px; }
+
+    /* FX grid */
+    #sm .fx-grid { display:grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap:10px; }
+    @media (max-width: 900px) { #sm .fx-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+    @media (max-width: 600px) { #sm .fx-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    #sm .fx-item { display:flex; align-items:center; gap:8px; border:1px solid var(--border); background:var(--card); padding:10px; border-radius:12px; }
+    #sm .fx-code { font-weight:600; width:48px; }
+    #sm .fx-del { border-radius:10px; padding:6px 8px; background:#ffe4e6; color:#be123c; border:1px solid #fecdd3; cursor:pointer; font-size:12px; }
+    #sm .fx-add { border:2px dashed var(--border); background:color-mix(in srgb, var(--card) 60%, transparent); padding:12px; border-radius:12px; grid-column: 1/-1; display:flex; gap:8px; align-items:center; }
+
+    /* helper */
+    #sm .muted { color: var(--muted); }
+    #sm .right { margin-left:auto; }
   </style>
 </head>
 <body>
-
-  <!-- Your existing banner + navbar (copied from your pages) -->
+  <!-- Keep your existing banner + navbar so the page matches the rest of the site -->
   <section id="banner">
     <a href="index.html">
       <img src="images/Coursework/Untitled_Artwork.png" width="350" height="150" class="logo" alt="Logo">
@@ -136,179 +94,370 @@
     </div>
   </section>
 
-  <!-- Subscription Manager (scoped) -->
   <main id="sm">
     <div class="sm-container">
-      <h1>Subscription Manager</h1>
+      <div class="sm-top">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="sm-chip"></div>
+          <div>
+            <h1 style="margin:0;">Subscription Manager</h1>
+            <p class="sm-sub">A completely free app to track your subscriptions</p>
+          </div>
+        </div>
+        <div class="sm-group">
+          <label class="sm-label" for="displayCcy" style="margin:0;">Display currency</label>
+          <select id="displayCcy" class="sm-select"></select>
+          <div class="sm-card" style="display:flex; gap:18px; align-items:center; padding:10px 12px;">
+            <div><div class="sm-label" style="margin:0;">Monthly:</div><div id="totMonthly" style="font-weight:700;">$0.00</div></div>
+            <div><div class="sm-label" style="margin:0;">Yearly:</div><div id="totYearly" style="font-weight:700;">$0.00</div></div>
+          </div>
+          <button id="themeToggle" class="sm-btn" title="Toggle theme">🌙 Dark</button>
+        </div>
+      </div>
 
       <!-- Upcoming payment -->
-      <section class="sm-card" id="sm-upcoming">
-        <div class="sm-upcoming-title">
-          <h2 style="margin:0;">Upcoming payment</h2>
-          <span class="sm-chip">Happening soon</span>
-        </div>
-        <div id="sm-up-body" class="sm-up-empty">No upcoming payments yet. Add a subscription below and we’ll show the next renewal here.</div>
-      </section>
-
-      <!-- Add form -->
       <section class="sm-card">
-        <h2>Add a Subscription</h2>
-        <div class="sm-row" style="margin-bottom:10px;">
-          <input id="sm-name" class="sm-input" type="text" placeholder="Name (e.g., Netflix)">
-          <input id="sm-cost" class="sm-input" type="number" inputmode="decimal" placeholder="Cost (e.g., 9.99)">
-          <select id="sm-cycle" class="sm-select">
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-          </select>
-          <input id="sm-start" class="sm-input" type="date" />
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+          <div class="sm-section-title">Upcoming payment</div>
+          <span class="sm-tag">Happening soon</span>
         </div>
-        <button id="sm-add" class="sm-btn sm-btn-primary">Add</button>
+        <div id="upcomingBody" class="muted">No upcoming payments yet. Add a subscription below and we’ll show the next renewal here.</div>
       </section>
 
-      <!-- Totals -->
-      <section class="sm-card sm-totals" id="sm-totals">
-        <div><strong>Monthly Total:</strong> <span id="sm-monthly" class="sm-amount">$0.00</span></div>
-        <div style="margin-top:6px;"><strong>Yearly Total:</strong> <span id="sm-yearly" class="sm-amount">$0.00</span></div>
-      </section>
-
-      <!-- List -->
+      <!-- Add a subscription -->
       <section class="sm-card">
-        <h2>Active Subscriptions</h2>
-        <div id="sm-list"></div>
+        <div class="sm-section-title">Add a subscription</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 10px;">
+          <button class="sm-btn" data-preset="YouTube Premium">YouTube Premium</button>
+          <button class="sm-btn" data-preset="Netflix">Netflix</button>
+          <button class="sm-btn" data-preset="iCloud">iCloud</button>
+          <button class="sm-btn" data-preset="Spotify">Spotify</button>
+          <button class="sm-btn" data-preset="Disney+">Disney+</button>
+          <button class="sm-btn" data-preset="Adobe CC">Adobe CC</button>
+          <button class="sm-btn" data-preset="Xbox Game Pass">Xbox Game Pass</button>
+        </div>
+
+        <div class="sm-row">
+          <div class="col-6">
+            <label class="sm-label">Name</label>
+            <input id="name" class="sm-input" placeholder="e.g., YouTube Premium" />
+          </div>
+          <div class="col-3">
+            <label class="sm-label">Cost</label>
+            <input id="cost" type="number" inputmode="decimal" class="sm-input" placeholder="e.g., 9.99" />
+          </div>
+          <div class="col-3">
+            <label class="sm-label">Currency</label>
+            <select id="currency" class="sm-select"></select>
+          </div>
+
+          <div class="col-3">
+            <label class="sm-label">Billing cycle</label>
+            <select id="cycle" class="sm-select">
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label class="sm-label">Start / Last renewal date</label>
+            <input id="startDate" type="date" class="sm-input" />
+          </div>
+          <div class="col-3">
+            <label class="sm-label">Status</label>
+            <select id="status" class="sm-select">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label class="sm-label">Badge colour</label>
+            <select id="badge" class="sm-select">
+              <option>sky</option><option>pink</option><option>violet</option><option>emerald</option><option>amber</option><option>rose</option><option>indigo</option><option>cyan</option><option>fuchsia</option><option>red</option><option>blue</option><option>green</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="sm-label">Notes (optional)</label>
+            <textarea id="notes" class="sm-textarea" rows="2" placeholder="Any extra details…"></textarea>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
+          <button id="addBtn" class="sm-btn primary">+ Add</button>
+          <button id="resetBtn" class="sm-btn">Reset</button>
+          <div class="right muted" id="nextPreview">Next renewal preview: —</div>
+        </div>
       </section>
+
+      <!-- Active -->
+      <section class="sm-card">
+        <div class="sm-section-title">Active subscriptions (<span id="countActive">0</span>)</div>
+        <div id="activeList" class="muted">No active subscriptions yet. Add some above ✨</div>
+      </section>
+
+      <!-- Inactive -->
+      <section class="sm-card">
+        <div class="sm-section-title">Inactive (won't count to totals) (<span id="countInactive">0</span>)</div>
+        <div id="inactiveList" class="muted">No inactive subscriptions. You can toggle any card to inactivate it.</div>
+      </section>
+
+      <!-- FX Rates -->
+      <section class="sm-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+          <div class="sm-section-title">Rates (1 USD = X currency)</div>
+          <div class="sm-group">
+            <button id="fxReset" class="sm-btn">Reset defaults</button>
+            <button id="fxUpdate" class="sm-btn primary">Update now</button>
+            <button id="fxToggle" class="sm-btn">Show all</button>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <label class="sm-label" style="display:flex; align-items:center; gap:8px;">
+            <input id="autoFx" type="checkbox" /> Auto‑update daily
+          </label>
+          <div class="sm-label">Last updated: <span id="fxTs">—</span></div>
+        </div>
+        <div id="fxGrid" class="fx-grid"></div>
+        <div class="fx-add">
+          <div class="sm-label" style="margin:0;">Add currency</div>
+          <input id="newCode" class="sm-input" placeholder="Code (e.g., SEK)" style="max-width:120px;">
+          <input id="newRate" class="sm-input" inputmode="decimal" type="number" step="0.0001" placeholder="Rate (1 USD = X)" style="max-width:220px;">
+          <button id="addFx" class="sm-btn primary">Add</button>
+          <span class="muted">Example: If 1 USD ≈ 8.8 SEK, enter code "SEK" and rate 8.8</span>
+        </div>
+      </section>
+
+      <div class="muted" style="text-align:center; margin-top:18px; font-size:12px;">This app is still currently in development</div>
     </div>
   </main>
 
-  <!-- App script -->
   <script>
-    (function(){
-      const $ = (id) => document.getElementById(id);
+  (function(){
+    const $ = (id) => document.getElementById(id);
 
-      // Load / save localStorage
-      function load() {
-        try { return JSON.parse(localStorage.getItem("subs_v1") || "[]"); }
-        catch { return []; }
-      }
-      function save(data) {
-        localStorage.setItem("subs_v1", JSON.stringify(data));
-      }
+    // ===== Storage keys
+    const K_SUBS = 'sm:subs:v2';
+    const K_FX = 'sm:fx:v2';
+    const K_DISP = 'sm:display:v2';
+    const K_AUTOFX = 'sm:autofx:v2';
+    const K_FXTS = 'sm:fxts:v2';
+    const K_THEME = 'sm:theme:v2';
 
-      let subs = load();
+    // ===== Defaults
+    const DEFAULT_FX = { USD:1, GBP:0.77, EUR:0.92, HKD:7.8, JPY:157 };
+    const DEFAULT_DISPLAY = 'HKD';
 
-      // Dates helpers
-      function parseISO(s){ const d=new Date(s); return isNaN(d.getTime())?null:d; }
-      function addMonths(d,n){ const r=new Date(d); r.setMonth(r.getMonth()+n); return r; }
-      function addYears(d,n){ const r=new Date(d); r.setFullYear(r.getFullYear()+n); return r; }
-      function nextRenewal(startISO, cycle){
-        const start = parseISO(startISO); if(!start) return null;
-        const now = new Date();
-        if(cycle === 'monthly'){ let dt = new Date(start); while(dt <= now) dt = addMonths(dt,1); return dt; }
-        let dt = new Date(start); while(dt <= now) dt = addYears(dt,1); return dt;
-      }
-      function daysUntil(date){
-        if(!date) return null;
-        const ms = date.getTime() - Date.now();
-        return Math.ceil(ms/86400000);
-      }
-      function fmtMoney(n){ return "$" + Number(n).toFixed(2); }
+    // ===== State
+    let subs = readJSON(K_SUBS, []);
+    let fx = readJSON(K_FX, DEFAULT_FX);
+    let display = localStorage.getItem(K_DISP) || DEFAULT_DISPLAY;
+    let autoFx = localStorage.getItem(K_AUTOFX) === '1';
+    let fxTs = Number(localStorage.getItem(K_FXTS)) || Date.now();
+    let theme = localStorage.getItem(K_THEME) || 'light';
 
-      // Render everything
-      function render() {
-        // list + totals
-        const list = $("sm-list");
-        list.innerHTML = "";
-        let monthly = 0, yearly = 0;
+    // init theme
+    const root = document.getElementById('sm');
+    if(theme==='dark'){ root.classList.add('sm-dark'); $('themeToggle').textContent='☀️ Light'; }
 
-        subs.forEach((s, i) => {
-          const nr = nextRenewal(s.start, s.cycle);
-          const d = daysUntil(nr);
-          const row = document.createElement("div");
-          row.className = "sm-sub";
-          row.innerHTML = `
+    // helpers
+    function readJSON(k, d){ try { const v = JSON.parse(localStorage.getItem(k) || ''); return (v==null?d:v); } catch { return d; } }
+    function save(){ localStorage.setItem(K_SUBS, JSON.stringify(subs)); localStorage.setItem(K_FX, JSON.stringify(fx)); localStorage.setItem(K_DISP, display); localStorage.setItem(K_AUTOFX, autoFx?'1':'0'); localStorage.setItem(K_FXTS, String(fxTs)); localStorage.setItem(K_THEME, theme); }
+
+    function convert(amount, src, dest){ const s=fx[src]; const d=fx[dest]; if(!s||!d) return amount; const usd=amount/s; return usd*d; }
+    function fmtMoney(n,ccy){ try{ return new Intl.NumberFormat(undefined,{style:'currency',currency:ccy}).format(n);}catch{return (ccy||'')+' '+n.toFixed(2);} }
+
+    function parseISO(s){ const d=new Date(s); return isNaN(d.getTime())?null:d; }
+    function addMonths(d,n){ const r=new Date(d); r.setMonth(r.getMonth()+n); return r; }
+    function addYears(d,n){ const r=new Date(d); r.setFullYear(r.getFullYear()+n); return r; }
+    function nextRenewal(startISO, cycle){ const start=parseISO(startISO); if(!start) return null; const now=new Date(); if(cycle==='monthly'){ let dt=new Date(start); while(dt<=now) dt=addMonths(dt,1); return dt; } let dt=new Date(start); while(dt<=now) dt=addYears(dt,1); return dt; }
+    function daysUntil(date){ if(!date) return null; return Math.ceil((date.getTime()-Date.now())/86400000); }
+
+    function orderedFxEntries(map){ const arr=Object.entries(map); const usd=arr.filter(([c])=>c==='USD'); const rest=arr.filter(([c])=>c!=='USD').sort((a,b)=>a[0].localeCompare(b[0])); return [...usd,...rest]; }
+
+    // ===== Populate selects
+    function refreshCurrencySelects(){ const codes = Object.keys(fx); const opts = codes.map(c=>`<option value="${c}">${c}</option>`).join(''); $('currency').innerHTML = opts; $('displayCcy').innerHTML = opts; if(!fx[display]) display='USD'; $('displayCcy').value = display; }
+
+    // ===== Add form behaviors
+    $('startDate').value = new Date().toISOString().slice(0,10);
+
+    function previewNext(){ const nr = nextRenewal($('startDate').value, $('cycle').value); const d = daysUntil(nr); $('nextPreview').textContent = 'Next renewal preview: ' + (nr ? nr.toLocaleDateString()+ (d!=null?` (${d} days)`:'') : '—'); }
+    ['startDate','cycle'].forEach(id=> $(id).addEventListener('change', previewNext));
+    previewNext();
+
+    // presets
+    document.querySelectorAll('[data-preset]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ $('name').value = btn.getAttribute('data-preset'); });
+    });
+
+    $('resetBtn').addEventListener('click', ()=>{ $('name').value=''; $('cost').value=''; $('cycle').value='monthly'; $('startDate').value=new Date().toISOString().slice(0,10); $('status').value='active'; $('badge').value='sky'; $('notes').value=''; previewNext(); });
+
+    $('addBtn').addEventListener('click', ()=>{
+      const name = $('name').value.trim();
+      const cost = parseFloat(($('cost').value||'').trim());
+      const currency = $('currency').value;
+      const cycle = $('cycle').value;
+      const startDate = $('startDate').value;
+      const active = $('status').value === 'active';
+      const color = $('badge').value || 'sky';
+      const notes = $('notes').value || '';
+      if(!name || !isFinite(cost)) { alert('Please enter a valid name and cost'); return; }
+      subs.unshift({ id: Math.random().toString(36).slice(2,9), name, cost, currency, cycle, startDate, active, color, notes });
+      $('name').value=''; $('cost').value=''; $('notes').value='';
+      previewNext();
+      renderAll(); save();
+    });
+
+    // ===== Renderers
+    function renderTotals(){ let monthly=0, yearly=0; subs.filter(s=>s.active).forEach(s=>{ const c = convert(s.cost, s.currency, display); if(s.cycle==='monthly'){ monthly+=c; yearly+=c*12; } else { monthly+=c/12; yearly+=c; } }); $('totMonthly').textContent = fmtMoney(monthly, display); $('totYearly').textContent = fmtMoney(yearly, display); }
+
+    function colorBar(color){ const map={ sky:'#38bdf8', pink:'#f472b6', violet:'#8b5cf6', emerald:'#10b981', amber:'#f59e0b', rose:'#f43f5e', indigo:'#6366f1', cyan:'#06b6d4', fuchsia:'#d946ef', red:'#ef4444', blue:'#3b82f6', green:'#22c55e' }; return map[color]||'#38bdf8'; }
+
+    function subCardHTML(s){
+      const converted = convert(s.cost, s.currency, display);
+      const monthly = s.cycle==='monthly'? converted : converted/12;
+      const yearly  = s.cycle==='yearly'? converted : converted*12;
+      const nr = nextRenewal(s.startDate, s.cycle);
+      const d = daysUntil(nr);
+      return `
+        <div class="sm-subcard">
+          <div class="sm-subline" style="background:${colorBar(s.color)}"></div>
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
             <div>
-              <div class="sm-sub-name">${s.name}</div>
-              <div class="sm-sub-meta">$${s.cost} / ${s.cycle}${nr ? ` • next: ${nr.toLocaleDateString()}${d!=null? ` • in ${d} days` : ""}` : ""}</div>
-            </div>
-            <button class="sm-btn sm-btn-danger" data-del="${i}">Delete</button>
-          `;
-          list.appendChild(row);
-
-          if (s.cycle === "monthly") { monthly += s.cost; yearly += s.cost * 12; }
-          else { yearly += s.cost; monthly += s.cost / 12; }
-        });
-
-        $("sm-monthly").textContent = fmtMoney(monthly);
-        $("sm-yearly").textContent = fmtMoney(yearly);
-        save(subs);
-
-        // upcoming
-        const up = $("sm-up-body");
-        if(subs.length === 0){
-          up.className = "sm-up-empty";
-          up.textContent = "No upcoming payments yet. Add a subscription below and we’ll show the next renewal here.";
-          return;
-        }
-        const withDates = subs.map(s => ({...s, nr: nextRenewal(s.start, s.cycle)}))
-                              .filter(x => !!x.nr)
-                              .sort((a,b)=> a.nr.getTime()-b.nr.getTime());
-        if(withDates.length === 0){
-          up.className = "sm-up-empty";
-          up.textContent = "No upcoming payments yet.";
-          return;
-        }
-        const n = withDates[0];
-        const dleft = daysUntil(n.nr);
-        up.className = "";
-        up.innerHTML = `
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
-            <div>
-              <div style="font-weight:700;color:#111827;margin-bottom:2px;">${n.name}</div>
-              <div style="color:#6b7280;font-size:14px;">
-                Due ${n.nr.toLocaleDateString()}${dleft!=null? ` • in ${dleft} days` : ""} • ($${n.cost.toFixed(2)}, ${n.cycle})
+              <div style="display:flex; gap:8px; align-items:center;">
+                <div class="sm-subname">${s.name}</div>
+                <span class="sm-tag" style="${s.active?'background:#dcfce7;border-color:#bbf7d0;color:#166534':'background:#fee2e2;border-color:#fecaca;color:#991b1b'}">${s.active?'Active':'Inactive'}</span>
               </div>
+              <div class="sm-submeta">${fmtMoney(converted, display)} <span class="muted">(${s.cost.toFixed(2)} ${s.currency}, ${s.cycle})</span></div>
+              <div class="sm-submeta">Next renewal: ${nr? nr.toLocaleDateString()+(d!=null?` • in ${d} days`: '') : '—'}</div>
+              ${s.notes? `<div class="sm-submeta">${s.notes.replace(/</g,'&lt;')}</div>`:''}
             </div>
             <div style="text-align:right;">
-              <div style="color:#6b7280;font-size:12px;">Amount</div>
-              <div style="font-weight:700;color:#111827;">${fmtMoney(n.cycle==='monthly'? n.cost : n.cost)}</div>
+              <div class="sm-submeta">Monthly</div>
+              <div style="font-weight:700;">${fmtMoney(monthly, display)}</div>
+              <div class="sm-submeta" style="margin-top:6px;">Yearly</div>
+              <div style="font-weight:700;">${fmtMoney(yearly, display)}</div>
+              <div style="margin-top:10px; display:flex; gap:6px; justify-content:flex-end;">
+                <button class="sm-btn" data-toggle="${s.id}">${s.active?'Inactivate':'Activate'}</button>
+                <button class="sm-btn" data-edit="${s.id}">Edit</button>
+                <button class="sm-btn red" data-del="${s.id}">Delete</button>
+              </div>
             </div>
           </div>
-        `;
+        </div>`;
+    }
+
+    function renderLists(){
+      const act = subs.filter(s=>s.active); const ina = subs.filter(s=>!s.active);
+      $('countActive').textContent = act.length; $('countInactive').textContent = ina.length;
+      const aEl = $('activeList'); const iEl = $('inactiveList');
+      aEl.innerHTML = act.length? act.map(subCardHTML).join('') : 'No active subscriptions yet. Add some above ✨';
+      iEl.innerHTML = ina.length? ina.map(subCardHTML).join('') : "No inactive subscriptions. You can toggle any card to inactivate it.";
+    }
+
+    function renderUpcoming(){
+      const items = subs.filter(s=>s.active).map(s=>({ s, nr: nextRenewal(s.startDate, s.cycle) })).filter(x=>!!x.nr).sort((a,b)=>a.nr-b.nr);
+      const el = $('upcomingBody');
+      if(!items.length){ el.className='muted'; el.textContent='No upcoming payments yet. Add a subscription below and we’ll show the next renewal here.'; return; }
+      const { s, nr } = items[0]; const due = convert(s.cost, s.currency, display); const d = daysUntil(nr);
+      el.className='';
+      el.innerHTML = `<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+        <div>
+          <div style="font-weight:700;">${s.name}</div>
+          <div class="sm-submeta">Due ${nr.toLocaleDateString()}${d!=null?` • in ${d} days`:''} • (${s.currency} ${s.cost.toFixed(2)}, ${s.cycle})</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="sm-submeta">Amount</div>
+          <div style="font-weight:700;">${fmtMoney(due, display)}</div>
+        </div>
+      </div>`;
+    }
+
+    // FX
+    let showAllFx=false;
+    function renderFx(){
+      // dropdowns
+      refreshCurrencySelects(); $('currency').value = $('currency').value || 'USD';
+      // timestamp
+      $('fxTs').textContent = new Date(fxTs).toLocaleString();
+      // grid entries
+      const all = orderedFxEntries(fx);
+      const cols = window.innerWidth>=900?5: (window.innerWidth>=600?3:2);
+      const twoRows = cols*2;
+      const list = showAllFx? all : all.slice(0,twoRows);
+      const grid = $('fxGrid');
+      grid.innerHTML = list.map(([ccy, rate])=>`
+        <div class="fx-item">
+          <div class="fx-code">${ccy}</div>
+          <input type="number" step="0.0001" class="sm-input" style="flex:1;min-width:0;" value="${rate}" data-rate="${ccy}">
+          <button class="fx-del" data-delccy="${ccy}">Del</button>
+        </div>`).join('');
+      $('fxToggle').textContent = showAllFx? 'Hide' : 'Show all';
+    }
+
+    // wire currency and totals changes
+    $('displayCcy').addEventListener('change', (e)=>{ display=e.target.value; save(); renderAll(); });
+
+    // fx listeners
+    $('fxToggle').addEventListener('click', ()=>{ showAllFx=!showAllFx; renderFx(); });
+    $('fxReset').addEventListener('click', ()=>{ fx = {...DEFAULT_FX}; fxTs = Date.now(); save(); renderAll(); });
+    $('fxGrid').addEventListener('input', (e)=>{ const c=e.target.getAttribute('data-rate'); if(!c) return; fx[c]=Number(e.target.value)||fx[c]; save(); renderAll(); });
+    $('fxGrid').addEventListener('click', (e)=>{ const c=e.target.getAttribute('data-delccy'); if(!c) return; if(c==='USD'){ alert('Cannot delete USD'); return;} delete fx[c]; if(display===c) display='USD'; save(); renderAll(); });
+    $('addFx').addEventListener('click', ()=>{ const code=($('newCode').value||'').toUpperCase().trim(); const rate=parseFloat(($('newRate').value||'').trim()); if(code.length!==3||!isFinite(rate)||rate<=0){ alert('Enter a 3‑letter code and a positive rate'); return;} if(fx[code]){ alert('Currency already exists'); return;} fx[code]=rate; $('newCode').value=''; $('newRate').value=''; save(); renderAll(); });
+
+    $('autoFx').checked = autoFx; $('autoFx').addEventListener('change',(e)=>{ autoFx=e.target.checked; save(); });
+    $('fxUpdate').addEventListener('click', fetchLiveFx);
+
+    async function fetchLiveFx(){
+      try {
+        const r = await fetch('https://api.frankfurter.app/latest?from=USD');
+        const j = await r.json();
+        if(j && j.rates){ fx = { USD:1, ...j.rates }; fxTs = Date.now(); save(); renderAll(); return; }
+      } catch{}
+      try {
+        const r2 = await fetch('https://open.er-api.com/v6/latest/USD');
+        const j2 = await r2.json();
+        if(j2 && j2.rates){ fx = { USD:1, ...j2.rates }; fxTs = Date.now(); save(); renderAll(); return; }
+      } catch{}
+      alert("Couldn't fetch live FX right now");
+    }
+
+    // Auto refresh FX daily (hourly check)
+    setInterval(()=>{ if(!autoFx) return; const DAY=86400000; if(Date.now()-fxTs>DAY) fetchLiveFx(); }, 3600000);
+
+    // Theme toggle
+    $('themeToggle').addEventListener('click', ()=>{ theme = (theme==='dark'?'light':'dark'); if(theme==='dark'){ root.classList.add('sm-dark'); $('themeToggle').textContent='☀️ Light'; } else { root.classList.remove('sm-dark'); $('themeToggle').textContent='🌙 Dark'; } save(); });
+
+    // edit/inactivate/delete using event delegation
+    function bindListClicks(){
+      function handler(e){
+        const t=e.target; if(!(t instanceof HTMLElement)) return;
+        const id = t.getAttribute('data-del')|| t.getAttribute('data-edit')|| t.getAttribute('data-toggle'); if(!id) return;
+        const idx = subs.findIndex(x=>x.id===id); if(idx<0) return;
+        if(t.hasAttribute('data-del')){ subs.splice(idx,1); save(); renderAll(); return; }
+        if(t.hasAttribute('data-toggle')){ subs[idx].active = !subs[idx].active; save(); renderAll(); return; }
+        if(t.hasAttribute('data-edit')){ openEdit(idx); return; }
       }
+      $('activeList').onclick = handler; $('inactiveList').onclick = handler;
+    }
 
-      function add() {
-        const name = $("sm-name").value.trim();
-        const costStr = $("sm-cost").value.trim();
-        const cycle = $("sm-cycle").value;
-        const start = $("sm-start").value || new Date().toISOString().slice(0,10);
-        // allow empty field to be blank; only validate on add
-        const cost = parseFloat(costStr);
-        if (!name || !isFinite(cost)) {
-          alert("Please enter a name and a valid cost.");
-          return;
-        }
-        subs.unshift({ name, cost, cycle, start });
-        $("sm-name").value = "";
-        $("sm-cost").value = "";
-        $("sm-start").value = "";
-        render();
-      }
+    function openEdit(i){
+      const s=subs[i];
+      // simple inline edit using prompts to keep code short (no modal markup)
+      const name = prompt('Name', s.name); if(name==null) return; s.name=name.trim()||s.name;
+      const cost = prompt('Cost', String(s.cost)); if(cost==null) return; const v=parseFloat(cost); if(isFinite(v)) s.cost=v;
+      const currency = prompt('Currency code (e.g., USD)', s.currency); if(currency==null) return; if(fx[currency]) s.currency=currency;
+      const cycle = prompt('Cycle (monthly/yearly)', s.cycle); if(cycle==null) return; if(cycle==='monthly'||cycle==='yearly') s.cycle=cycle;
+      const date = prompt('Start/last date (YYYY-MM-DD)', s.startDate); if(date==null) return; if(parseISO(date)) s.startDate=date;
+      const active = confirm('Should this be Active? (OK = Active, Cancel = Inactive)'); s.active=active;
+      save(); renderAll();
+    }
 
-      // default date = today
-      $("sm-start").value = new Date().toISOString().slice(0,10);
+    function renderAll(){ refreshCurrencySelects(); renderTotals(); renderLists(); renderUpcoming(); renderFx(); bindListClicks(); }
 
-      // Events
-      $("sm-add").addEventListener("click", add);
-      $("sm-list").addEventListener("click", (e) => {
-        const btn = e.target.closest("button[data-del]");
-        if (!btn) return;
-        const idx = parseInt(btn.getAttribute("data-del"), 10);
-        subs.splice(idx, 1);
-        render();
-      });
+    // Initial render
+    renderAll();
 
-      // First paint
-      render();
-    })();
+    // resize -> re-render FX grid slice
+    window.addEventListener('resize', ()=>{ renderFx(); });
+  })();
   </script>
 </body>
 </html>

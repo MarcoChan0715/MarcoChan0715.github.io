@@ -7,3 +7,9 @@
 .app-container section {
   margin-bottom: 30px; /* Adds space between each block (e.g. Upcoming, Add Subscription, Active Subs, FX rates) */
 }
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px;
+  }
+}

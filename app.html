@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subscription Manager - Marco's Site</title>
+  <link rel="stylesheet" href="Coursework.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .subscription {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .subscription:last-child {
+      border-bottom: none;
+    }
+    button {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    button.add {
+      background: #6c63ff;
+      color: white;
+    }
+    button.delete {
+      background: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔹 Banner & Navbar copied from your other pages -->
+  <section id="banner">
+    <a href="index.html">
+      <img src="images/Coursework/Untitled_Artwork.png" width="350px" height="150px" class="logo">
+    </a>
+    <div class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="Hobbies.html">Hobbies</a></li>
+        <li><a href="Video.html">Video</a></li>
+        <li><a href="app.html">App</a></li> <!-- 🔹 New App link -->
+        <li><a href="Clock.html">Clock</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 🔹 Subscription Manager -->
+  <div class="container">
+    <h1>Subscription Manager</h1>
+
+    <!-- Totals -->
+    <div class="card" id="totals">
+      <strong>Monthly Total:</strong> <span id="monthlyTotal">0</span><br>
+      <strong>Yearly Total:</strong> <span id="yearlyTotal">0</span>
+    </div>
+
+    <!-- Active Subs -->
+    <div class="card">
+      <h2>Active Subscriptions</h2>
+      <div id="activeSubs"></div>
+    </div>
+
+    <!-- Add Sub Form -->
+    <div class="card">
+      <h2>Add a Subscription</h2>
+      <input type="text" id="name" placeholder="Name (e.g. Netflix)">
+      <input type="number" id="cost" placeholder="Cost (e.g. 9.99)">
+      <select id="cycle">
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+      <button class="add" onclick="addSub()">Add</button>
+    </div>
+  </div>
+
+  <!-- 🔹 JavaScript -->
+  <script>
+    let subs = JSON.parse(localStorage.getItem("subs") || "[]");
+
+    function renderSubs() {
+      const activeDiv = document.getElementById("activeSubs");
+      activeDiv.innerHTML = "";
+      let monthly = 0, yearly = 0;
+
+      subs.forEach((s, index) => {
+        const div = document.createElement("div");
+        div.className = "subscription";
+        div.innerHTML = `
+          <span>${s.name} - $${s.cost} / ${s.cycle}</span>
+          <button class="delete" onclick="deleteSub(${index})">Delete</button>
+        `;
+        activeDiv.appendChild(div);
+
+        if (s.cycle === "monthly") {
+          monthly += s.cost;
+          yearly += s.cost * 12;
+        } else {
+          yearly += s.cost;
+          monthly += s.cost / 12;
+        }
+      });
+
+      document.getElementById("monthlyTotal").textContent = "$" + monthly.toFixed(2);
+      document.getElementById("yearlyTotal").textContent = "$" + yearly.toFixed(2);
+      localStorage.setItem("subs", JSON.stringify(subs));
+    }
+
+    function addSub() {
+      const name = document.getElementById("name").value;
+      const cost = parseFloat(document.getElementById("cost").value);
+      const cycle = document.getElementById("cycle").value;
+      if (!name || isNaN(cost)) return alert("Fill out all fields!");
+      subs.push({ name, cost, cycle });
+      renderSubs();
+      document.getElementById("name").value = "";
+      document.getElementById("cost").value = "";
+    }
+
+    function deleteSub(index) {
+      subs.splice(index, 1);
+      renderSubs();
+    }
+
+    renderSubs();
+  </script>
+</body>
+</html>

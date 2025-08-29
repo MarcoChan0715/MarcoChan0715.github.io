@@ -1,0 +1,9 @@
+.app-container {
+  max-width: 1200px;   /* Keeps the app from stretching too wide */
+  margin: 0 auto;      /* Centers the app horizontally */
+  padding: 20px;       /* Adds spacing inside */
+}
+
+.app-container section {
+  margin-bottom: 30px; /* Adds space between each block (e.g. Upcoming, Add Subscription, Active Subs, FX rates) */
+}

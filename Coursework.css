@@ -1,3 +1,10 @@
+/* Add this to the TOP of Coursework.css */
+body {
+    /* This puts the image on the whole page and keeps it still */
+    background: url('images/Coursework/MountainBanner.jpg') no-repeat center center fixed; 
+    background-size: cover; 
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 * {
@@ -57,9 +64,8 @@
 
 /* --- Banner Section --- */
 #banner {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/Coursework/MountainBanner.jpg');
-    background-size: cover;
-    background-position: center;
+    /* Removed the background image from here since it is now on the body */
+    background: transparent; 
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -67,7 +73,7 @@
     justify-content: center;
     color: #fff;
     text-align: center;
-    padding-top: 60px; /* Space for navbar */
+    padding-top: 60px;
 }
 
 .logo {

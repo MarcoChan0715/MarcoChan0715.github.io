@@ -1,496 +1,210 @@
-*{
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box; /* Fixes layout sizing issues */
     font-family: 'Poppins', sans-serif;
 }
 
-#banner{
-    background: url(images/Coursework/MountainBanner.jpg);
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    background-repeat: repeat-y;
-}
-
-.logo{
-    size: 100px;
-   position: absolute;
-   top: 0%;
-   left: 0%;
-   cursor: pointer;
-
-}
-
-.banner-text{
-    text-align: center;
-    color: #000000;
-    padding-top: 100px;
-    text-align: center;
-    justify-items: center;
-    position: absolute;
-    display: contents;
-    
-
-}
-
-
-.banner-text h1{
-    top: 10%;
-    font-size: 80px;
-    height: 40vh;
+/* --- Navigation --- */
+.navbar {
+    width: 100%;
+    padding: 20px;
     display: flex;
-    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    position: fixed; /* Sticks to top */
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar ul {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
-.banner-text p{
-    top: 30%;
-    font-size:30px;
-    font-style:italic;
-}
 
-.navbar{
-    width: 30%;
-    margin: auto;
-    padding: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    
-}
-
-.navbar ul li{
+.navbar ul li {
     list-style: none;
-    display: inline-block;
-    margin: 0 20px;
+    margin: 0 15px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
     position: relative;
 }
 
-.navbar ul li a{
-    text-decoration: none;
-    color:#000000;
-    text-transform: uppercase;
-}
-
-.navbar ul li::after{
+.navbar ul li a::after {
     content: '';
     height: 3px;
     width: 0;
     background: #009688;
     position: absolute;
     left: 0;
-    bottom: -10px;
-    transition: 0.5s;
-
+    bottom: -5px;
+    transition: 0.3s;
 }
 
-.navbar ul li:hover::after{
+.navbar ul li a:hover::after {
     width: 100%;
 }
 
-.home-photo{
-    width: 250px;
-    height: 250px;
-    position: absolute;
-    top: 600; right: 0;
-    bottom: 0; left: 0;
-    margin: auto;
-    cursor: pointer;
-    border-radius: 25px;
-}
-
-
-.video{   
-    width: 560px;
-    height: 315px;
-    position: absolute;
-    top: 0; right: 0;
-    bottom: 0; left: 0;
-    margin: auto;
-    
-}
-
-.labworks{
-    Width: 100%;
-    position: absolute;
-    top: 30%;
-    transform: translateY(-50%);
+/* --- Banner Section --- */
+#banner {
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/Coursework/MountainBanner.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
     text-align: center;
-    color:#000000;
+    padding-top: 60px; /* Space for navbar */
 }
 
-.labworks h1{
-    font-size: 70px;
-    margin-top: 80px;
+.logo {
+    width: 150px;
+    margin-bottom: 20px;
+    /* Removed absolute positioning for better centering */
 }
 
-button{
-    font-size: 15;
-    width:300px;
-    padding:15px 0;
-    text-align: center;
-    margin: 20px 10px;
-    border-radius: 25px;
-    font-weight: bold;
+.banner-text h1 {
+    font-size: clamp(2rem, 5vw, 4rem); /* Responsive font size */
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.banner-text p {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.home-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+.home-photo:hover {
+    transform: scale(1.05);
+}
+
+/* --- Buttons --- */
+button {
+    padding: 12px 30px;
+    margin: 10px;
+    border-radius: 30px;
     border: 2px solid #009688;
     background: transparent;
-    color: #000000;
+    color: #009688; /* Changed for visibility */
+    font-weight: bold;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-
+    transition: 0.3s;
 }
 
-span{
+button:hover {
     background: #009688;
-    height: 100%;
-    width: 0;
-    border-radius: 25px;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    z-index: -1;
-    transition: 0.5s;
+    color: #fff;
 }
 
-button:hover span{
-    width: 100%;
-}
-
-button:hover{
-    border: none;
-}
-
-#hobby{
-    width:100%;
-    padding: 70px 0;
-}
-
-.hb-text{
-    text-align: center;
-    padding-top: 70px;
-}
-
-.hb-text p{
-    margin: auto;
-    font-size: 20px;
-    color: #009688;
-    font-weight: bold;
-    position: relative;
-    z-index: 1;
-    display: inline-block;
-}
-
-.hb-text h1{
-    font-size: 50px;
-}
-
-
-
-
-
-
-.title-text{
-    text-align: center;
-    padding-top: 30px;
-}
-
-.title-text p{
-    margin: auto;
-    font-size: 20px;
-    color: #009688;
-    font-weight: bold;
-    position: relative;
-    z-index: 1;
-    display: inline-block;
-}
-
-.title-text h1{
-    font-size: 50px;
-
-}
-
-.arrow{
-    height: 40vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-}
-
-.hobbies-box{
-    width:80%;
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    text-align: center;
-}
-
-.hobbies{
-    flex-basis: 100%;
-}
-
-.hobbies-img{
-    flex-basis: 0%;
-    margin:auto;
-}
-.hobbies-img img{
-    width: 30%;
-    border-radius: 10px;
-}
-
-.hobbies h1{
-    text-align: left;
-    margin-bottom: 10px;
-    font-weight: 100;
-    color: #009688;
-    font-size: 35px;
-}
-
-.hobbies-desc{
-    display:flex;
-    align-items: center;
-    margin-bottom: 40px;
-}
-
-.hobbies-icon .fa{
-    width: 50px;
-    height: 50px;
-    font-size: 30px;
-    line-height: 50px;
-    border-radius: 8px;
-    color: #009688;
-    border: 1px solid #009688;
-    cursor: pointer;
-}
-
-.hobbies-icon .fa:hover{
-    transform: translateY(-4px);
-}
-
-
-
-
-.hobbies-text p{
-    padding: 0 10px;
-    text-align: initial;
-    font-size: 20px;
-}
-
-html{
-    scroll-behavior: smooth;
-}
-
-.to-top{
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    border-radius:  0.5rem;
-    text-decoration:none;
-    transition: 0.2s ease-out;
-    font-size: 30px;
-}
-
-.to-top:hover{
-    transform: translateY(-4px);
-}
-
+/* --- Clock Section Fixes --- */
 #clock {
     position: relative;
-    width: 600px;
-    height: 600px;
-    background: url(images/processed-svg-clock-baseasset-1-removebg-preview.png);
-    background-repeat: no-repeat;
-    list-style: none;
-    position: absolute;
-    top: 0; right: 0;
-    bottom: 0; left: 0;
-    margin: auto;
-    display: flex;
+    width: 300px; /* Default size */
+    height: 300px;
+    margin: 20px auto;
+    background: url('images/processed-svg-clock-baseasset-1-removebg-preview.png') no-repeat center center;
+    background-size: contain;
 }
 
 #sec, #min, #hour {
     position: absolute;
-    width: 30px;
-    height: 600px;
-    top: 0px;
-    left: 285px;
-    top: 0; right: 0;
-    bottom: 0; left: 0;
-    margin: auto;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
-#sec {
-    background: url(images/secondshand-removebg-preview.png);
-    z-index: 3;
-}
+#sec { background-image: url('images/secondshand-removebg-preview.png'); z-index: 3; }
+#min { background-image: url('images/minhand-removebg-preview.png'); z-index: 2; }
+#hour { background-image: url('images/hourhand-removebg-preview.png'); z-index: 1; }
 
-#min {
-    background: url(images/minhand-removebg-preview.png);
-    z-index: 2;
-}
-
-#hour {
-    background: url(images/hourhand-removebg-preview.png);
-    z-index: 1;
-}
-
-.clock-section{
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
     text-align: center;
-    padding-top: 30px;
-    font-size: 80px;
-    background: rgb(255, 255, 255);
-    color: #000000;
+    padding: 20px;
 }
 
-.container{
+/* --- Hobbies Grid --- */
+.hobbies-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.hobbies-desc {
+    display: flex;
+    align-items: flex-start;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    max-width: 600px;
     width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    background: rgb(255, 255, 255);
-    color: #000000;
 }
 
-.container p{
-    position: absolute;
-    top: 10%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    color: #000000;
-    font-size: 50px;
-    font-weight: 600;
-    letter-spacing: 3px;
-
+.hobbies-icon .fa {
+    font-size: 2rem;
+    color: #009688;
+    margin-right: 15px;
 }
 
-.container h1{
-    position: absolute;
-    top: 20%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    color: #000000;
-    font-size: 90px;
-    font-weight: 600;
-    letter-spacing: 3px;
-
-}
-
-.container h2{
-    position: absolute;
-    top: 40%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    color: #000000;
-    font-size: 50px;
-    font-weight: 600;
-    letter-spacing: 3px;
-
-}
-
-.container h3{
-    position: absolute;
-    top: 50%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    color: #000000;
-    font-size: 90px;
-    font-weight: 600;
-    letter-spacing: 3px;
-
-}
-
-.container h4{
-    position: absolute;
-    top: 70%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    color: #000000;
-    font-size: 50px;
-    font-weight: 600;
-    letter-spacing: 3px;
-
-}
-
-.clock-text{
-    text-align: center;
-    color: #000000;
-    padding-top: 180px;
-    text-align: center;
-    position: absolute;
-    display: contents;
-    
-
-}
-
-
-.clock-text h1{
-    font-size: 40px;
-    height: 165vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font: bold;
-}
-
-.stopwatch h1{
-    top: -30%;
-    left:50%;
-    font-size: 60px;
-    height: 165vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font: bold;
-    color: rgb(0, 0, 0);
-}
-
-.stopwatch{
-    Width: 100%;
-    position: absolute;
-    top: 90%;
-    transform: translateY(-50%);
-    text-align: center;
-    color:#000000;
-}
-
-#display {
-    font-size: 2em;
-    margin-bottom: 10px;
-}
-
-.stopwatch header {
- width: 0;
- height: 0;
- color:#000000;
- text-align: center;
- justify-content: center;
- font: bold;
- display: flex;
- position: absolute;
- align-items: center;
- margin-bottom: 5px;
-}
-
-.app-container {
-  max-width: 1200px;   /* Keeps the app from stretching too wide */
-  margin: 0 auto;      /* Centers the app horizontally */
-  padding: 20px;       /* Adds spacing inside */
-}
-
-.app-container section {
-  margin-bottom: 30px; /* Adds space between each block (e.g. Upcoming, Add Subscription, Active Subs, FX rates) */
-}
-
+/* --- Mobile Responsive Queries --- */
 @media (max-width: 768px) {
-  .app-container {
-    padding: 10px;
-  }
+    .navbar {
+        padding: 10px;
+    }
+    
+    .navbar ul li {
+        margin: 5px 10px;
+    }
+
+    .banner-text h1 {
+        font-size: 2rem;
+    }
+
+    /* Fix the clock on mobile */
+    #clock {
+        width: 250px;
+        height: 250px;
+    }
+
+    .hobbies-desc {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .hobbies-icon {
+        margin-bottom: 10px;
+    }
 }

@@ -15,39 +15,39 @@ body {
     min-height: 100vh;
 }
 
-/* ================= HEADER (Fixed at Top) ================= */
-/* This container holds the Logo and Menu */
-#header-container {
-    position: fixed; /* Sticks to the top of the screen */
+/* ================= HEADER (Fixed & Stable) ================= */
+.header-container {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100px; /* Height of the menu bar */
-    z-index: 5000; /* Stays on top of everything */
-    background: transparent; /* See-through background */
+    height: 100px;
+    display: flex; /* Uses Flexbox to align items */
+    align-items: center; /* Vertically centers items */
+    justify-content: center; /* Centers the menu */
+    z-index: 10000; /* Stays on top */
+    background: transparent; /* See-through */
+    padding: 0 40px;
 }
 
-/* FIX: Logo Squeezing */
+/* LOGO FIX - Absolute position to stay on the left */
 .logo {
     position: absolute;
+    left: 40px;
     top: 50%;
-    left: 30px;
-    transform: translateY(-50%); /* Center vertically */
-    width: 300px; /* Wider width to fit the text */
-    height: auto; /* Maintains aspect ratio so it doesn't squish */
-    object-fit: contain;
+    transform: translateY(-50%);
+    height: 60px; /* Fixed height stops squeezing */
+    width: auto;  /* Width adjusts naturally */
+    max-width: 250px;
+    object-fit: contain; /* Ensures image isn't distorted */
 }
 
-/* Menu Centering */
+/* NAVBAR - Centered by the flex container */
 .navbar {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Perfect Center */
-    padding: 10px 30px;
-    background: rgba(255, 255, 255, 0.85); /* White bubble behind menu for readability */
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px 30px;
     border-radius: 30px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .navbar ul {
@@ -69,65 +69,42 @@ body {
     color: #009688;
 }
 
-/* ================= PAGE LAYOUT FIXES ================= */
-
-/* 1. HOME PAGE (Centered Content) */
-.banner-text {
-    position: absolute;
-    top: 55%; /* Slightly below center to clear header */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    width: 100%;
-    z-index: 10;
-}
-
-.home-photo {
-    width: 300px; 
-    height: 300px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid #fff;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    margin-top: 30px;
-}
-
-/* 2. GENERAL PAGE SPACER (Hobbies, Video) */
-/* This class pushes content down so it's not hidden behind the header */
-.page-content {
-    padding-top: 160px; /* The Magic Number: Pushes content down */
-    text-align: center; /* Forces text to center */
+/* ================= PAGE CONTENT SPACER ================= */
+/* This pushes ALL content down so it doesn't hide behind the header */
+.page-wrapper {
+    padding-top: 150px; /* Pushes content below the 100px header */
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
+    text-align: center;
 }
 
-/* Hobbies Specifics */
-.title-text {
-    margin-bottom: 40px;
-    background: rgba(255,255,255,0.9);
-    padding: 20px;
-    border-radius: 15px;
-    display: inline-block; /* Wraps tightly around text */
-}
-
+/* ================= HOBBIES PAGE ================= */
 .hobbies-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    padding-bottom: 60px;
+    padding-bottom: 50px;
+}
+
+.title-text {
+    margin-bottom: 30px;
+    background: rgba(255,255,255,0.9);
+    padding: 20px;
+    border-radius: 15px;
+    display: inline-block;
 }
 
 .hobbies-desc {
     background: rgba(255, 255, 255, 0.95);
-    padding: 25px;
+    padding: 20px;
     border-radius: 15px;
     width: 100%;
     max-width: 800px;
     display: flex;
     align-items: center;
-    text-align: left; /* Keep card text readable */
+    text-align: left;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
@@ -143,32 +120,35 @@ body {
     max-width: 500px;
     width: 100%;
     border-radius: 15px;
-    margin-top: 20px;
 }
 
-/* Video Page Specifics */
-.video-container {
-    padding-top: 160px; /* Push down */
-    text-align: center;
-}
-
+/* ================= VIDEO PAGE ================= */
 .video-frame {
     border: 5px solid #fff;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    width: 70%;
+    width: 80%;
+    max-width: 800px;
     height: 450px;
     margin-top: 20px;
+}
+
+/* ================= APP PAGE ================= */
+/* Forces the app container down */
+.app-container-wrapper {
+    margin-top: 160px !important;
+    position: relative;
+    z-index: 1;
 }
 
 /* ================= CLOCK PAGE ================= */
 #clock {
     position: relative;
-    width: 350px;
-    height: 350px;
+    width: 300px;
+    height: 300px;
     background: url('images/processed-svg-clock-baseasset-1-removebg-preview.png') no-repeat center center;
     background-size: contain;
-    margin: 50px auto 30px auto;
+    margin: 20px auto;
     list-style: none; 
 }
 
@@ -178,37 +158,27 @@ body {
     margin: auto;
     list-style: none;
 }
-
 #sec { background: url('images/secondshand-removebg-preview.png') center/contain no-repeat; z-index: 3; }
 #min { background: url('images/minhand-removebg-preview.png') center/contain no-repeat; z-index: 2; }
 #hour { background: url('images/hourhand-removebg-preview.png') center/contain no-repeat; z-index: 1; }
 
 .clock-tools {
-    text-align: center;
     background: rgba(255,255,255,0.9);
-    padding: 30px;
+    padding: 20px;
     border-radius: 20px;
     max-width: 500px;
     margin: 0 auto 50px auto;
 }
 
-/* Buttons Styling */
 .buttons button {
-    background: linear-gradient(45deg, #009688, #4DB6AC);
-    border: none;
+    background: #009688;
     color: white;
-    padding: 12px 30px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    margin: 5px;
     font-size: 16px;
-    border-radius: 25px;
     cursor: pointer;
-    margin: 10px;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    transition: transform 0.2s;
-}
-
-.buttons button:hover {
-    transform: scale(1.05);
 }
 
 /* Back to Top */

@@ -29,7 +29,10 @@
       <li><a href="Clock.html">Clock</a></li>
     </ul>
    </div>
+</section>
 
+<div style="padding-top: 20px;">
+   
    <ul id="clock">
          <li id="sec"></li>
          <li id="hour"></li>
@@ -38,13 +41,13 @@
 
    <div class="clock-tools">
         <h2>The time now is:</h2>
-        <h1 id="current-time"></h1>
+        <h1 id="current-time" style="font-size: 50px; margin: 10px 0;"></h1>
         
         <h2>Current date:</h2>
-        <h3 id="date-today"></h3>
+        <h3 id="date-today" style="margin-bottom: 20px;"></h3>
         
-        <h4>Stopwatch</h4>
-        <h1 id="displayTime">00:00:00</h1>
+        <h4 style="color: #009688; font-size: 24px;">Stopwatch</h4>
+        <h1 id="displayTime" style="font-size: 60px; font-family: monospace;">00:00:00</h1>
         
         <div class="buttons">
             <button onclick="Stop()">Stop</button>
@@ -52,7 +55,11 @@
             <button onclick="Reset()">Reset</button>
         </div>
    </div>
-</section>
+
+   <a href="#" class="to-top">
+      <i class="fa fa-arrow-up fa-xl"></i>
+   </a>
+</div>
 
 <script>
     // Live Time

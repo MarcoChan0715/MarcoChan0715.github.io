@@ -1,146 +1,193 @@
-/* Add this to the TOP of Coursework.css */
-body {
-    /* This puts the image on the whole page and keeps it still */
-    background: url('images/Coursework/MountainBanner.jpg') no-repeat center center fixed; 
-    background-size: cover; 
-}
-
+/* =========================================
+   1. GLOBAL RESET & BACKGROUND
+   ========================================= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box; /* Fixes layout sizing issues */
+    box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
 
-/* --- Navigation --- */
-.navbar {
+body {
+    /* Fixed background, NO dim overlay */
+    background: url('images/Coursework/MountainBanner.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #000;
+    overflow-x: hidden; /* Prevents side scrolling */
+}
+
+/* =========================================
+   2. HEADER (LOGO & NAVIGATION)
+   ========================================= */
+/* Make the banner a container for absolute positioning */
+#banner {
+    position: relative; 
     width: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
-    position: fixed; /* Sticks to top */
-    top: 0;
+    height: 100vh; /* Full screen height */
+    overflow: hidden;
+}
+
+/* LOGO: Top Left */
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    width: 200px; /* Adjust size as needed */
+    height: auto;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+/* NAVIGATION: Top Center */
+.navbar {
+    position: absolute;
+    top: 25px; /* Aligns vertically with logo */
+    left: 50%;
+    transform: translateX(-50%); /* Forces it to true center */
+    width: auto;
+    background: transparent; /* Removes any grey box */
+    z-index: 1000;
+    padding: 0;
 }
 
 .navbar ul {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.navbar ul li {
     list-style: none;
-    margin: 0 15px;
+    gap: 30px; /* Space between links */
 }
 
 .navbar ul li a {
     text-decoration: none;
-    color: #333;
+    color: #000; /* Black text for visibility */
     font-weight: 600;
     text-transform: uppercase;
-    font-size: 14px;
-    position: relative;
+    font-size: 16px;
+    letter-spacing: 1px;
+    transition: color 0.3s;
 }
 
-.navbar ul li a::after {
-    content: '';
-    height: 3px;
-    width: 0;
-    background: #009688;
+.navbar ul li a:hover {
+    color: #009688;
+}
+
+/* =========================================
+   3. HOME PAGE TEXT
+   ========================================= */
+.banner-text {
     position: absolute;
-    left: 0;
-    bottom: -5px;
-    transition: 0.3s;
-}
-
-.navbar ul li a:hover::after {
-    width: 100%;
-}
-
-/* --- Banner Section --- */
-#banner {
-    /* Removed the background image from here since it is now on the body */
-    background: transparent; 
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Perfect Center */
     text-align: center;
-    padding-top: 60px;
-}
-
-.logo {
-    width: 150px;
-    margin-bottom: 20px;
-    /* Removed absolute positioning for better centering */
+    width: 80%;
 }
 
 .banner-text h1 {
-    font-size: clamp(2rem, 5vw, 4rem); /* Responsive font size */
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: #333; /* Dark grey for readability */
 }
 
 .banner-text p {
-    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-size: 20px;
     font-style: italic;
-    margin-bottom: 20px;
+    color: #555;
+    margin-bottom: 30px;
 }
 
 .home-photo {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%; /* Circle shape */
+    border: 5px solid rgba(255,255,255,0.5);
     object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s;
+    margin-top: 20px;
 }
 
-.home-photo:hover {
-    transform: scale(1.05);
+/* =========================================
+   4. HOBBIES PAGE FIX
+   ========================================= */
+#hobby {
+    padding-top: 120px; /* Push content down below header */
+    padding-bottom: 50px;
 }
 
-/* --- Buttons --- */
-button {
-    padding: 12px 30px;
-    margin: 10px;
-    border-radius: 30px;
-    border: 2px solid #009688;
-    background: transparent;
-    color: #009688; /* Changed for visibility */
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+.title-text {
+    text-align: center;
+    margin-bottom: 50px;
 }
 
-button:hover {
-    background: #009688;
-    color: #fff;
+.hobbies-box {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
-/* --- Clock Section Fixes --- */
+/* The card container */
+.hobbies-desc {
+    display: flex;
+    align-items: center; /* Vertically center items */
+    background: rgba(255, 255, 255, 0.9); /* White background to see text */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.hobbies-icon .fa {
+    font-size: 40px;
+    color: #009688;
+    margin-right: 20px;
+    width: 60px;
+    text-align: center;
+}
+
+.hobbies-text p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Fix the "Huge Photo" issue */
+.hobbies-img {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.hobbies-img img {
+    max-width: 80%; /* Limit width */
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* =========================================
+   5. CLOCK PAGE FIX
+   ========================================= */
+/* Center the clock on the screen */
 #clock {
-    position: relative;
-    width: 300px; /* Default size */
-    height: 300px;
-    margin: 20px auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Perfect Center */
+    width: 400px;
+    height: 400px;
     background: url('images/processed-svg-clock-baseasset-1-removebg-preview.png') no-repeat center center;
     background-size: contain;
+    margin: 0; /* Remove auto margins */
 }
 
+/* Center the hands */
 #sec, #min, #hour {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-repeat: no-repeat;
+    margin: auto;
     background-position: center;
+    background-repeat: no-repeat;
     background-size: contain;
 }
 
@@ -148,69 +195,44 @@ button:hover {
 #min { background-image: url('images/minhand-removebg-preview.png'); z-index: 2; }
 #hour { background-image: url('images/hourhand-removebg-preview.png'); z-index: 1; }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
+.clock-section {
+    padding-top: 100px;
     text-align: center;
-    padding: 20px;
+    font-size: 40px;
+    background: transparent;
 }
 
-/* --- Hobbies Grid --- */
-.hobbies-box {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
+/* Tools container below the clock */
+.container {
+    margin-top: 500px; /* Push down below the absolute clock */
+    text-align: center;
+    background: rgba(255,255,255,0.9);
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 30px;
+    border-radius: 15px;
 }
 
-.hobbies-desc {
-    display: flex;
-    align-items: flex-start;
-    background: #f9f9f9;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    max-width: 600px;
-    width: 100%;
-}
-
-.hobbies-icon .fa {
-    font-size: 2rem;
-    color: #009688;
-    margin-right: 15px;
-}
-
-/* --- Mobile Responsive Queries --- */
+/* =========================================
+   6. RESPONSIVE (MOBILE)
+   ========================================= */
 @media (max-width: 768px) {
     .navbar {
-        padding: 10px;
+        top: 80px; /* Push nav below logo on small screens */
+        width: 100%;
+        text-align: center;
     }
     
-    .navbar ul li {
-        margin: 5px 10px;
+    .logo {
+        left: 50%;
+        transform: translateX(-50%);
     }
 
-    .banner-text h1 {
-        font-size: 2rem;
-    }
-
-    /* Fix the clock on mobile */
+    .banner-text h1 { font-size: 30px; }
+    
     #clock {
         width: 250px;
         height: 250px;
-    }
-
-    .hobbies-desc {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .hobbies-icon {
-        margin-bottom: 10px;
     }
 }

@@ -16,39 +16,44 @@ body {
 }
 
 /* ================= HEADER (Fixed at Top) ================= */
-#banner {
-    position: relative;
+/* This container holds the Logo and Menu */
+#header-container {
+    position: fixed; /* Sticks to the top of the screen */
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100px; /* Specific height to prevent overlap */
-    z-index: 1000;
+    height: 100px; /* Height of the menu bar */
+    z-index: 5000; /* Stays on top of everything */
+    background: transparent; /* See-through background */
 }
 
+/* FIX: Logo Squeezing */
 .logo {
     position: absolute;
-    top: 20px;
-    left: 40px;
-    width: 200px;
-    z-index: 2000;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%); /* Center vertically */
+    width: 300px; /* Wider width to fit the text */
+    height: auto; /* Maintains aspect ratio so it doesn't squish */
+    object-fit: contain;
 }
 
+/* Menu Centering */
 .navbar {
     position: absolute;
-    top: 30px;
-    width: 100%;
-    display: flex;
-    justify-content: center; /* Center the menu */
-    z-index: 2000;
-    pointer-events: none; /* Let clicks pass through empty space */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Perfect Center */
+    padding: 10px 30px;
+    background: rgba(255, 255, 255, 0.85); /* White bubble behind menu for readability */
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
 .navbar ul {
     display: flex;
     list-style: none;
     gap: 30px;
-    pointer-events: auto; /* Re-enable clicks on links */
-    background: rgba(255, 255, 255, 0.8); /* Slight background for readability */
-    padding: 10px 30px;
-    border-radius: 30px;
 }
 
 .navbar ul li a {
@@ -57,106 +62,121 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     font-size: 14px;
+    letter-spacing: 1px;
 }
 
 .navbar ul li a:hover {
     color: #009688;
 }
 
-/* ================= HOME PAGE FIXES ================= */
+/* ================= PAGE LAYOUT FIXES ================= */
+
+/* 1. HOME PAGE (Centered Content) */
 .banner-text {
+    position: absolute;
+    top: 55%; /* Slightly below center to clear header */
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
-    padding-top: 100px; /* Push down from header */
+    width: 100%;
+    z-index: 10;
 }
 
 .home-photo {
-    width: 300px; /* FIX: Stops photo from being huge */
+    width: 300px; 
     height: 300px;
     border-radius: 50%;
     object-fit: cover;
     border: 5px solid #fff;
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     margin-top: 30px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
-/* ================= HOBBIES PAGE FIXES ================= */
-#hobby {
-    padding-top: 50px;
+/* 2. GENERAL PAGE SPACER (Hobbies, Video) */
+/* This class pushes content down so it's not hidden behind the header */
+.page-content {
+    padding-top: 160px; /* The Magic Number: Pushes content down */
+    text-align: center; /* Forces text to center */
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* Hobbies Specifics */
 .title-text {
-    text-align: center; /* FIX: Centers the "Hobbies" title */
     margin-bottom: 40px;
     background: rgba(255,255,255,0.9);
     padding: 20px;
     border-radius: 15px;
-    display: inline-block;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    display: inline-block; /* Wraps tightly around text */
+}
+
+.hobbies-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 60px;
 }
 
 .hobbies-desc {
     background: rgba(255, 255, 255, 0.95);
-    padding: 20px;
+    padding: 25px;
     border-radius: 15px;
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
     display: flex;
     align-items: center;
+    text-align: left; /* Keep card text readable */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .hobbies-icon i {
     font-size: 40px;
     color: #009688;
-    margin-right: 20px;
-    width: 60px;
+    margin-right: 25px;
+    min-width: 50px;
     text-align: center;
-}
-
-/* FIX: Hobbies Image Size */
-.hobbies-img {
-    text-align: center;
-    margin-top: 30px;
-    padding-bottom: 50px;
 }
 
 .hobbies-img img {
-    max-width: 500px; /* Limits width */
-    width: 90%;
+    max-width: 500px;
+    width: 100%;
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    margin-top: 20px;
 }
 
-/* ================= APP PAGE FIXES ================= */
-#sm {
-    margin-top: 20px !important; /* Spacing from header */
-    position: relative;
-    z-index: 1; /* Ensures header (z-index 2000) sits on top */
+/* Video Page Specifics */
+.video-container {
+    padding-top: 160px; /* Push down */
+    text-align: center;
 }
 
-/* ================= CLOCK PAGE FIXES ================= */
+.video-frame {
+    border: 5px solid #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    width: 70%;
+    height: 450px;
+    margin-top: 20px;
+}
+
+/* ================= CLOCK PAGE ================= */
 #clock {
     position: relative;
     width: 350px;
     height: 350px;
     background: url('images/processed-svg-clock-baseasset-1-removebg-preview.png') no-repeat center center;
     background-size: contain;
-    margin: 50px auto 20px auto; /* Centers clock */
-    list-style: none; /* FIX: Removes black dots */
+    margin: 50px auto 30px auto;
+    list-style: none; 
 }
 
-/* Hands positioning */
 #sec, #min, #hour {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     margin: auto;
-    list-style: none; /* Removes dots */
+    list-style: none;
 }
 
 #sec { background: url('images/secondshand-removebg-preview.png') center/contain no-repeat; z-index: 3; }
@@ -166,18 +186,18 @@ body {
 .clock-tools {
     text-align: center;
     background: rgba(255,255,255,0.9);
-    padding: 20px;
+    padding: 30px;
     border-radius: 20px;
     max-width: 500px;
     margin: 0 auto 50px auto;
 }
 
-/* FIX: Beautiful Buttons */
+/* Buttons Styling */
 .buttons button {
     background: linear-gradient(45deg, #009688, #4DB6AC);
     border: none;
     color: white;
-    padding: 10px 25px;
+    padding: 12px 30px;
     font-size: 16px;
     border-radius: 25px;
     cursor: pointer;
@@ -189,12 +209,11 @@ body {
 
 .buttons button:hover {
     transform: scale(1.05);
-    background: linear-gradient(45deg, #00796B, #009688);
 }
 
-/* ================= BACK TO TOP BUTTON ================= */
+/* Back to Top */
 .to-top {
-    position: fixed; /* Sticks to screen */
+    position: fixed;
     bottom: 30px;
     right: 30px;
     background: #fff;
@@ -204,15 +223,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
     color: #009688;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 3000;
-    transition: 0.3s;
-}
-
-.to-top:hover {
-    transform: translateY(-5px);
-    background: #009688;
-    color: #fff;
 }

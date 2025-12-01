@@ -236,3 +236,9 @@ body {
         height: 250px;
     }
 }
+
+#sm {
+    background: rgba(255, 255, 255, 0.95) !important; /* Forces white background on App */
+    margin-top: 100px; /* Pushes it down below the header */
+    border-radius: 15px;
+}

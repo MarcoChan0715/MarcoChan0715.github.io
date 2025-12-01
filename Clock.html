@@ -51,32 +51,31 @@
     <h2>Current date:</h2>
     <h3 id="date-today"></h3>
     <h4>Stopwatch:</h4>
-<script>
-    let time = document.getElementById("current-time");
-    setInterval(() =>{
-    d = new Date();
-    time.innerHTML = d.toLocaleTimeString();
-    },1000)
+
+   <script>
+    // 1. Live Time Update
+    const timeElement = document.getElementById("current-time");
+    setInterval(() => {
+        const d = new Date();
+        timeElement.innerHTML = d.toLocaleTimeString();
+    }, 1000);
+
+    // 2. Date Display (Fixed Bugs)
+    const dateToday = document.getElementById("date-today");
+    const today = new Date(); 
+    
+    // Ensure 2 digits for day and month
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); 
+    const year = today.getFullYear();
+
+    // Set the text content
+    dateToday.textContent = `${day}/${month}/${year}`;
 </script>
 
-<script>
-    let dateToday = document.getElementById("date-today");
 
-    let today = new date();
-    let day = '${today.getDate() < 10 ? "0" : ""}${today.getDate()}';
-    let month = '${today.getMonth() + 1) < 10 ? "0" : ""}${today.getMonth() + 1}';
-    let year = today.getFullYear();
 
-    dateToday.textContent = '${day}/${month}/${year}';
-</script>
 
-<script>
-    n =  new Date();
-    y = n.getFullYear();
-    m = n.getMonth() + 1;
-    d = n.getDate();
-    document.getElementById("date-today").innerHTML = d + "/" + m + "/" + y;
-    </script>
 
 <div class="stopwatch">
     <h1 id="displayTime">00:00:00</h1>

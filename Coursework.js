@@ -1,83 +1,63 @@
+// --- Analog Clock Functionality ---
 $(document).ready(function () {
-    setInterval(function () {
+    function updateClock() {
+        const now = new Date();
+        
+        const seconds = now.getSeconds();
+        const sdegree = seconds * 6;
+        
+        const mins = now.getMinutes();
+        const mdegree = mins * 6 + (seconds / 10); // Smooth movement
+        
+        const hours = now.getHours();
+        const hdegree = hours * 30 + (mins / 2); // Smooth movement
 
-        var seconds = new Date().getSeconds() * 6;
-        var srotate = "rotate(" + seconds + "deg)";
-        var sdegree = seconds * 6;
+        $("#sec").css({ "transform": "rotate(" + sdegree + "deg)" });
+        $("#min").css({ "transform": "rotate(" + mdegree + "deg)" });
+        $("#hour").css({ "transform": "rotate(" + hdegree + "deg)" });
+    }
 
-        $("#sec").css({"transform": srotate 
-        });
-    }, 1000);
+    setInterval(updateClock, 1000);
+    updateClock(); // Run immediately on load
 });
 
-$(document).ready(function () {
-    setInterval(function () {
-
-        var mins = new Date().getMinutes() * 6;
-        var mrotate = "rotate(" + mins + "deg)";
-        var mdegree = mins * 6;
-
-        $("#min").css({"transform": mrotate 
-        });
-    }, 1000);
-});
-
-$(document).ready(function () {
-    setInterval(function () {
-
-        var hours = new Date().getHours() * 30;
-        var hrotate = "rotate(" + hours + "deg)";
-        var hdegree = hours * 30;
-
-        $("#hour").css({"transform": hrotate 
-        });
-    }, 1000);
-});
-
-
-
-let timer;
-let isRunning = false;
-let seconds = 0;
-let minutes = 0;
-let hours = 0;
+// --- Stopwatch Functionality ---
+let timer = null;
+let seconds = 0, minutes = 0, hours = 0;
 
 function Start() {
-  if (!isRunning) {
+    if (timer !== null) return; // Prevent multiple clicks
     timer = setInterval(updateDisplay, 1000);
-    isRunning = true;
-  }
 }
 
 function Stop() {
-  clearInterval(timer);
-  isRunning = false;
+    clearInterval(timer);
+    timer = null;
 }
 
 function Reset() {
-  clearInterval(timer);
-  isRunning = false;
-  seconds = -1;
-  minutes = 0;
-  hours = 0;
-  updateDisplay();
+    Stop();
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    const display = document.getElementById("displayTime");
+    if(display) display.textContent = "00:00:00";
 }
 
 function updateDisplay() {
-  seconds++;
-  if (seconds === 60) {
-    seconds = 0;
-    minutes++;
-    if (minutes === 60) {
-      minutes = 0;
-      hours++;
+    seconds++;
+    if (seconds === 60) {
+        seconds = 0;
+        minutes++;
+        if (minutes === 60) {
+            minutes = 0;
+            hours++;
+        }
     }
-  }
-
-  const display = document.getElementById("displayTime");
-  display.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    const display = document.getElementById("displayTime");
+    if(display) display.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
 function pad(value) {
-  return value < 10 ? `0${value}` : value;
+    return value < 10 ? `0${value}` : value;
 }

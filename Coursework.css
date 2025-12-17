@@ -106,3 +106,27 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode p, body.
     color: #e0e0e0 !important;
 }
 body.dark-mode .navbar ul li a:hover { color: #4DB6AC !important; }
+
+/* ================= DARK MODE ASSET SWAPS ================= */
+
+/* Switch Clock Face */
+body.dark-mode #clock {
+    background-image: url('images/White Clock.png') !important;
+}
+
+/* Switch Minute Hand */
+body.dark-mode #min {
+    background-image: url('images/White minhand.png') !important;
+}
+
+/* Switch Hour Hand */
+body.dark-mode #hour {
+    background-image: url('images/White hourhand.png') !important;
+}
+
+/* Switch Second Hand (Optional - only if you have a white version) */
+/*
+body.dark-mode #sec {
+    background-image: url('images/White secondhand.png') !important;
+}
+*/

@@ -140,6 +140,7 @@
 
   <script src="Coursework.js"></script>
 
+
   <script>
   (function(){
     const $ = (id) => document.getElementById(id);
@@ -151,7 +152,7 @@
     let subs = JSON.parse(localStorage.getItem(K_SUBS) || '[]');
     let fx = DEFAULT_FX;
     let display = 'USD';
-    let editIndex = -1; // Tracks which item is being edited (-1 means none)
+    let editIndex = -1; 
 
     function save(){ localStorage.setItem(K_SUBS, JSON.stringify(subs)); }
     
@@ -197,19 +198,15 @@
         let yTotal = 0;
 
         subs.forEach((s, index) => {
-            // Ensure 'active' property exists (default to true)
             if (typeof s.active === 'undefined') s.active = true;
 
-            // Only add to TOTAL if active
             const val = convert(s.cost, s.currency, display);
             if (s.active) {
                 if(s.cycle === 'monthly') { mTotal += val; yTotal += val * 12; }
                 else { mTotal += val / 12; yTotal += val; }
             }
 
-            // Create List Item
             const div = document.createElement('div');
-            // Dim the card if inactive
             const opacity = s.active ? "1" : "0.5";
             const bg = s.active ? "transparent" : "rgba(0,0,0,0.02)";
             
@@ -228,16 +225,16 @@
                     <div style="font-weight:bold; font-size:16px;">${fmtMoney(val, display)}</div>
                     
                     <div style="display:flex; gap:8px;">
-                        <button onclick="window.toggleSub(${index})" style="font-size:12px; border:1px solid var(--border); background:var(--card); color:var(--ink); padding:4px 8px; border-radius:6px; cursor:pointer;" title="Pause/Resume">
-                            ${s.active ? '⏸️' : '▶️'}
+                        <button onclick="window.toggleSub(${index})" style="font-size:12px; border:1px solid var(--border); background:var(--card); color:var(--ink); padding:5px 10px; border-radius:6px; cursor:pointer; min-width: 60px;">
+                            ${s.active ? 'Pause' : 'Resume'}
                         </button>
 
-                        <button onclick="window.editSub(${index})" style="font-size:12px; border:1px solid var(--border); background:var(--card); color:var(--ink); padding:4px 8px; border-radius:6px; cursor:pointer;" title="Edit">
-                            ✏️
+                        <button onclick="window.editSub(${index})" style="font-size:12px; border:1px solid var(--border); background:var(--card); color:var(--ink); padding:5px 10px; border-radius:6px; cursor:pointer;">
+                            Edit
                         </button>
                         
-                        <button onclick="window.delSub(${index})" style="font-size:12px; border:1px solid #fee2e2; background:#fef2f2; color:#ef4444; padding:4px 8px; border-radius:6px; cursor:pointer;" title="Delete">
-                            🗑️
+                        <button onclick="window.delSub(${index})" style="font-size:12px; border:1px solid #fee2e2; background:#fef2f2; color:#ef4444; padding:5px 10px; border-radius:6px; cursor:pointer;">
+                            Delete
                         </button>
                     </div>
                 </div>
@@ -245,12 +242,10 @@
             list.appendChild(div);
         });
 
-        // Update Totals
         $('totMonthly').innerText = fmtMoney(mTotal, display);
         $('totYearly').innerText = fmtMoney(yTotal, display);
-        $('countActive').innerText = subs.filter(s => s.active).length; // Only count active ones
+        $('countActive').innerText = subs.filter(s => s.active).length;
         
-        // Populate Dropdowns
         const curSel = $('currency').value;
         const disSel = $('displayCcy').value;
         const opts = Object.keys(fx).sort().map(c => `<option value="${c}">${c}</option>`).join('');
@@ -260,7 +255,6 @@
         if(fx[curSel]) $('currency').value = curSel;
         if(fx[disSel]) $('displayCcy').value = disSel; else $('displayCcy').value = 'USD';
 
-        // Render FX Grid
         const grid = $('fxGrid');
         grid.innerHTML = '';
         Object.keys(fx).forEach(ccy => {
@@ -271,8 +265,6 @@
             grid.appendChild(item);
         });
     }
-
-    // --- BUTTON ACTIONS ---
 
     $('addBtn').addEventListener('click', () => {
         const name = $('name').value;
@@ -289,28 +281,22 @@
         };
 
         if (editIndex > -1) {
-            // Update Existing
             subs[editIndex] = newSub;
-            editIndex = -1; // Reset edit mode
+            editIndex = -1; 
             $('addBtn').innerText = "+ Add Subscription";
             $('addBtn').style.background = "linear-gradient(90deg, #ec4899, #06b6d4)";
         } else {
-            // Create New
             subs.push(newSub);
         }
 
         save();
         render();
-        // Clear inputs
         $('name').value = ''; $('cost').value = ''; $('startDate').value = '';
     });
 
     $('displayCcy').addEventListener('change', (e) => { display = e.target.value; render(); });
     $('fxUpdate').addEventListener('click', fetchLiveRates);
 
-    // --- GLOBAL WINDOW FUNCTIONS (Called by HTML clicks) ---
-
-    // 1. DELETE
     window.delSub = function(index) {
         if(confirm('Delete this subscription?')) {
             subs.splice(index, 1);
@@ -320,35 +306,29 @@
         }
     };
 
-    // 2. TOGGLE ACTIVE/INACTIVE
     window.toggleSub = function(index) {
         if (typeof subs[index].active === 'undefined') subs[index].active = true;
-        subs[index].active = !subs[index].active; // Flip status
+        subs[index].active = !subs[index].active; 
         save();
         render();
     };
 
-    // 3. EDIT SUBSCRIPTION
     window.editSub = function(index) {
         const s = subs[index];
-        // Fill form with data
         $('name').value = s.name;
         $('cost').value = s.cost;
         $('currency').value = s.currency;
         $('cycle').value = s.cycle;
         $('startDate').value = s.date || '';
 
-        // Enter Edit Mode
         editIndex = index;
         const btn = $('addBtn');
         btn.innerText = "💾 Update Subscription";
-        btn.style.background = "#4ade80"; // Green color for update
+        btn.style.background = "#4ade80"; 
         
-        // Scroll to top so user sees the form
         document.getElementById('sm').scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Initial Load
     render(); 
     fetchLiveRates(); 
   })();

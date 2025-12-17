@@ -21,7 +21,7 @@
       background: rgba(255, 255, 255, 0.95); 
       border-radius: 16px;
       transition: background 0.3s, color 0.3s;
-      position: relative; /* Needed for modal positioning context if strictly inside */
+      position: relative; 
     }
 
     .app-container { max-width: 1100px; margin: 0 auto; }
@@ -58,14 +58,14 @@
     #sm .sm-btn.primary { background: linear-gradient(90deg, #ec4899, #06b6d4); color:#fff; border:0; }
     #sm .fx-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:10px; margin-bottom: 10px; }
 
-    /* --- NEW MODAL STYLES --- */
+    /* MODAL STYLES */
     .modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.6); /* Dark dimming */
+        background: rgba(0, 0, 0, 0.6); 
         z-index: 10000;
-        display: none; /* Hidden by default */
+        display: none; 
         align-items: center; justify-content: center;
-        backdrop-filter: blur(5px); /* Blur effect */
+        backdrop-filter: blur(5px);
     }
     .modal-box {
         background: var(--card);
@@ -213,7 +213,7 @@
     let subs = JSON.parse(localStorage.getItem(K_SUBS) || '[]');
     let fx = DEFAULT_FX;
     let display = 'USD';
-    let editIndex = -1; // -1 means nothing is being edited
+    let editIndex = -1;
 
     function save(){ localStorage.setItem(K_SUBS, JSON.stringify(subs)); }
     
@@ -225,6 +225,28 @@
         const s = fx[src] || 1; 
         const d = fx[dest] || 1; 
         return (amount / s) * d; 
+    }
+
+    // --- NEW HELPER: CALCULATE NEXT PAYMENT DATE ---
+    function getNextBillDate(startDate, cycle) {
+        if (!startDate) return null; // No date set
+        
+        let due = new Date(startDate);
+        const today = new Date();
+        today.setHours(0,0,0,0); // Ignore time for cleaner comparison
+
+        // If the start date is in the future, that is the first bill
+        if (due >= today) return due.toLocaleDateString();
+
+        // Otherwise, add months/years until we pass today
+        while (due < today) {
+            if (cycle === 'monthly') {
+                due.setMonth(due.getMonth() + 1);
+            } else {
+                due.setFullYear(due.getFullYear() + 1);
+            }
+        }
+        return due.toLocaleDateString();
     }
 
     async function fetchLiveRates() {
@@ -276,6 +298,10 @@
                 inactCount++;
             }
 
+            // Calculate Next Bill String
+            const nextDate = getNextBillDate(s.date, s.cycle);
+            const dateHTML = nextDate ? `<div style="font-size:11px; color:#eab308; margin-top:4px;">📅 Next Bill: ${nextDate}</div>` : '';
+
             const div = document.createElement('div');
             const bg = s.active ? "transparent" : "rgba(128, 128, 128, 0.05)";
             
@@ -289,7 +315,7 @@
                     </span>
                     <br> 
                     <small style="color:var(--muted)">Original: ${s.cost} ${s.currency}</small>
-                </div>
+                    ${s.active ? dateHTML : ''} </div>
                 <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
                     <div style="font-weight:bold; font-size:16px;">${fmtMoney(val, display)}</div>
                     
@@ -319,19 +345,17 @@
         const inactSec = $('inactiveSection');
         inactSec.style.display = (inactCount === 0) ? 'none' : 'block';
         
-        // Populate ALL dropdowns (Main + Modal)
         const curSel = $('currency').value;
         const disSel = $('displayCcy').value;
         const opts = Object.keys(fx).sort().map(c => `<option value="${c}">${c}</option>`).join('');
         
         $('currency').innerHTML = opts;
         $('displayCcy').innerHTML = opts;
-        $('editCurrency').innerHTML = opts; // Populate Modal Dropdown too
+        $('editCurrency').innerHTML = opts; 
         
         if(fx[curSel]) $('currency').value = curSel;
         if(fx[disSel]) $('displayCcy').value = disSel; else $('displayCcy').value = 'USD';
 
-        // FX Grid
         const grid = $('fxGrid');
         grid.innerHTML = '';
         Object.keys(fx).forEach(ccy => {
@@ -343,7 +367,6 @@
         });
     }
 
-    // --- MAIN ADD BUTTON (Adds Only) ---
     $('addBtn').addEventListener('click', () => {
         const name = $('name').value;
         const cost = parseFloat($('cost').value);
@@ -370,7 +393,6 @@
             subs.splice(index, 1);
             save();
             render();
-            // If editing this item, close modal
             if(editIndex === index) window.closeEditModal();
         }
     };
@@ -382,9 +404,6 @@
         render();
     };
 
-    // --- MODAL FUNCTIONS ---
-    
-    // 1. Open the modal and fill data
     window.openEditModal = function(index) {
         const s = subs[index];
         $('editName').value = s.name;
@@ -393,17 +412,15 @@
         $('editCycle').value = s.cycle;
         $('editDate').value = s.date || '';
         
-        editIndex = index; // Track which item we are editing
-        $('editModal').style.display = 'flex'; // Show modal
+        editIndex = index; 
+        $('editModal').style.display = 'flex'; 
     };
 
-    // 2. Close the modal
     window.closeEditModal = function() {
         $('editModal').style.display = 'none';
         editIndex = -1;
     };
 
-    // 3. Save changes from modal
     window.saveEdit = function() {
         if(editIndex === -1) return;
 
@@ -411,7 +428,6 @@
         const cost = parseFloat($('editCost').value);
         if(!name || isNaN(cost)) return alert('Name and Price are required');
 
-        // Update the array
         subs[editIndex].name = name;
         subs[editIndex].cost = cost;
         subs[editIndex].currency = $('editCurrency').value;

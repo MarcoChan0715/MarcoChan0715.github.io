@@ -111,6 +111,14 @@
           <p class="sm-sub">Track your recurring payments easily.</p>
         </div>
         <div class="sm-group">
+          <label class="sm-label" style="font-size: 12px; color: var(--muted)">Sort:</label>
+          <select id="sortOrder" class="sm-select" style="width:auto; margin-right: 15px;">
+             <option value="date">📅 Next Bill Date</option>
+             <option value="priceDesc">💰 Price (High to Low)</option>
+             <option value="priceAsc">💰 Price (Low to High)</option>
+             <option value="name">🔤 Name (A-Z)</option>
+          </select>
+
           <label class="sm-label" style="font-size: 12px; color: var(--muted)">Currency:</label>
           <select id="displayCcy" class="sm-select" style="width:auto;"></select>
         </div>
@@ -183,6 +191,7 @@
                     <select id="editCycle" class="sm-select">
                         <option value="monthly">Monthly</option>
                         <option value="yearly">Yearly</option>
+                        <option value="days30">Every 30 Days</option>
                     </select>
                 </div>
                 <div class="col-6">
@@ -215,6 +224,7 @@
     let fx = DEFAULT_FX;
     let display = 'USD';
     let editIndex = -1;
+    let currentSort = 'date'; // Default sort order
 
     function save(){ localStorage.setItem(K_SUBS, JSON.stringify(subs)); }
     
@@ -228,10 +238,9 @@
         return (amount / s) * d; 
     }
 
-    // --- HELPER: CALCULATE NEXT PAYMENT DATE ---
+    // --- HELPER: CALCULATE NEXT PAYMENT DATE (DISPLAY STRING) ---
     function getNextBillDate(startDate, cycle) {
-        if (!startDate) return null; // No date set
-        
+        if (!startDate) return null; 
         let due = new Date(startDate);
         const today = new Date();
         today.setHours(0,0,0,0); 
@@ -239,15 +248,28 @@
         if (due >= today) return due.toLocaleDateString();
 
         while (due < today) {
-            if (cycle === 'monthly') {
-                due.setMonth(due.getMonth() + 1);
-            } else if (cycle === 'days30') {
-                due.setDate(due.getDate() + 30);
-            } else {
-                due.setFullYear(due.getFullYear() + 1);
-            }
+            if (cycle === 'monthly') due.setMonth(due.getMonth() + 1);
+            else if (cycle === 'days30') due.setDate(due.getDate() + 30);
+            else due.setFullYear(due.getFullYear() + 1);
         }
         return due.toLocaleDateString();
+    }
+
+    // --- HELPER: CALCULATE NEXT PAYMENT TIMESTAMP (FOR SORTING) ---
+    function getNextBillTimestamp(startDate, cycle) {
+        if (!startDate) return 9999999999999; // Items without date go to bottom
+        let due = new Date(startDate);
+        const today = new Date();
+        today.setHours(0,0,0,0); 
+
+        if (due >= today) return due.getTime();
+
+        while (due < today) {
+            if (cycle === 'monthly') due.setMonth(due.getMonth() + 1);
+            else if (cycle === 'days30') due.setDate(due.getDate() + 30);
+            else due.setFullYear(due.getFullYear() + 1);
+        }
+        return due.getTime();
     }
 
     async function fetchLiveRates() {
@@ -275,6 +297,31 @@
     }
 
     function render(){
+        // SORTING LOGIC:
+        // We sort the main 'subs' array based on currentSort preference
+        subs.sort((a, b) => {
+            if (currentSort === 'name') {
+                return a.name.localeCompare(b.name);
+            } 
+            else if (currentSort === 'priceDesc') {
+                // Convert both to USD for fair comparison
+                let valA = convert(a.cost, a.currency, 'USD');
+                let valB = convert(b.cost, b.currency, 'USD');
+                return valB - valA;
+            } 
+            else if (currentSort === 'priceAsc') {
+                let valA = convert(a.cost, a.currency, 'USD');
+                let valB = convert(b.cost, b.currency, 'USD');
+                return valA - valB;
+            } 
+            else if (currentSort === 'date') {
+                let timeA = getNextBillTimestamp(a.date, a.cycle);
+                let timeB = getNextBillTimestamp(b.date, b.cycle);
+                return timeA - timeB;
+            }
+            return 0;
+        });
+
         const activeList = $('activeList');
         const inactiveList = $('inactiveList');
         
@@ -309,7 +356,6 @@
             }
 
             const nextDate = getNextBillDate(s.date, s.cycle);
-            // Updated Date Layout: Flexbox ensures this is NOT "offside"
             const dateHTML = nextDate ? `<div style="font-size:11px; color:#eab308; display:flex; align-items:center; gap:4px;">📅 Next Bill: ${nextDate}</div>` : '';
 
             let cycleText = 'PAUSED';
@@ -324,7 +370,6 @@
             
             div.style.cssText = `display:flex; justify-content:space-between; padding: 12px; border-bottom:1px solid var(--border); color: var(--ink); align-items: center; background:${bg};`;
             
-            // --- NEW LAYOUT: STRICT FLEXBOX COLUMN ON LEFT ---
             div.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:flex-start; gap:2px;">
                     <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
@@ -376,6 +421,9 @@
         if(fx[curSel]) $('currency').value = curSel;
         if(fx[disSel]) $('displayCcy').value = disSel; else $('displayCcy').value = 'USD';
 
+        // Keep sort dropdown synced (though it's manual, good practice)
+        $('sortOrder').value = currentSort;
+
         const grid = $('fxGrid');
         grid.innerHTML = '';
         Object.keys(fx).forEach(ccy => {
@@ -406,6 +454,8 @@
     });
 
     $('displayCcy').addEventListener('change', (e) => { display = e.target.value; render(); });
+    // NEW: SORT LISTENER
+    $('sortOrder').addEventListener('change', (e) => { currentSort = e.target.value; render(); });
     $('fxUpdate').addEventListener('click', fetchLiveRates);
 
     window.delSub = function(index) {

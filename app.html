@@ -13,25 +13,30 @@
 
   <style>
     /* ===== App Specific Styles ===== */
-    /* Scoped to #sm to avoid conflicts */
     #sm {
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
       width: 100%;
-      /* FIX: Removed padding-top here as the main container handles it */
       padding: 24px 16px 56px;
       background: rgba(255, 255, 255, 0.95); 
       border-radius: 16px;
+      transition: background 0.3s, color 0.3s;
     }
 
-    .app-container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+    .app-container { max-width: 1100px; margin: 0 auto; }
 
-    /* Variables for colors */
-    :root { --bg: #f6f7f9; --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; --ring:#818cf8; }
-    #sm.sm-dark { --bg:#0b1220; --ink:#eef2ff; --muted:#cbd5e1; --card:#0f172a; --border:#23304a; --ring:#60a5fa; background: rgba(11, 18, 32, 0.9); }
+    /* Default Light Mode Variables */
+    :root { --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; }
+    
+    /* GLOBAL DARK MODE OVERRIDES */
+    /* When <body> has class 'dark-mode', update the app variables */
+    body.dark-mode #sm {
+        background: rgba(30, 30, 40, 0.95);
+        --ink: #eef2ff;
+        --muted: #94a3b8;
+        --card: #1e293b;
+        --border: #334155;
+    }
 
     /* Layout Utilities */
     #sm h1 { margin: 0 0 12px; font-size: 26px; font-weight:700; color: var(--ink); }
@@ -40,35 +45,25 @@
     #sm .sm-group { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
     
     /* Inputs & Cards */
-    #sm .sm-input, #sm .sm-select, #sm .sm-textarea {
+    #sm .sm-input, #sm .sm-select {
       background: var(--card); color: var(--ink);
       border:1px solid var(--border); border-radius:12px; padding:10px 12px; font-size:14px;
       outline:none; min-height:40px; width: 100%;
     }
     #sm .sm-card { background: var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom: 20px; box-shadow:0 8px 18px rgba(0,0,0,0.06); }
     
-    /* Buttons */
-    #sm .sm-btn { border:1px solid var(--border); background: var(--card); color: var(--ink); border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer; }
-    #sm .sm-btn.primary { background: linear-gradient(90deg, #ec4899, #06b6d4); color:#fff; border:0; }
-    #sm .sm-btn.red { background:#fee2e2; color:#b91c1c; border-color:#fecaca; }
-    
     /* Grid System */
     #sm .sm-row { display:grid; grid-template-columns: repeat(12, 1fr); gap:10px; margin-top: 10px; }
     #sm .col-12 { grid-column: span 12; }
     #sm .col-6 { grid-column: span 6; }
     #sm .col-3 { grid-column: span 3; }
-    
-    /* Responsive Grid */
+    #sm .sm-btn { border:1px solid var(--border); background: var(--card); color: var(--ink); border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer; }
+    #sm .sm-btn.primary { background: linear-gradient(90deg, #ec4899, #06b6d4); color:#fff; border:0; }
+    #sm .fx-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:10px; margin-bottom: 10px; }
+
     @media (max-width: 800px) { 
         #sm .col-6, #sm .col-3 { grid-column: span 12; } 
     }
-
-    /* FX Grid */
-    #sm .fx-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:10px; margin-bottom: 10px; }
-    #sm .fx-item { display:flex; align-items:center; gap:8px; border:1px solid var(--border); background:var(--card); padding:10px; border-radius:12px; }
-    
-    /* --- FIX: I REMOVED THE .logo RULE HERE SO IT USES THE GLOBAL ONE --- */
-
   </style>
 </head>
 <body>
@@ -96,25 +91,24 @@
           <p class="sm-sub">Track your recurring payments easily.</p>
         </div>
         <div class="sm-group">
-          <label class="sm-label" style="font-size: 12px;">Currency:</label>
+          <label class="sm-label" style="font-size: 12px; color: var(--muted)">Currency:</label>
           <select id="displayCcy" class="sm-select" style="width:auto;"></select>
-          <button id="themeToggle" class="sm-btn">🌙 Dark</button>
         </div>
       </div>
       
       <div class="sm-card" style="display:flex; gap:20px; justify-content: space-around; text-align: center;">
         <div>
             <div style="font-size:12px; color:var(--muted);">Monthly Total</div>
-            <div id="totMonthly" style="font-size:24px; font-weight:700;">$0.00</div>
+            <div id="totMonthly" style="font-size:24px; font-weight:700; color:var(--ink);">$0.00</div>
         </div>
         <div>
             <div style="font-size:12px; color:var(--muted);">Yearly Total</div>
-            <div id="totYearly" style="font-size:24px; font-weight:700;">$0.00</div>
+            <div id="totYearly" style="font-size:24px; font-weight:700; color:var(--ink);">$0.00</div>
         </div>
       </div>
 
       <section class="sm-card">
-        <h3>Add Subscription</h3>
+        <h3 style="color:var(--ink)">Add Subscription</h3>
         <div class="sm-row">
           <div class="col-6"><input id="name" class="sm-input" placeholder="Name (e.g. Netflix)" /></div>
           <div class="col-3"><input id="cost" type="number" class="sm-input" placeholder="Price" /></div>
@@ -131,12 +125,12 @@
       </section>
 
       <section class="sm-card">
-        <h3>Active Subscriptions (<span id="countActive">0</span>)</h3>
+        <h3 style="color:var(--ink)">Active Subscriptions (<span id="countActive">0</span>)</h3>
         <div id="activeList"></div>
       </section>
       
       <section class="sm-card">
-        <h3>FX Rates</h3>
+        <h3 style="color:var(--ink)">FX Rates</h3>
          <div id="fxGrid" class="fx-grid"></div>
          <button id="fxUpdate" class="sm-btn">Update Rates</button>
       </section>
@@ -144,8 +138,11 @@
     </div>
   </main>
 
+  <script src="Coursework.js"></script>
+
   <script>
   (function(){
+    // ... (This internal script logic remains exactly the same as before) ...
     const $ = (id) => document.getElementById(id);
     const K_SUBS = 'sm:subs:v2';
     const DEFAULT_FX = { USD:1, GBP:0.77, EUR:0.92, HKD:7.8, JPY:157 };
@@ -178,9 +175,9 @@
             else { mTotal += val / 12; yTotal += val; }
 
             const div = document.createElement('div');
-            div.style.cssText = "display:flex; justify-content:space-between; padding: 10px; border-bottom:1px solid #eee;";
+            div.style.cssText = "display:flex; justify-content:space-between; padding: 10px; border-bottom:1px solid var(--border); color: var(--ink)";
             div.innerHTML = `
-                <div><strong>${s.name}</strong> <br> <small>${s.cost} ${s.currency} / ${s.cycle}</small></div>
+                <div><strong>${s.name}</strong> <br> <small style="color:var(--muted)">${s.cost} ${s.currency} / ${s.cycle}</small></div>
                 <div>${fmtMoney(val, display)} <button onclick="window.delSub(${index})" style="color:red; border:none; background:none; cursor:pointer;">&times;</button></div>
             `;
             list.appendChild(div);
@@ -190,13 +187,11 @@
         $('totYearly').innerText = fmtMoney(yTotal, display);
         $('countActive').innerText = subs.length;
         
-        // Populate Selects
         const opts = Object.keys(fx).map(c => `<option value="${c}">${c}</option>`).join('');
         if($('currency').innerHTML === '') $('currency').innerHTML = opts;
         if($('displayCcy').innerHTML === '') { $('displayCcy').innerHTML = opts; $('displayCcy').value = 'USD'; }
     }
 
-    // Event Listeners
     $('addBtn').addEventListener('click', () => {
         const name = $('name').value;
         const cost = parseFloat($('cost').value);
@@ -216,7 +211,6 @@
 
     $('displayCcy').addEventListener('change', (e) => { display = e.target.value; render(); });
 
-    // Global delete function
     window.delSub = function(index) {
         if(confirm('Delete this subscription?')) {
             subs.splice(index, 1);
@@ -225,7 +219,6 @@
         }
     };
 
-    // Initial Render
     render();
   })();
   </script>

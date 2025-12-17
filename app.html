@@ -18,12 +18,10 @@
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
       width: 100%;
-      min-height: 80vh; /* Ensure it takes up space */
+      /* FIX: Removed padding-top here as the main container handles it */
       padding: 24px 16px 56px;
-      /* Semi-transparent background so text is readable over the mountain image */
-      background: rgba(255, 255, 255, 0.85); 
+      background: rgba(255, 255, 255, 0.95); 
       border-radius: 16px;
-      margin-top: 20px;
     }
 
     .app-container {
@@ -69,10 +67,12 @@
     #sm .fx-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:10px; margin-bottom: 10px; }
     #sm .fx-item { display:flex; align-items:center; gap:8px; border:1px solid var(--border); background:var(--card); padding:10px; border-radius:12px; }
     
-    .logo { width: 150px; }
+    /* --- FIX: I REMOVED THE .logo RULE HERE SO IT USES THE GLOBAL ONE --- */
+
   </style>
 </head>
 <body>
+
   <div class="header-container">
      <a href="index.html">
         <img src="images/Coursework/Untitled_Artwork.png" class="logo" alt="Logo">
@@ -88,7 +88,7 @@
      </div>
   </div>
 
-  <main class="app-container" style="margin-top: 150px; position: relative;"> 
+  <main class="main-content-spacer" style="padding-top: 160px;"> 
     <div id="sm">
       <div class="sm-top">
         <div>
@@ -140,42 +140,92 @@
          <div id="fxGrid" class="fx-grid"></div>
          <button id="fxUpdate" class="sm-btn">Update Rates</button>
       </section>
+
     </div>
   </main>
-  
+
   <script>
   (function(){
     const $ = (id) => document.getElementById(id);
     const K_SUBS = 'sm:subs:v2';
     const DEFAULT_FX = { USD:1, GBP:0.77, EUR:0.92, HKD:7.8, JPY:157 };
+    
     let subs = JSON.parse(localStorage.getItem(K_SUBS) || '[]');
-    let fx = DEFAULT_FX; let display = 'USD';
+    let fx = DEFAULT_FX;
+    let display = 'USD';
+
     function save(){ localStorage.setItem(K_SUBS, JSON.stringify(subs)); }
-    function fmtMoney(n, ccy){ return new Intl.NumberFormat('en-US', { style: 'currency', currency: ccy }).format(n); }
-    function convert(amount, src, dest){ const s = fx[src] || 1; const d = fx[dest] || 1; return (amount / s) * d; }
+    
+    function fmtMoney(n, ccy){ 
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: ccy }).format(n);
+    }
+
+    function convert(amount, src, dest){ 
+        const s = fx[src] || 1; 
+        const d = fx[dest] || 1; 
+        return (amount / s) * d; 
+    }
+
     function render(){
-        const list = $('activeList'); list.innerHTML = ''; let mTotal = 0; let yTotal = 0;
+        const list = $('activeList');
+        list.innerHTML = '';
+        let mTotal = 0;
+        let yTotal = 0;
+
         subs.forEach((s, index) => {
             const val = convert(s.cost, s.currency, display);
-            if(s.cycle === 'monthly') { mTotal += val; yTotal += val * 12; } else { mTotal += val / 12; yTotal += val; }
+            if(s.cycle === 'monthly') { mTotal += val; yTotal += val * 12; }
+            else { mTotal += val / 12; yTotal += val; }
+
             const div = document.createElement('div');
             div.style.cssText = "display:flex; justify-content:space-between; padding: 10px; border-bottom:1px solid #eee;";
-            div.innerHTML = `<div><strong>${s.name}</strong> <br> <small>${s.cost} ${s.currency} / ${s.cycle}</small></div><div>${fmtMoney(val, display)} <button onclick="window.delSub(${index})" style="color:red; border:none; background:none; cursor:pointer;">&times;</button></div>`;
+            div.innerHTML = `
+                <div><strong>${s.name}</strong> <br> <small>${s.cost} ${s.currency} / ${s.cycle}</small></div>
+                <div>${fmtMoney(val, display)} <button onclick="window.delSub(${index})" style="color:red; border:none; background:none; cursor:pointer;">&times;</button></div>
+            `;
             list.appendChild(div);
         });
-        $('totMonthly').innerText = fmtMoney(mTotal, display); $('totYearly').innerText = fmtMoney(yTotal, display); $('countActive').innerText = subs.length;
+
+        $('totMonthly').innerText = fmtMoney(mTotal, display);
+        $('totYearly').innerText = fmtMoney(yTotal, display);
+        $('countActive').innerText = subs.length;
+        
+        // Populate Selects
         const opts = Object.keys(fx).map(c => `<option value="${c}">${c}</option>`).join('');
         if($('currency').innerHTML === '') $('currency').innerHTML = opts;
         if($('displayCcy').innerHTML === '') { $('displayCcy').innerHTML = opts; $('displayCcy').value = 'USD'; }
     }
+
+    // Event Listeners
     $('addBtn').addEventListener('click', () => {
-        const name = $('name').value; const cost = parseFloat($('cost').value);
+        const name = $('name').value;
+        const cost = parseFloat($('cost').value);
         if(!name || !cost) return alert('Please enter name and cost');
-        subs.push({ name, cost, currency: $('currency').value, cycle: $('cycle').value, date: $('startDate').value });
-        save(); render(); $('name').value = ''; $('cost').value = '';
+        
+        subs.push({
+            name, 
+            cost, 
+            currency: $('currency').value, 
+            cycle: $('cycle').value,
+            date: $('startDate').value
+        });
+        save();
+        render();
+        $('name').value = ''; $('cost').value = '';
     });
+
     $('displayCcy').addEventListener('change', (e) => { display = e.target.value; render(); });
-    window.delSub = function(index) { if(confirm('Delete?')) { subs.splice(index, 1); save(); render(); } };
+
+    // Global delete function
+    window.delSub = function(index) {
+        if(confirm('Delete this subscription?')) {
+            subs.splice(index, 1);
+            save();
+            render();
+        }
+    };
+
+    // Initial Render
     render();
   })();
   </script>

@@ -10,28 +10,29 @@ body {
     min-height: 100vh;
 }
 
-/* FIXED HEADER: Transparent & No Blur */
+/* --- HEADER CONTAINER --- */
 .header-container {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100px;
     z-index: 9999;
     display: flex; align-items: center; justify-content: center;
-    background: transparent; 
+    background: transparent;
 }
 
-/* LOGO FIX: Perfectly Centered & Consistent Size */
+/* LOGO (Desktop) */
 .logo {
     position: absolute;
-    left: 40px; /* More breathing room from the edge */
-    top: 50%;   /* Move to the vertical middle */
-    transform: translateY(-50%); /* Pull it back up by half its height to center it perfectly */
-    height: 75px; /* Slightly larger fixed height for consistency */
-    width: auto;  /* calculates width automatically */
-    display: block; /* Fixes the Safari/Chrome size differences */
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 75px; 
+    width: auto;
+    display: block;
     object-fit: contain;
-    z-index: 10001; /* Ensures it sits on top of everything */
+    z-index: 10001;
 }
 
+/* NAVIGATION BUBBLE */
 .navbar {
     background: rgba(255, 255, 255, 0.9); padding: 12px 40px;
     border-radius: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -40,38 +41,29 @@ body {
 .navbar ul li a { text-decoration: none; color: #000; font-weight: 700; text-transform: uppercase; font-size: 14px; }
 .navbar ul li a:hover { color: #009688; }
 
-/* --- THE FIX: MAIN CONTENT SPACER --- */
-/* This class MUST be on the main container of every page.
-   It pushes content down 160px from the top. */
+/* --- MAIN SPACER --- */
 .main-content-spacer {
-    padding-top: 160px;
+    padding-top: 180px;
     width: 90%; max-width: 1000px;
-    margin: 0 auto; /* Centers container horizontally */
-    text-align: center; /* Centers text within */
+    margin: 0 auto;
+    text-align: center;
 }
 
-/* --- HOME PAGE SPECIFIC FIXES --- */
+/* --- HOME PAGE --- */
 .home-container {
     background: rgba(255,255,255,0.8); padding: 40px; border-radius: 20px;
-    display: inline-block; /* Wraps size to content */
+    display: inline-block;
 }
-
-/* FORCE PHOTO SIZE */
 .home-photo {
-    width: 250px !important; /* !important forces it to be this size */
-    height: 250px !important;
+    width: 250px; height: 250px;
     border-radius: 50%; border: 5px solid #fff;
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    margin: 30px auto 0 auto; /* Centers image block */
+    margin: 30px auto 0 auto;
     display: block; object-fit: cover;
 }
 
-/* --- CLOCK PAGE SPECIFIC FIXES --- */
-.clock-wrapper {
-    display: flex; flex-direction: column; align-items: center;
-    /* No extra margin needed here because .main-content-spacer handles it */
-}
-
+/* --- CLOCK PAGE --- */
+.clock-wrapper { display: flex; flex-direction: column; align-items: center; }
 #clock {
     position: relative; width: 300px; height: 300px;
     background: url('images/processed-svg-clock-baseasset-1-removebg-preview.png') no-repeat center center;
@@ -81,19 +73,49 @@ body {
 #sec { background: url('images/secondshand-removebg-preview.png') center/contain no-repeat; z-index: 3; }
 #min { background: url('images/minhand-removebg-preview.png') center/contain no-repeat; z-index: 2; }
 #hour { background: url('images/hourhand-removebg-preview.png') center/contain no-repeat; z-index: 1; }
-
-.clock-tools {
-    background: rgba(255,255,255,0.9); padding: 30px; border-radius: 20px; min-width: 350px;
-}
-/* Buttons */
+.clock-tools { background: rgba(255,255,255,0.9); padding: 30px; border-radius: 20px; min-width: 350px; }
 .buttons button { margin: 5px; padding: 10px 20px; border-radius: 20px; border: none; background: #009688; color: white; font-weight: bold; cursor: pointer;}
 .buttons button:hover { background: #00796B; }
 
-/* --- SHARED UTILS (Hobbies/Video/App) --- */
-/* These pages need the .main-content-spacer class on their container */
+/* --- UTILS --- */
 .hobbies-box, .video-container { display: flex; flex-direction: column; align-items: center; gap: 25px; }
 .hobbies-desc { background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; width: 100%; max-width: 800px; display: flex; align-items: center; text-align: left;}
 .hobbies-icon i { font-size: 40px; color: #009688; margin-right: 25px; min-width: 50px; text-align: center;}
 .hobbies-img img { max-width: 500px; width: 100%; border-radius: 15px; }
 .video-frame { width: 80%; height: 450px; border: 5px solid #fff; border-radius: 15px; }
 .to-top { position: fixed; bottom: 30px; right: 30px; background: #fff; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #009688; z-index: 3000; }
+
+/* --- MOBILE TWEAKS (The Fix for Overlap) --- */
+@media (max-width: 768px) {
+    .header-container {
+        /* On phone: Make header taller and stack items vertically */
+        height: auto;
+        flex-direction: column;
+        padding-top: 15px;
+        padding-bottom: 10px;
+        background: rgba(255,255,255,0.1); /* Slight background to see it */
+        backdrop-filter: blur(5px);
+    }
+    
+    .logo {
+        /* Put logo back in normal flow so it sits on TOP */
+        position: relative;
+        left: auto; top: auto;
+        transform: none;
+        margin-bottom: 10px;
+        height: 60px; /* Slightly smaller logo on phone */
+    }
+    
+    .navbar {
+        /* Menu sits BELOW logo */
+        padding: 8px 20px;
+        width: 90%; /* Fit nicely */
+        display: flex; justify-content: center;
+    }
+    
+    .navbar ul { gap: 15px; flex-wrap: wrap; justify-content: center; }
+    .navbar ul li a { font-size: 12px; } /* Smaller text */
+
+    /* Push content down further because header is taller now */
+    .main-content-spacer { padding-top: 240px; }
+}

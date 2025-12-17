@@ -1,27 +1,22 @@
-// --- Global Dark Mode System ---
 document.addEventListener("DOMContentLoaded", function () {
-    // 1. Check for saved theme preference
+    // --- 1. Global Dark Mode System ---
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
     }
 
-    // 2. Inject Toggle Button into Navbar
     const navbarList = document.querySelector('.navbar ul');
     if (navbarList) {
         const li = document.createElement('li');
         const btn = document.createElement('a');
         btn.href = "#";
         btn.id = "global-theme-toggle";
-        // Set icon based on current mode
         btn.textContent = document.body.classList.contains('dark-mode') ? "☀️" : "🌙";
         btn.style.cursor = "pointer";
         
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             document.body.classList.toggle('dark-mode');
-            
-            // Update Icon
             if (document.body.classList.contains('dark-mode')) {
                 btn.textContent = "☀️";
                 localStorage.setItem('theme', 'dark');
@@ -34,28 +29,29 @@ document.addEventListener("DOMContentLoaded", function () {
         li.appendChild(btn);
         navbarList.appendChild(li);
     }
+
+    // --- 2. Analog Clock Functionality ---
+    // Moved inside DOMContentLoaded so it finds the elements!
+    if (document.getElementById("sec")) {
+        setInterval(() => {
+            const now = new Date();
+            const seconds = now.getSeconds();
+            const mins = now.getMinutes();
+            const hours = now.getHours();
+            
+            const sdegree = seconds * 6;
+            const mdegree = mins * 6 + (seconds / 10);
+            const hdegree = hours * 30 + (mins / 2);
+
+            // Using standard JS instead of jQuery for better compatibility
+            document.getElementById("sec").style.transform = "rotate(" + sdegree + "deg)";
+            document.getElementById("min").style.transform = "rotate(" + mdegree + "deg)";
+            document.getElementById("hour").style.transform = "rotate(" + hdegree + "deg)";
+        }, 1000);
+    }
 });
 
-// --- Existing Clock Functionality ---
-// (Only runs if elements exist, preventing errors on other pages)
-if (document.getElementById("sec")) {
-    setInterval(() => {
-        const now = new Date();
-        const seconds = now.getSeconds();
-        const mins = now.getMinutes();
-        const hours = now.getHours();
-        
-        const sdegree = seconds * 6;
-        const mdegree = mins * 6 + (seconds / 10);
-        const hdegree = hours * 30 + (mins / 2);
-
-        $("#sec").css({ "transform": "rotate(" + sdegree + "deg)" });
-        $("#min").css({ "transform": "rotate(" + mdegree + "deg)" });
-        $("#hour").css({ "transform": "rotate(" + hdegree + "deg)" });
-    }, 1000);
-}
-
-// --- Existing Stopwatch Functionality ---
+// --- 3. Stopwatch Functionality ---
 let timer = null;
 let seconds = 0, minutes = 0, hours = 0;
 

@@ -29,7 +29,6 @@
     :root { --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; }
     
     /* GLOBAL DARK MODE OVERRIDES */
-    /* When <body> has class 'dark-mode', update the app variables */
     body.dark-mode #sm {
         background: rgba(30, 30, 40, 0.95);
         --ink: #eef2ff;
@@ -38,13 +37,11 @@
         --border: #334155;
     }
 
-    /* Layout Utilities */
     #sm h1 { margin: 0 0 12px; font-size: 26px; font-weight:700; color: var(--ink); }
     #sm p.sm-sub { margin:0; color: var(--muted); font-size:12px; }
     #sm .sm-top { display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin:14px 0 18px; }
     #sm .sm-group { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
     
-    /* Inputs & Cards */
     #sm .sm-input, #sm .sm-select {
       background: var(--card); color: var(--ink);
       border:1px solid var(--border); border-radius:12px; padding:10px 12px; font-size:14px;
@@ -52,7 +49,6 @@
     }
     #sm .sm-card { background: var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom: 20px; box-shadow:0 8px 18px rgba(0,0,0,0.06); }
     
-    /* Grid System */
     #sm .sm-row { display:grid; grid-template-columns: repeat(12, 1fr); gap:10px; margin-top: 10px; }
     #sm .col-12 { grid-column: span 12; }
     #sm .col-6 { grid-column: span 6; }
@@ -128,9 +124,14 @@
         <h3 style="color:var(--ink)">Active Subscriptions (<span id="countActive">0</span>)</h3>
         <div id="activeList"></div>
       </section>
+
+      <section class="sm-card" id="inactiveSection" style="display:none; border: 1px dashed var(--border);">
+        <h3 style="color:var(--muted)">Inactive Subscriptions (<span id="countInactive">0</span>)</h3>
+        <div id="inactiveList"></div>
+      </section>
       
       <section class="sm-card">
-        <h3 style="color:var(--ink)">Rates</h3>
+        <h3 style="color:var(--ink)">FX Rates</h3>
          <div id="fxGrid" class="fx-grid"></div>
          <button id="fxUpdate" class="sm-btn">Update Rates</button>
       </section>
@@ -191,22 +192,35 @@
     }
 
     function render(){
-        const list = $('activeList');
-        list.innerHTML = '';
+        const activeList = $('activeList');
+        const inactiveList = $('inactiveList');
+        
+        // Clear both lists
+        activeList.innerHTML = '';
+        inactiveList.innerHTML = '';
+
         let mTotal = 0;
         let yTotal = 0;
+        let actCount = 0;
+        let inactCount = 0;
 
         subs.forEach((s, index) => {
             if (typeof s.active === 'undefined') s.active = true;
 
             const val = convert(s.cost, s.currency, display);
+            
+            // Calculate Totals only for Active items
             if (s.active) {
+                actCount++;
                 if(s.cycle === 'monthly') { mTotal += val; yTotal += val * 12; }
                 else { mTotal += val / 12; yTotal += val; }
+            } else {
+                inactCount++;
             }
 
             const div = document.createElement('div');
-            const opacity = s.active ? "1" : "0.5";
+            // Dim if inactive
+            const opacity = s.active ? "1" : "0.7";
             const bg = s.active ? "transparent" : "rgba(0,0,0,0.02)";
             
             div.style.cssText = `display:flex; justify-content:space-between; padding: 12px; border-bottom:1px solid var(--border); color: var(--ink); align-items: center; opacity:${opacity}; background:${bg};`;
@@ -224,7 +238,7 @@
                     <div style="font-weight:bold; font-size:16px;">${fmtMoney(val, display)}</div>
                     
                     <div style="display:flex; gap:8px;">
-                        <button onclick="window.toggleSub(${index})" style="font-size:12px; border:1px solid var(--border); background:var(--card); color:var(--ink); padding:5px 10px; border-radius:6px; cursor:pointer; min-width: 60px;">
+                        <button onclick="window.toggleSub(${index})" style="font-size:12px; border:1px solid var(--border); background:var(--card); color:var(--ink); padding:5px 10px; border-radius:6px; cursor:pointer; min-width: 65px;">
                             ${s.active ? 'Pause' : 'Resume'}
                         </button>
 
@@ -238,12 +252,28 @@
                     </div>
                 </div>
             `;
-            list.appendChild(div);
+            
+            // SORT INTO CORRECT LIST
+            if (s.active) {
+                activeList.appendChild(div);
+            } else {
+                inactiveList.appendChild(div);
+            }
         });
 
         $('totMonthly').innerText = fmtMoney(mTotal, display);
         $('totYearly').innerText = fmtMoney(yTotal, display);
-        $('countActive').innerText = subs.filter(s => s.active).length;
+        
+        $('countActive').innerText = actCount;
+        $('countInactive').innerText = inactCount;
+
+        // Auto-Hide Inactive Section if empty
+        const inactSec = $('inactiveSection');
+        if (inactCount === 0) {
+            inactSec.style.display = 'none';
+        } else {
+            inactSec.style.display = 'block';
+        }
         
         const curSel = $('currency').value;
         const disSel = $('displayCcy').value;

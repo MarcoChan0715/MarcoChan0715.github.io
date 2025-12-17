@@ -1,8 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
     // --- 1. Global Dark Mode System ---
+    
+    // Define Paths for Logo Assets
+    // Make sure these paths match exactly where you uploaded the files!
+    const logoLight = "images/Coursework/Untitled_Artwork.png"; // Original Black Logo
+    const logoDark = "images/Coursework/White logo.png";                   // New White Logo
+
     const savedTheme = localStorage.getItem('theme');
+    const logoImg = document.querySelector('.logo'); // Find the logo image
+
+    // Apply saved theme on load
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
+        if (logoImg) logoImg.src = logoDark; 
     }
 
     const navbarList = document.querySelector('.navbar ul');
@@ -17,12 +27,16 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             document.body.classList.toggle('dark-mode');
+            
+            // Check current mode and update Icon & Logo
             if (document.body.classList.contains('dark-mode')) {
                 btn.textContent = "☀️";
                 localStorage.setItem('theme', 'dark');
+                if (logoImg) logoImg.src = logoDark; // Switch to White Logo
             } else {
                 btn.textContent = "🌙";
                 localStorage.setItem('theme', 'light');
+                if (logoImg) logoImg.src = logoLight; // Switch to Black Logo
             }
         });
 
@@ -31,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // --- 2. Analog Clock Functionality ---
-    // Moved inside DOMContentLoaded so it finds the elements!
     if (document.getElementById("sec")) {
         setInterval(() => {
             const now = new Date();
@@ -43,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const mdegree = mins * 6 + (seconds / 10);
             const hdegree = hours * 30 + (mins / 2);
 
-            // Using standard JS instead of jQuery for better compatibility
             document.getElementById("sec").style.transform = "rotate(" + sdegree + "deg)";
             document.getElementById("min").style.transform = "rotate(" + mdegree + "deg)";
             document.getElementById("hour").style.transform = "rotate(" + hdegree + "deg)";

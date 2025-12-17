@@ -119,3 +119,43 @@ body {
     /* Push content down further because header is taller now */
     .main-content-spacer { padding-top: 240px; }
 }
+
+/* ================= GLOBAL DARK MODE ================= */
+
+/* 1. Darken the Main Background */
+body.dark-mode {
+    /* Adds a dark tint over the mountain image */
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/Coursework/MountainBanner.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #e0e0e0; /* Light text */
+}
+
+/* 2. Darken White Cards (Hobbies, Clock Tools, Home Banner) */
+body.dark-mode .navbar, 
+body.dark-mode .home-container, 
+body.dark-mode .hobbies-desc, 
+body.dark-mode .title-text,
+body.dark-mode .clock-tools,
+body.dark-mode .video-container h1 {
+    background: rgba(30, 30, 30, 0.9) !important; /* Dark Grey */
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* 3. Text & Icon Colors */
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode p,
+body.dark-mode .navbar ul li a {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .navbar ul li a:hover {
+    color: #4DB6AC !important; /* Lighter Teal */
+}
+
+/* 4. Inputs & Buttons in Dark Mode */
+body.dark-mode button {
+    filter: brightness(1.1);
+}

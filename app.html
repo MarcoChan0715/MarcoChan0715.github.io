@@ -125,7 +125,7 @@
         <div id="activeList"></div>
       </section>
 
-      <section class="sm-card" id="inactiveSection" style="display:none; border: 1px dashed var(--border);">
+      <section class="sm-card" id="inactiveSection" style="display:none; border: 1px dashed var(--border); background: rgba(128,128,128,0.02);">
         <h3 style="color:var(--muted)">Inactive Subscriptions (<span id="countInactive">0</span>)</h3>
         <div id="inactiveList"></div>
       </section>
@@ -219,11 +219,12 @@
             }
 
             const div = document.createElement('div');
-            // Dim if inactive
-            const opacity = s.active ? "1" : "0.7";
-            const bg = s.active ? "transparent" : "rgba(0,0,0,0.02)";
             
-            div.style.cssText = `display:flex; justify-content:space-between; padding: 12px; border-bottom:1px solid var(--border); color: var(--ink); align-items: center; opacity:${opacity}; background:${bg};`;
+            // FIX: Removed opacity difference so buttons remain bright.
+            // Added a subtle background tint for inactive items.
+            const bg = s.active ? "transparent" : "rgba(128, 128, 128, 0.05)";
+            
+            div.style.cssText = `display:flex; justify-content:space-between; padding: 12px; border-bottom:1px solid var(--border); color: var(--ink); align-items: center; background:${bg};`;
             
             div.innerHTML = `
                 <div>

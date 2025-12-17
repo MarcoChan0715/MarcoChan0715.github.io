@@ -342,23 +342,40 @@
   <script src="Coursework.js"></script>
 
   <script>
-    // === APP LAUNCHER LOGIC ===
-    function openApp(appId) {
-        // Hide Dashboard
-        document.getElementById('dashboardView').style.display = 'none';
-        // Show App
-        document.getElementById(appId).style.display = 'block';
-    }
+    // ==========================================
+    // 1. DASHBOARD LOGIC (The "Brain" for buttons)
+    // ==========================================
+    
+    // We attach these to 'window' to make sure the HTML can see them!
+    window.openApp = function(appId) {
+        // 1. Find the Dashboard and Hide it
+        const dashboard = document.getElementById('dashboardView');
+        if(dashboard) dashboard.style.display = 'none';
 
-    function closeApp() {
-        // Hide all apps
+        // 2. Find the Specific App and Show it
+        const app = document.getElementById(appId);
+        if(app) {
+            app.style.display = 'block';
+            window.scrollTo(0, 0); // Scroll to top
+        } else {
+            console.error("Could not find app with ID:", appId);
+        }
+    };
+
+    window.closeApp = function() {
+        // 1. Hide ALL apps
         const apps = document.querySelectorAll('.app-view');
         apps.forEach(app => app.style.display = 'none');
-        // Show Dashboard
-        document.getElementById('dashboardView').style.display = 'block';
-    }
 
-    // === CLOCK LOGIC (Merged here) ===
+        // 2. Show Dashboard
+        const dashboard = document.getElementById('dashboardView');
+        if(dashboard) dashboard.style.display = 'block';
+    };
+
+
+    // ==========================================
+    // 2. CLOCK APP LOGIC
+    // ==========================================
     function updateClock() {
         const now = new Date();
         const s = now.getSeconds();
@@ -370,37 +387,47 @@
         const mDeg = m * 6 + (s/10);
         const hDeg = h * 30 + (m/2);
         
-        document.getElementById('sec').style.transform = `rotate(${sDeg}deg)`;
-        document.getElementById('min').style.transform = `rotate(${mDeg}deg)`;
-        document.getElementById('hour').style.transform = `rotate(${hDeg}deg)`;
+        const secHand = document.getElementById('sec');
+        const minHand = document.getElementById('min');
+        const hourHand = document.getElementById('hour');
+
+        if(secHand) secHand.style.transform = `rotate(${sDeg}deg)`;
+        if(minHand) minHand.style.transform = `rotate(${mDeg}deg)`;
+        if(hourHand) hourHand.style.transform = `rotate(${hDeg}deg)`;
 
         // Digital Display
-        document.getElementById('digitalTime').textContent = now.toLocaleTimeString();
+        const digi = document.getElementById('digitalTime');
+        if(digi) digi.textContent = now.toLocaleTimeString();
         
         // Date
-        const day = String(now.getDate()).padStart(2, '0');
-        const mo = String(now.getMonth()+1).padStart(2,'0');
-        const yr = now.getFullYear();
-        document.getElementById('dateDisplay').textContent = `${day}/${mo}/${yr}`;
+        const dateDisp = document.getElementById('dateDisplay');
+        if(dateDisp) {
+            const day = String(now.getDate()).padStart(2, '0');
+            const mo = String(now.getMonth()+1).padStart(2,'0');
+            const yr = now.getFullYear();
+            dateDisp.textContent = `${day}/${mo}/${yr}`;
+        }
     }
+    // Start the clock immediately
     setInterval(updateClock, 1000);
-    updateClock(); // Run immediately
+    setTimeout(updateClock, 100); 
 
     // Stopwatch Logic
     let timer = null;
     let swSec = 0, swMin = 0, swHour = 0;
 
-    function Start() {
+    window.Start = function() {
         if(timer !== null) return;
         timer = setInterval(swUpdate, 1000);
-    }
-    function Stop() {
+    };
+    window.Stop = function() {
         clearInterval(timer); timer = null;
-    }
-    function Reset() {
-        Stop(); swSec=0; swMin=0; swHour=0;
-        document.getElementById('swDisplay').textContent = "00:00:00";
-    }
+    };
+    window.Reset = function() {
+        window.Stop(); swSec=0; swMin=0; swHour=0;
+        const disp = document.getElementById('swDisplay');
+        if(disp) disp.textContent = "00:00:00";
+    };
     function swUpdate() {
         swSec++;
         if(swSec === 60) { swSec=0; swMin++; }
@@ -409,10 +436,14 @@
         const h = swHour < 10 ? "0"+swHour : swHour;
         const m = swMin < 10 ? "0"+swMin : swMin;
         const s = swSec < 10 ? "0"+swSec : swSec;
-        document.getElementById('swDisplay').textContent = `${h}:${m}:${s}`;
+        const disp = document.getElementById('swDisplay');
+        if(disp) disp.textContent = `${h}:${m}:${s}`;
     }
 
-    // === SUBSCRIPTION MANAGER LOGIC (Wrapped) ===
+
+    // ==========================================
+    // 3. SUBSCRIPTION MANAGER LOGIC
+    // ==========================================
     (function(){
         const $ = (id) => document.getElementById(id);
         const K_SUBS = 'sm:subs:v2';
@@ -470,6 +501,7 @@
 
         async function fetchLiveRates() {
             const btn = $('fxUpdate');
+            if(!btn) return;
             const originalText = btn.textContent;
             btn.textContent = "Fetching...";
             btn.disabled = true;
@@ -492,6 +524,9 @@
         }
 
         function render(){
+            // Check if element exists before doing anything
+            if(!$('activeList')) return;
+
             // Upcoming Payment
             let nearestSub = null;
             let minTime = 9999999999000;
@@ -592,7 +627,9 @@
             });
         }
 
-        $('addBtn').addEventListener('click', () => {
+        // Attach listeners safely
+        const addBtn = $('addBtn');
+        if(addBtn) addBtn.addEventListener('click', () => {
             const name = $('name').value;
             const cost = parseFloat($('cost').value);
             if(!name || isNaN(cost)) return alert('Please enter a valid name and cost');
@@ -601,10 +638,16 @@
             $('name').value = ''; $('cost').value = ''; $('startDate').value = '';
         });
 
-        $('displayCcy').addEventListener('change', (e) => { display = e.target.value; localStorage.setItem(K_CURRENCY, display); render(); });
-        $('sortOrder').addEventListener('change', (e) => { currentSort = e.target.value; localStorage.setItem(K_SORT, currentSort); render(); });
-        $('fxUpdate').addEventListener('click', fetchLiveRates);
+        const dispCcy = $('displayCcy');
+        if(dispCcy) dispCcy.addEventListener('change', (e) => { display = e.target.value; localStorage.setItem(K_CURRENCY, display); render(); });
+        
+        const sortOrd = $('sortOrder');
+        if(sortOrd) sortOrd.addEventListener('change', (e) => { currentSort = e.target.value; localStorage.setItem(K_SORT, currentSort); render(); });
+        
+        const fxBtn = $('fxUpdate');
+        if(fxBtn) fxBtn.addEventListener('click', fetchLiveRates);
 
+        // Global Window Functions for HTML Onclick
         window.delSub = function(index) { if(confirm('Delete?')) { subs.splice(index, 1); save(); render(); if(editIndex===index) window.closeEditModal(); }};
         window.toggleSub = function(index) { if (typeof subs[index].active === 'undefined') subs[index].active = true; subs[index].active = !subs[index].active; save(); render(); };
         window.openEditModal = function(index) {

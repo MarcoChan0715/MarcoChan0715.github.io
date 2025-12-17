@@ -215,16 +215,22 @@
   <script>
   (function(){
     const $ = (id) => document.getElementById(id);
+    // Keys for Local Storage
     const K_SUBS = 'sm:subs:v2';
+    const K_CURRENCY = 'sm:display_currency';
+    const K_SORT = 'sm:sort_order';
     
     // Default fallback rates
     let DEFAULT_FX = { USD:1, GBP:0.77, EUR:0.92, HKD:7.8, JPY:157, CAD:1.36, AUD:1.52, CNY:7.23 };
     
     let subs = JSON.parse(localStorage.getItem(K_SUBS) || '[]');
+    
+    // Load Saved Preferences or Default
+    let display = localStorage.getItem(K_CURRENCY) || 'USD';
+    let currentSort = localStorage.getItem(K_SORT) || 'date';
+    
     let fx = DEFAULT_FX;
-    let display = 'USD';
     let editIndex = -1;
-    let currentSort = 'date'; // Default sort order
 
     function save(){ localStorage.setItem(K_SUBS, JSON.stringify(subs)); }
     
@@ -257,7 +263,7 @@
 
     // --- HELPER: CALCULATE NEXT PAYMENT TIMESTAMP (FOR SORTING) ---
     function getNextBillTimestamp(startDate, cycle) {
-        if (!startDate) return 9999999999999; // Items without date go to bottom
+        if (!startDate) return 9999999999999; 
         let due = new Date(startDate);
         const today = new Date();
         today.setHours(0,0,0,0); 
@@ -354,7 +360,6 @@
             }
 
             const nextDate = getNextBillDate(s.date, s.cycle);
-            // Removed emoji from display
             const dateHTML = nextDate ? `<div style="font-size:11px; color:#eab308; display:flex; align-items:center; gap:4px;">Next Bill: ${nextDate}</div>` : '';
 
             let cycleText = 'PAUSED';
@@ -409,17 +414,14 @@
         const inactSec = $('inactiveSection');
         inactSec.style.display = (inactCount === 0) ? 'none' : 'block';
         
-        const curSel = $('currency').value;
-        const disSel = $('displayCcy').value;
+        // Populate Currency Dropdowns
         const opts = Object.keys(fx).sort().map(c => `<option value="${c}">${c}</option>`).join('');
-        
         $('currency').innerHTML = opts;
         $('displayCcy').innerHTML = opts;
         $('editCurrency').innerHTML = opts; 
         
-        if(fx[curSel]) $('currency').value = curSel;
-        if(fx[disSel]) $('displayCcy').value = disSel; else $('displayCcy').value = 'USD';
-
+        // Set dropdowns to saved values
+        $('displayCcy').value = display;
         $('sortOrder').value = currentSort;
 
         const grid = $('fxGrid');
@@ -451,8 +453,19 @@
         $('name').value = ''; $('cost').value = ''; $('startDate').value = '';
     });
 
-    $('displayCcy').addEventListener('change', (e) => { display = e.target.value; render(); });
-    $('sortOrder').addEventListener('change', (e) => { currentSort = e.target.value; render(); });
+    // SAVE PREFERENCES ON CHANGE
+    $('displayCcy').addEventListener('change', (e) => { 
+        display = e.target.value; 
+        localStorage.setItem(K_CURRENCY, display);
+        render(); 
+    });
+    
+    $('sortOrder').addEventListener('change', (e) => { 
+        currentSort = e.target.value; 
+        localStorage.setItem(K_SORT, currentSort);
+        render(); 
+    });
+
     $('fxUpdate').addEventListener('click', fetchLiveRates);
 
     window.delSub = function(index) {

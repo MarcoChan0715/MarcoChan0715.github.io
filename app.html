@@ -181,8 +181,7 @@
                 <div class="col-6">
                     <label style="font-size:12px; color:var(--muted);">Cycle</label>
                     <select id="editCycle" class="sm-select">
-                        <option value="monthly">Monthly (Same Date)</option>
-                        <option value="days30">Every 30 Days</option>
+                        <option value="monthly">Monthly</option>
                         <option value="yearly">Yearly</option>
                     </select>
                 </div>
@@ -237,19 +236,14 @@
         const today = new Date();
         today.setHours(0,0,0,0); 
 
-        // If the start date is in the future, that is the first bill
         if (due >= today) return due.toLocaleDateString();
 
-        // Otherwise, iterate until we pass today
         while (due < today) {
             if (cycle === 'monthly') {
-                // Standard: Same date next month
                 due.setMonth(due.getMonth() + 1);
             } else if (cycle === 'days30') {
-                // 30 Days: Exactly 30 days later
                 due.setDate(due.getDate() + 30);
             } else {
-                // Yearly
                 due.setFullYear(due.getFullYear() + 1);
             }
         }
@@ -297,19 +291,16 @@
 
             const val = convert(s.cost, s.currency, display);
             
-            // --- UPDATED TOTALS LOGIC ---
             if (s.active) {
                 actCount++;
                 if(s.cycle === 'monthly') { 
                     mTotal += val; 
                     yTotal += val * 12; 
                 } else if(s.cycle === 'days30') {
-                    // 365 days / 30 = 12.166 payments per year
                     let yearlyOccurrences = 365 / 30;
                     mTotal += (val * yearlyOccurrences) / 12;
                     yTotal += val * yearlyOccurrences;
                 } else { 
-                    // Yearly
                     mTotal += val / 12; 
                     yTotal += val; 
                 }
@@ -317,11 +308,10 @@
                 inactCount++;
             }
 
-            // Calculate Next Bill String
             const nextDate = getNextBillDate(s.date, s.cycle);
-            const dateHTML = nextDate ? `<div style="font-size:11px; color:#eab308; margin-top:4px;">📅 Next Bill: ${nextDate}</div>` : '';
+            // Updated Date Layout: Flexbox ensures this is NOT "offside"
+            const dateHTML = nextDate ? `<div style="font-size:11px; color:#eab308; display:flex; align-items:center; gap:4px;">📅 Next Bill: ${nextDate}</div>` : '';
 
-            // Handle badge text
             let cycleText = 'PAUSED';
             if (s.active) {
                 if(s.cycle === 'monthly') cycleText = 'monthly';
@@ -334,15 +324,18 @@
             
             div.style.cssText = `display:flex; justify-content:space-between; padding: 12px; border-bottom:1px solid var(--border); color: var(--ink); align-items: center; background:${bg};`;
             
+            // --- NEW LAYOUT: STRICT FLEXBOX COLUMN ON LEFT ---
             div.innerHTML = `
-                <div>
-                    <strong>${s.name}</strong> 
-                    <span style="font-size:11px; background:${s.active ? '#e0f2fe' : '#ddd'}; color:${s.active ? '#0284c7' : '#666'}; padding:2px 6px; border-radius:4px; margin-left:6px; font-weight:600;">
-                        ${cycleText}
-                    </span>
-                    <br> 
+                <div style="display:flex; flex-direction:column; align-items:flex-start; gap:2px;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <strong style="font-size:16px;">${s.name}</strong> 
+                        <span style="font-size:11px; background:${s.active ? '#e0f2fe' : '#ddd'}; color:${s.active ? '#0284c7' : '#666'}; padding:2px 6px; border-radius:4px; font-weight:600;">
+                            ${cycleText}
+                        </span>
+                    </div>
                     ${s.active ? dateHTML : ''} 
                 </div>
+
                 <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
                     <div style="font-weight:bold; font-size:16px;">${fmtMoney(s.cost, s.currency)}</div>
                     

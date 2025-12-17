@@ -20,9 +20,17 @@ body {
     backdrop-filter: blur(5px); /* Blurs background behind menu */
 }
 
+/* LOGO FIX: Perfectly Centered & Consistent Size */
 .logo {
-    position: absolute; left: 30px;
-    height: 70px; width: auto; object-fit: contain;
+    position: absolute;
+    left: 40px; /* More breathing room from the edge */
+    top: 50%;   /* Move to the vertical middle */
+    transform: translateY(-50%); /* Pull it back up by half its height to center it perfectly */
+    height: 75px; /* Slightly larger fixed height for consistency */
+    width: auto;  /* calculates width automatically */
+    display: block; /* Fixes the Safari/Chrome size differences */
+    object-fit: contain;
+    z-index: 10001; /* Ensures it sits on top of everything */
 }
 
 .navbar {

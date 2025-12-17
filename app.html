@@ -227,7 +227,7 @@
         return (amount / s) * d; 
     }
 
-    // --- NEW HELPER: CALCULATE NEXT PAYMENT DATE ---
+    // --- HELPER: CALCULATE NEXT PAYMENT DATE ---
     function getNextBillDate(startDate, cycle) {
         if (!startDate) return null; // No date set
         
@@ -307,6 +307,7 @@
             
             div.style.cssText = `display:flex; justify-content:space-between; padding: 12px; border-bottom:1px solid var(--border); color: var(--ink); align-items: center; background:${bg};`;
             
+            // --- REMOVED "Original:" LINE BELOW ---
             div.innerHTML = `
                 <div>
                     <strong>${s.name}</strong> 
@@ -314,8 +315,8 @@
                         ${s.active ? s.cycle : 'PAUSED'}
                     </span>
                     <br> 
-                    <small style="color:var(--muted)">Original: ${s.cost} ${s.currency}</small>
-                    ${s.active ? dateHTML : ''} </div>
+                    ${s.active ? dateHTML : ''} 
+                </div>
                 <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
                     <div style="font-weight:bold; font-size:16px;">${fmtMoney(val, display)}</div>
                     

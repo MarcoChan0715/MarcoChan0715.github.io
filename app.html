@@ -113,10 +113,10 @@
         <div class="sm-group">
           <label class="sm-label" style="font-size: 12px; color: var(--muted)">Sort:</label>
           <select id="sortOrder" class="sm-select" style="width:auto; margin-right: 15px;">
-             <option value="date">📅 Next Bill Date</option>
-             <option value="priceDesc">💰 Price (High to Low)</option>
-             <option value="priceAsc">💰 Price (Low to High)</option>
-             <option value="name">🔤 Name (A-Z)</option>
+             <option value="date">Next Bill Date</option>
+             <option value="priceDesc">Price (High to Low)</option>
+             <option value="priceAsc">Price (Low to High)</option>
+             <option value="name">Name (A-Z)</option>
           </select>
 
           <label class="sm-label" style="font-size: 12px; color: var(--muted)">Currency:</label>
@@ -298,13 +298,11 @@
 
     function render(){
         // SORTING LOGIC:
-        // We sort the main 'subs' array based on currentSort preference
         subs.sort((a, b) => {
             if (currentSort === 'name') {
                 return a.name.localeCompare(b.name);
             } 
             else if (currentSort === 'priceDesc') {
-                // Convert both to USD for fair comparison
                 let valA = convert(a.cost, a.currency, 'USD');
                 let valB = convert(b.cost, b.currency, 'USD');
                 return valB - valA;
@@ -356,7 +354,8 @@
             }
 
             const nextDate = getNextBillDate(s.date, s.cycle);
-            const dateHTML = nextDate ? `<div style="font-size:11px; color:#eab308; display:flex; align-items:center; gap:4px;">📅 Next Bill: ${nextDate}</div>` : '';
+            // Removed emoji from display
+            const dateHTML = nextDate ? `<div style="font-size:11px; color:#eab308; display:flex; align-items:center; gap:4px;">Next Bill: ${nextDate}</div>` : '';
 
             let cycleText = 'PAUSED';
             if (s.active) {
@@ -421,7 +420,6 @@
         if(fx[curSel]) $('currency').value = curSel;
         if(fx[disSel]) $('displayCcy').value = disSel; else $('displayCcy').value = 'USD';
 
-        // Keep sort dropdown synced (though it's manual, good practice)
         $('sortOrder').value = currentSort;
 
         const grid = $('fxGrid');
@@ -454,7 +452,6 @@
     });
 
     $('displayCcy').addEventListener('change', (e) => { display = e.target.value; render(); });
-    // NEW: SORT LISTENER
     $('sortOrder').addEventListener('change', (e) => { currentSort = e.target.value; render(); });
     $('fxUpdate').addEventListener('click', fetchLiveRates);
 

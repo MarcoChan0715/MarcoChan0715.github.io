@@ -22,7 +22,7 @@ body {
 
 .logo {
     position: absolute; left: 30px;
-    height: 70px; width: auto; object-fit: contain;
+    height: 30px; width: auto; object-fit: contain;
 }
 
 .navbar {

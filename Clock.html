@@ -1,18 +1,10 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Marco's Site</title>
+  <title>Clock</title>
   <link rel="stylesheet" href="Coursework.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Coursework.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script type="text/javascript" src="Coursework.js"></script>
+  <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="header-container">
@@ -43,7 +35,7 @@
                 <h1 id="current-time" style="font-size: 40px; margin: 10px 0;"></h1>
                 
                 <h3>Date:</h3>
-                <h4 id="date-today" style="margin-bottom: 20px; color: #555;"></h4>
+                <h4 id="date-today" style="margin-bottom: 20px;"></h4>
                 
                 <hr style="margin: 20px 0; border-top: 1px solid #eee;">
                 
@@ -58,14 +50,32 @@
             </div>
         </div>
     </div>
-    
+
+    <a href="#" class="to-top">
+        <i class="fa fa-circle-up fa-2xl"></i>
+    </a>
+
     <script>
+        // 1. Live Time Update
         const timeElement = document.getElementById("current-time");
-        setInterval(() => { timeElement.innerHTML = new Date().toLocaleTimeString(); }, 1000);
+        setInterval(() => {
+            const d = new Date();
+            timeElement.innerHTML = d.toLocaleTimeString();
+        }, 1000);
+
+        // 2. Date Display
         const dateToday = document.getElementById("date-today");
         const today = new Date(); 
-        dateToday.textContent = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+        
+        // Ensure 2 digits for day and month
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
+        const year = today.getFullYear();
+
+        // Set the text content
+        dateToday.textContent = `${day}/${month}/${year}`;
     </script>
+    
     <script src="Coursework.js"></script>
 </body>
 </html>

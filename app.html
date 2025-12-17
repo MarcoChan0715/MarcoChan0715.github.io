@@ -106,7 +106,7 @@
   <main class="main-content-spacer" style="padding-top: 160px;"> 
     <div id="sm">
       <div class="sm-top">
-        <div>
+        <div style="text-align: left;">
           <h1>Subscription Manager</h1>
           <p class="sm-sub">Track your recurring payments easily.</p>
         </div>
@@ -137,7 +137,7 @@
 
       <section id="upcomingSection" class="sm-card" style="display:none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border:none;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
+            <div style="text-align: left;">
                 <div style="font-size:12px; opacity:0.9; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Upcoming Payment</div>
                 <h2 id="upName" style="margin:0; font-size:22px; color:white;">Netflix</h2>
                 <div id="upDate" style="font-size:13px; opacity:0.9; margin-top:4px;">Due on 12/01/2026</div>
@@ -311,7 +311,6 @@
     }
 
     function render(){
-        // 1. Calculate Upcoming Payment (Nearest)
         let nearestSub = null;
         let minTime = 9999999999000;
 
@@ -331,11 +330,9 @@
             $('upName').textContent = nearestSub.name;
             $('upCost').textContent = fmtMoney(nearestSub.cost, nearestSub.currency);
             
-            // Date
             let dateObj = new Date(minTime);
             $('upDate').textContent = "Due on " + dateObj.toLocaleDateString();
 
-            // Countdown Days
             let now = new Date(); 
             now.setHours(0,0,0,0);
             let diffTime = dateObj - now;
@@ -351,7 +348,6 @@
             upSec.style.display = 'none';
         }
 
-        // 2. Sorting Logic
         subs.sort((a, b) => {
             if (currentSort === 'name') {
                 return a.name.localeCompare(b.name);

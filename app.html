@@ -142,13 +142,14 @@
 
   <script>
   (function(){
-    // ... (This internal script logic remains exactly the same as before) ...
     const $ = (id) => document.getElementById(id);
     const K_SUBS = 'sm:subs:v2';
-    const DEFAULT_FX = { USD:1, GBP:0.77, EUR:0.92, HKD:7.8, JPY:157 };
+    
+    // Default fallback rates (in case internet is down)
+    let DEFAULT_FX = { USD:1, GBP:0.77, EUR:0.92, HKD:7.8, JPY:157, CAD:1.36, AUD:1.52, CNY:7.23 };
     
     let subs = JSON.parse(localStorage.getItem(K_SUBS) || '[]');
-    let fx = DEFAULT_FX;
+    let fx = DEFAULT_FX; // Starts with default, updates later
     let display = 'USD';
 
     function save(){ localStorage.setItem(K_SUBS, JSON.stringify(subs)); }
@@ -163,35 +164,109 @@
         return (amount / s) * d; 
     }
 
+    // --- NEW: Fetch Real-Time Rates ---
+    async function fetchLiveRates() {
+        const btn = $('fxUpdate');
+        const originalText = btn.textContent;
+        btn.textContent = "Fetching Live Rates...";
+        btn.disabled = true;
+
+        try {
+            // Using Frankfurter API (Free, Open Source, No API Key needed)
+            const response = await fetch('https://api.frankfurter.app/latest?from=USD');
+            if (!response.ok) throw new Error("API Connection Failed");
+            
+            const data = await response.json();
+            
+            // API returns rates relative to USD. We merge USD:1 back in.
+            fx = { USD: 1, ...data.rates };
+            
+            render(); // Refresh the UI with new data
+            btn.textContent = "Rates Updated!";
+        } catch (error) {
+            console.error("Could not fetch rates:", error);
+            alert("Could not connect to live currency server. Using offline default rates.");
+            fx = DEFAULT_FX;
+            render();
+            btn.textContent = "Update Failed (Offline)";
+        } finally {
+            // Reset button after 2 seconds
+            setTimeout(() => { 
+                btn.textContent = originalText; 
+                btn.disabled = false; 
+            }, 2000);
+        }
+    }
+
     function render(){
+        // 1. Render Subscriptions List
         const list = $('activeList');
         list.innerHTML = '';
         let mTotal = 0;
         let yTotal = 0;
 
         subs.forEach((s, index) => {
+            // Convert cost to the selected Display Currency
             const val = convert(s.cost, s.currency, display);
+            
+            // Calculate Totals
             if(s.cycle === 'monthly') { mTotal += val; yTotal += val * 12; }
             else { mTotal += val / 12; yTotal += val; }
 
+            // Create List Item
             const div = document.createElement('div');
-            div.style.cssText = "display:flex; justify-content:space-between; padding: 10px; border-bottom:1px solid var(--border); color: var(--ink)";
+            div.style.cssText = "display:flex; justify-content:space-between; padding: 10px; border-bottom:1px solid var(--border); color: var(--ink); align-items: center;";
             div.innerHTML = `
-                <div><strong>${s.name}</strong> <br> <small style="color:var(--muted)">${s.cost} ${s.currency} / ${s.cycle}</small></div>
-                <div>${fmtMoney(val, display)} <button onclick="window.delSub(${index})" style="color:red; border:none; background:none; cursor:pointer;">&times;</button></div>
+                <div>
+                    <strong>${s.name}</strong> 
+                    <span style="font-size:12px; background:#eee; color:#555; padding:2px 6px; border-radius:4px; margin-left:8px;">${s.cycle}</span>
+                    <br> 
+                    <small style="color:var(--muted)">Original: ${s.cost} ${s.currency}</small>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-weight:bold; font-size:16px;">${fmtMoney(val, display)}</div>
+                    <button onclick="window.delSub(${index})" style="color:#ef4444; font-size:12px; border:none; background:none; cursor:pointer; margin-top:4px;">Remove</button>
+                </div>
             `;
             list.appendChild(div);
         });
 
+        // 2. Update Header Totals
         $('totMonthly').innerText = fmtMoney(mTotal, display);
         $('totYearly').innerText = fmtMoney(yTotal, display);
         $('countActive').innerText = subs.length;
         
-        const opts = Object.keys(fx).map(c => `<option value="${c}">${c}</option>`).join('');
-        if($('currency').innerHTML === '') $('currency').innerHTML = opts;
-        if($('displayCcy').innerHTML === '') { $('displayCcy').innerHTML = opts; $('displayCcy').value = 'USD'; }
+        // 3. Populate Dropdowns (Dynamic based on fetched rates)
+        // We save the current selection so it doesn't reset every time we render
+        const curSel = $('currency').value;
+        const disSel = $('displayCcy').value;
+
+        const opts = Object.keys(fx).sort().map(c => `<option value="${c}">${c}</option>`).join('');
+        $('currency').innerHTML = opts;
+        $('displayCcy').innerHTML = opts;
+        
+        // Restore selections if valid
+        if(fx[curSel]) $('currency').value = curSel;
+        if(fx[disSel]) $('displayCcy').value = disSel; else $('displayCcy').value = 'USD';
+
+        // 4. Render FX Grid (The new currency box display)
+        const grid = $('fxGrid');
+        grid.innerHTML = '';
+        Object.keys(fx).forEach(ccy => {
+            if(ccy === 'USD') return; // Skip base
+            const rate = fx[ccy];
+            // Show rate relative to USD
+            const item = document.createElement('div');
+            item.className = 'fx-item';
+            item.innerHTML = `
+                <div style="font-weight:bold; color:var(--ink);">${ccy}</div> 
+                <div style="color:var(--muted); font-size:13px;">${rate.toFixed(2)}</div>
+            `;
+            grid.appendChild(item);
+        });
     }
 
+    // Event Listeners
     $('addBtn').addEventListener('click', () => {
         const name = $('name').value;
         const cost = parseFloat($('cost').value);
@@ -210,6 +285,7 @@
     });
 
     $('displayCcy').addEventListener('change', (e) => { display = e.target.value; render(); });
+    $('fxUpdate').addEventListener('click', fetchLiveRates);
 
     window.delSub = function(index) {
         if(confirm('Delete this subscription?')) {
@@ -219,7 +295,9 @@
         }
     };
 
-    render();
+    // Initial Load
+    render(); // Show existing data first
+    fetchLiveRates(); // Then fetch real data immediately
   })();
   </script>
 </body>

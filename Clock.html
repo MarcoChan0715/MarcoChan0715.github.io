@@ -15,70 +15,64 @@
     <script type="text/javascript" src="Coursework.js"></script>
 </head>
 <body>
-<section id="banner">
-   <a href="index.html">
-     <img src="images/Coursework/Untitled_Artwork.png" class="logo">
-   </a>
-
-   <div class="navbar">
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="Hobbies.html">Hobbies</a></li>
-      <li><a href="Video.html">Video</a></li>
-      <li><a href="app.html">App</a></li>
-      <li><a href="Clock.html">Clock</a></li>
-    </ul>
-   </div>
-</section>
-
-<div style="padding-top: 20px;">
-   
-   <ul id="clock">
-         <li id="sec"></li>
-         <li id="hour"></li>
-         <li id="min"></li>
-   </ul>
-
-   <div class="clock-tools">
-        <h2>The time now is:</h2>
-        <h1 id="current-time" style="font-size: 50px; margin: 10px 0;"></h1>
-        
-        <h2>Current date:</h2>
-        <h3 id="date-today" style="margin-bottom: 20px;"></h3>
-        
-        <h4 style="color: #009688; font-size: 24px;">Stopwatch</h4>
-        <h1 id="displayTime" style="font-size: 60px; font-family: monospace;">00:00:00</h1>
-        
-        <div class="buttons">
-            <button onclick="Stop()">Stop</button>
-            <button onclick="Start()">Start</button>
-            <button onclick="Reset()">Reset</button>
+    <div class="header-container">
+        <a href="index.html">
+            <img src="images/Coursework/Untitled_Artwork.png" class="logo" alt="Logo">
+        </a>
+        <div class="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Hobbies.html">Hobbies</a></li>
+                <li><a href="Video.html">Video</a></li>
+                <li><a href="app.html">App</a></li>
+                <li><a href="Clock.html">Clock</a></li>
+            </ul>
         </div>
-   </div>
+    </div>
 
-   <a href="#" class="to-top">
-      <i class="fa fa-arrow-up fa-xl"></i>
-   </a>
-</div>
+    <div class="clock-wrapper">
+        <ul id="clock">
+            <li id="sec"></li>
+            <li id="hour"></li>
+            <li id="min"></li>
+        </ul>
 
-<script>
-    // Live Time
-    const timeElement = document.getElementById("current-time");
-    setInterval(() => {
-        const d = new Date();
-        timeElement.innerHTML = d.toLocaleTimeString();
-    }, 1000);
+        <div class="clock-tools">
+            <h3>Current Time:</h3>
+            <h1 id="current-time"></h1>
+            
+            <h3>Date:</h3>
+            <h4 id="date-today"></h4>
+            
+            <hr style="margin: 15px 0;">
+            
+            <h4 style="color: #009688;">Stopwatch</h4>
+            <h1 id="displayTime" style="font-family: monospace; font-size: 40px;">00:00:00</h1>
+            
+            <div class="buttons" style="margin-top:10px;">
+                <button onclick="Stop()" style="margin:5px;">Stop</button>
+                <button onclick="Start()" style="margin:5px;">Start</button>
+                <button onclick="Reset()" style="margin:5px;">Reset</button>
+            </div>
+        </div>
+    </div>
 
-    // Date
-    const dateToday = document.getElementById("date-today");
-    const today = new Date(); 
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0'); 
-    const year = today.getFullYear();
-    dateToday.textContent = `${day}/${month}/${year}`;
-</script>
+    <script>
+        // Live Time
+        const timeElement = document.getElementById("current-time");
+        setInterval(() => {
+            const d = new Date();
+            timeElement.innerHTML = d.toLocaleTimeString();
+        }, 1000);
 
-<script src="Coursework.js"></script>
-
+        // Date
+        const dateToday = document.getElementById("date-today");
+        const today = new Date(); 
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
+        const year = today.getFullYear();
+        dateToday.textContent = `${day}/${month}/${year}`;
+    </script>
+    <script src="Coursework.js"></script>
 </body>
 </html>

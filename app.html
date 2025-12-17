@@ -135,6 +135,20 @@
         </div>
       </div>
 
+      <section id="upcomingSection" class="sm-card" style="display:none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <div style="font-size:12px; opacity:0.9; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Upcoming Payment</div>
+                <h2 id="upName" style="margin:0; font-size:22px; color:white;">Netflix</h2>
+                <div id="upDate" style="font-size:13px; opacity:0.9; margin-top:4px;">Due on 12/01/2026</div>
+            </div>
+            <div style="text-align:right;">
+                <div id="upCost" style="font-size:26px; font-weight:700;">$13.00</div>
+                <div id="upCountdown" style="font-size:12px; background:rgba(255,255,255,0.25); padding:4px 10px; border-radius:20px; display:inline-block; margin-top:5px; font-weight:600;">In 5 days</div>
+            </div>
+        </div>
+      </section>
+
       <section class="sm-card">
         <h3 style="color:var(--ink)">Add Subscription</h3>
         <div class="sm-row">
@@ -215,17 +229,13 @@
   <script>
   (function(){
     const $ = (id) => document.getElementById(id);
-    // Keys for Local Storage
     const K_SUBS = 'sm:subs:v2';
     const K_CURRENCY = 'sm:display_currency';
     const K_SORT = 'sm:sort_order';
     
-    // Default fallback rates
     let DEFAULT_FX = { USD:1, GBP:0.77, EUR:0.92, HKD:7.8, JPY:157, CAD:1.36, AUD:1.52, CNY:7.23 };
     
     let subs = JSON.parse(localStorage.getItem(K_SUBS) || '[]');
-    
-    // Load Saved Preferences or Default
     let display = localStorage.getItem(K_CURRENCY) || 'USD';
     let currentSort = localStorage.getItem(K_SORT) || 'date';
     
@@ -244,7 +254,6 @@
         return (amount / s) * d; 
     }
 
-    // --- HELPER: CALCULATE NEXT PAYMENT DATE (DISPLAY STRING) ---
     function getNextBillDate(startDate, cycle) {
         if (!startDate) return null; 
         let due = new Date(startDate);
@@ -261,7 +270,6 @@
         return due.toLocaleDateString();
     }
 
-    // --- HELPER: CALCULATE NEXT PAYMENT TIMESTAMP (FOR SORTING) ---
     function getNextBillTimestamp(startDate, cycle) {
         if (!startDate) return 9999999999999; 
         let due = new Date(startDate);
@@ -303,7 +311,47 @@
     }
 
     function render(){
-        // SORTING LOGIC:
+        // 1. Calculate Upcoming Payment (Nearest)
+        let nearestSub = null;
+        let minTime = 9999999999000;
+
+        subs.forEach(s => {
+            if(s.active && s.date) {
+                let ts = getNextBillTimestamp(s.date, s.cycle);
+                if(ts < minTime) {
+                    minTime = ts;
+                    nearestSub = s;
+                }
+            }
+        });
+
+        const upSec = $('upcomingSection');
+        if(nearestSub) {
+            upSec.style.display = 'block';
+            $('upName').textContent = nearestSub.name;
+            $('upCost').textContent = fmtMoney(nearestSub.cost, nearestSub.currency);
+            
+            // Date
+            let dateObj = new Date(minTime);
+            $('upDate').textContent = "Due on " + dateObj.toLocaleDateString();
+
+            // Countdown Days
+            let now = new Date(); 
+            now.setHours(0,0,0,0);
+            let diffTime = dateObj - now;
+            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            let dayText = "";
+            if(diffDays === 0) dayText = "Today!";
+            else if(diffDays === 1) dayText = "Tomorrow";
+            else dayText = `In ${diffDays} days`;
+            
+            $('upCountdown').textContent = dayText;
+        } else {
+            upSec.style.display = 'none';
+        }
+
+        // 2. Sorting Logic
         subs.sort((a, b) => {
             if (currentSort === 'name') {
                 return a.name.localeCompare(b.name);
@@ -414,13 +462,11 @@
         const inactSec = $('inactiveSection');
         inactSec.style.display = (inactCount === 0) ? 'none' : 'block';
         
-        // Populate Currency Dropdowns
         const opts = Object.keys(fx).sort().map(c => `<option value="${c}">${c}</option>`).join('');
         $('currency').innerHTML = opts;
         $('displayCcy').innerHTML = opts;
         $('editCurrency').innerHTML = opts; 
         
-        // Set dropdowns to saved values
         $('displayCcy').value = display;
         $('sortOrder').value = currentSort;
 
@@ -453,7 +499,6 @@
         $('name').value = ''; $('cost').value = ''; $('startDate').value = '';
     });
 
-    // SAVE PREFERENCES ON CHANGE
     $('displayCcy').addEventListener('change', (e) => { 
         display = e.target.value; 
         localStorage.setItem(K_CURRENCY, display);

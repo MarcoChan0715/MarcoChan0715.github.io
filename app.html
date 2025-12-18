@@ -15,7 +15,6 @@
   <style>
     /* =========================================
        APP-SPECIFIC STYLES ONLY
-       (NO HEADER STYLES HERE)
        ========================================= */
     
     /* Dashboard Layout */
@@ -45,13 +44,15 @@
     /* Icon Colors */
     .icon-sub { color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
+    /* Weather Icon is now Active! */
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
     
-    /* Dark Mode Overrides for Dashboard */
+    /* Dark Mode Overrides */
     body.dark-mode .app-icon { background: #1e293b; border-color: #334155; }
     body.dark-mode .app-name { color: #e2e8f0; }
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
+    body.dark-mode .icon-weather { background: #451a03; color: #fbbf24; }
 
     /* App View & Navigation */
     .app-view { display: none; animation: slideUp 0.3s ease-out; }
@@ -75,7 +76,7 @@
     :root { --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; }
     body.dark-mode { --ink: #eef2ff; --muted: #94a3b8; --card: #1e293b; --border: #334155; }
 
-    /* Subscription Manager Styles */
+    /* ===== SUBSCRIPTION MANAGER STYLES ===== */
     #sm {
       box-sizing: border-box; font-family: 'Poppins', sans-serif;
       width: 100%; padding: 24px 16px 56px;
@@ -101,7 +102,7 @@
     .modal-box { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 1px solid var(--border); animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     @media (max-width: 800px) { #sm .col-6, #sm .col-3 { grid-column: span 12; } }
 
-    /* Clock & Pomodoro Styles */
+    /* ===== CLOCK & CUTE POMODORO STYLES ===== */
     .clock-container {
         text-align: center; background: rgba(255,255,255,0.95);
         padding: 40px; border-radius: 30px; 
@@ -153,6 +154,56 @@
     .btn-sw-start { background: #bbf7d0; color: #16a34a; }
     .btn-sw-reset { background: #e5e7eb; color: #374151; }
 
+    /* ===== WEATHER APP STYLES ===== */
+    .weather-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px; padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        max-width: 600px; margin: 0 auto;
+        position: relative;
+    }
+    body.dark-mode .weather-container { background: #1e293b; color: white; }
+
+    .search-box { display: flex; gap: 10px; margin-bottom: 25px; }
+    .weather-input {
+        flex: 1; padding: 12px 15px; border-radius: 12px;
+        border: 1px solid var(--border); background: var(--card); color: var(--ink);
+        font-size: 16px; outline: none;
+    }
+    .weather-btn {
+        padding: 12px 20px; border-radius: 12px; border: none;
+        background: #f59e0b; color: white; font-weight: bold; cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .weather-btn:hover { transform: scale(1.05); }
+
+    .weather-info { margin-top: 20px; animation: fadeIn 0.5s; display: none; /* Hidden by default */ }
+    .weather-icon { font-size: 80px; color: #f59e0b; margin-bottom: 10px; }
+    .weather-temp { font-size: 50px; font-weight: 700; margin: 0; }
+    .weather-desc { font-size: 18px; color: var(--muted); text-transform: capitalize; }
+    
+    .save-city-btn {
+        background: transparent; border: 1px solid #f59e0b; color: #f59e0b;
+        padding: 8px 16px; border-radius: 20px; margin-top: 15px; cursor: pointer;
+        font-weight: 600; font-size: 13px; transition: all 0.2s;
+    }
+    .save-city-btn:hover { background: #fffbeb; }
+    body.dark-mode .save-city-btn:hover { background: #451a03; }
+
+    /* Saved Cities Chips */
+    .saved-cities { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; justify-content: center; }
+    .city-chip {
+        background: #f3f4f6; color: #4b5563; padding: 6px 12px; border-radius: 20px;
+        font-size: 12px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .city-chip:hover { background: #e5e7eb; }
+    body.dark-mode .city-chip { background: #334155; color: #e2e8f0; }
+    body.dark-mode .city-chip:hover { background: #475569; }
+    .city-delete { color: #9ca3af; font-size: 14px; }
+    .city-delete:hover { color: #ef4444; }
+
   </style>
 </head>
 <body>
@@ -187,7 +238,7 @@
                   <i class="fa-solid fa-clock"></i>
                   <div class="app-name">Focus & Clock</div>
               </div>
-              <div class="app-icon icon-weather" style="opacity:0.6; cursor:default;">
+              <div class="app-icon icon-weather" onclick="openApp('weatherApp')">
                   <i class="fa-solid fa-cloud-sun"></i>
                   <div class="app-name">Weather</div>
               </div>
@@ -321,6 +372,34 @@
                   <button class="sw-btn btn-sw-stop" onclick="Stop()">Stop</button>
                   <button class="sw-btn btn-sw-start" onclick="Start()">Start</button>
                   <button class="sw-btn btn-sw-reset" onclick="Reset()">Reset</button>
+              </div>
+          </div>
+      </div>
+
+      <div id="weatherApp" class="app-view">
+           <div class="back-bar">
+              <button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button>
+          </div>
+          <div class="weather-container">
+              <h2 style="color:var(--ink); margin-bottom:20px;">Weather Search</h2>
+              <div class="search-box">
+                  <input type="text" id="cityInput" class="weather-input" placeholder="Enter city name (e.g. London)" onkeypress="if(event.key === 'Enter') getWeather()">
+                  <button class="weather-btn" onclick="getWeather()"><i class="fa-solid fa-search"></i></button>
+              </div>
+
+              <div id="weatherResult" class="weather-info">
+                  <div id="wIcon" class="weather-icon"><i class="fa-solid fa-cloud"></i></div>
+                  <h3 id="wCity" style="margin:0; color:var(--ink);">London</h3>
+                  <div id="wTemp" class="weather-temp">15°C</div>
+                  <div id="wDesc" class="weather-desc">Cloudy</div>
+                  
+                  <button class="save-city-btn" onclick="saveCurrentCity()">❤️ Save City</button>
+              </div>
+
+              <div style="margin-top:40px; text-align:left;">
+                  <h4 style="color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Saved Cities</h4>
+                  <div id="savedCitiesList" class="saved-cities">
+                      </div>
               </div>
           </div>
       </div>
@@ -497,6 +576,93 @@
     window.saveEdit = function() { if(editIndex === -1) return; const name = $('editName').value; const cost = parseFloat($('editCost').value); if(!name || isNaN(cost)) return alert('Name and Price are required'); subs[editIndex].name = name; subs[editIndex].cost = cost; subs[editIndex].currency = $('editCurrency').value; subs[editIndex].cycle = $('editCycle').value; subs[editIndex].date = $('editDate').value; save(); render(); window.closeEditModal(); };
     render(); fetchLiveRates(); 
   })();
+  </script>
+
+  <script>
+    let savedCities = JSON.parse(localStorage.getItem('sm:savedCities') || '[]');
+    let currentCityData = null;
+
+    async function getWeather(cityName = null) {
+        const input = document.getElementById('cityInput');
+        const city = cityName || input.value;
+        if(!city) return;
+
+        // 1. Get Lat/Lon (Geocoding API - Open Meteo is free)
+        try {
+            const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`);
+            const geoData = await geoRes.json();
+            
+            if(!geoData.results) { alert("City not found"); return; }
+            
+            const { latitude, longitude, name, country } = geoData.results[0];
+            
+            // 2. Get Weather
+            const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+            const wData = await weatherRes.json();
+            
+            displayWeather(name, wData.current_weather);
+            currentCityData = name; // Store for saving
+            input.value = ''; // Clear input
+        } catch(e) {
+            console.error(e);
+            alert("Could not fetch weather.");
+        }
+    }
+
+    function displayWeather(city, weather) {
+        document.getElementById('weatherResult').style.display = 'block';
+        document.getElementById('wCity').textContent = city;
+        document.getElementById('wTemp').textContent = `${weather.temperature}°C`;
+        
+        // Map WMO codes to icons/text
+        const code = weather.weathercode;
+        let icon = 'fa-sun'; let desc = 'Clear';
+        
+        if(code >= 1 && code <= 3) { icon = 'fa-cloud'; desc = 'Cloudy'; }
+        else if(code >= 45 && code <= 48) { icon = 'fa-smog'; desc = 'Foggy'; }
+        else if(code >= 51 && code <= 67) { icon = 'fa-cloud-rain'; desc = 'Rainy'; }
+        else if(code >= 71 && code <= 77) { icon = 'fa-snowflake'; desc = 'Snow'; }
+        else if(code >= 95) { icon = 'fa-bolt'; desc = 'Thunderstorm'; }
+        
+        document.getElementById('wIcon').innerHTML = `<i class="fa-solid ${icon}"></i>`;
+        document.getElementById('wDesc').textContent = desc;
+    }
+
+    function saveCurrentCity() {
+        if(!currentCityData) return;
+        if(!savedCities.includes(currentCityData)) {
+            savedCities.push(currentCityData);
+            localStorage.setItem('sm:savedCities', JSON.stringify(savedCities));
+            renderSavedCities();
+        }
+    }
+
+    function deleteCity(city, event) {
+        event.stopPropagation(); // Prevent clicking the city chip
+        savedCities = savedCities.filter(c => c !== city);
+        localStorage.setItem('sm:savedCities', JSON.stringify(savedCities));
+        renderSavedCities();
+    }
+
+    function renderSavedCities() {
+        const list = document.getElementById('savedCitiesList');
+        list.innerHTML = '';
+        savedCities.forEach(city => {
+            const chip = document.createElement('div');
+            chip.className = 'city-chip';
+            chip.onclick = () => getWeather(city);
+            chip.innerHTML = `
+                ${city} 
+                <span class="city-delete" onclick="deleteCity('${city}', event)">
+                    <i class="fa-solid fa-times"></i>
+                </span>
+            `;
+            list.appendChild(chip);
+        });
+    }
+
+    // Load saved cities on start
+    renderSavedCities();
   </script>
 </body>
 </html>

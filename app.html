@@ -14,10 +14,10 @@
 
   <style>
     /* =========================================
-       APP-SPECIFIC STYLES
+       APP-SPECIFIC STYLES ONLY
        ========================================= */
     
-    /* Global Reset */
+    /* Global Reset for App Content */
     body { font-family: 'Poppins', sans-serif; }
     * { box-sizing: border-box; }
 
@@ -50,7 +50,7 @@
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
     
-    /* Dark Mode Overrides */
+    /* Dark Mode Overrides for Dashboard */
     body.dark-mode .app-icon { background: #1e293b; border-color: #334155; }
     body.dark-mode .app-name { color: #e2e8f0; }
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
@@ -157,19 +157,21 @@
     .btn-sw-start { background: #bbf7d0; color: #16a34a; }
     .btn-sw-reset { background: #e5e7eb; color: #374151; }
 
-    /* ===== WEATHER APP STYLES (FIXED) ===== */
+    /* ===== WEATHER APP STYLES (WIDESCREEN + AUTOCOMPLETE) ===== */
     .weather-container {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 30px; padding: 30px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         max-width: 1000px;
         margin: 0 auto;
-        /* Ensure the box itself handles overflow just in case */
-        overflow: hidden; 
+        overflow: visible; /* Need visible for suggestion dropdown */
+        position: relative;
     }
     body.dark-mode .weather-container { background: #1e293b; color: white; }
 
-    .search-box { display: flex; gap: 10px; margin-bottom: 30px; max-width: 500px; margin-left:auto; margin-right:auto; }
+    .search-wrapper { position: relative; max-width: 500px; margin: 0 auto 30px; }
+    
+    .search-box { display: flex; gap: 10px; }
     .weather-input {
         flex: 1; padding: 12px 20px; border-radius: 50px;
         border: 1px solid var(--border); background: var(--card); color: var(--ink);
@@ -181,6 +183,24 @@
         transition: transform 0.2s;
     }
     .weather-btn:hover { transform: scale(1.05); }
+
+    /* SUGGESTIONS DROPDOWN */
+    .suggestions-list {
+        position: absolute; top: 100%; left: 0; right: 0;
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 12px; margin-top: 5px;
+        max-height: 200px; overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        z-index: 100;
+        display: none; /* Hidden by default */
+    }
+    .suggestion-item {
+        padding: 10px 15px; cursor: pointer; text-align: left;
+        font-size: 14px; border-bottom: 1px solid rgba(0,0,0,0.05);
+        color: var(--ink);
+    }
+    .suggestion-item:hover { background: rgba(0,0,0,0.03); }
+    body.dark-mode .suggestion-item:hover { background: rgba(255,255,255,0.05); }
 
     /* GRID LAYOUT */
     .weather-content-grid {
@@ -206,12 +226,8 @@
     .weather-temp { font-size: 70px; font-weight: 700; margin: 0; line-height: 1; }
     .weather-desc { font-size: 20px; color: var(--muted); text-transform: capitalize; margin-bottom: 20px; }
 
-    /* RIGHT COL - FIXED OVERFLOW HERE */
-    .forecast-section { 
-        text-align: left; 
-        /* CRITICAL FIX: prevents horizontal scrolling blowout */
-        min-width: 0; 
-    }
+    /* RIGHT COL */
+    .forecast-section { text-align: left; min-width: 0; }
 
     .rain-alert {
         background: #eff6ff; color: #1d4ed8; padding: 15px;
@@ -223,7 +239,7 @@
 
     .hourly-scroll {
         display: flex; gap: 15px; 
-        overflow-x: auto; /* Allow scrolling */
+        overflow-x: auto; 
         padding-bottom: 15px; margin-bottom: 25px; 
         scroll-behavior: smooth;
     }
@@ -443,9 +459,13 @@
           
           <div class="weather-container">
               <h2 style="color:var(--ink); margin-bottom:10px;">Weather Search</h2>
-              <div class="search-box">
-                  <input type="text" id="cityInput" class="weather-input" placeholder="Enter city name (e.g. London)" onkeypress="if(event.key === 'Enter') getWeather()">
-                  <button class="weather-btn" onclick="getWeather()"><i class="fa-solid fa-search"></i></button>
+              
+              <div class="search-wrapper">
+                  <div class="search-box">
+                      <input type="text" id="cityInput" class="weather-input" placeholder="Enter city name (e.g. London)" onkeyup="handleInput(event)">
+                      <button class="weather-btn" onclick="getWeather()"><i class="fa-solid fa-search"></i></button>
+                  </div>
+                  <div id="suggestionsList" class="suggestions-list"></div>
               </div>
 
               <div id="weatherResult" class="weather-content-grid">
@@ -652,8 +672,8 @@
   <script>
     let savedCities = JSON.parse(localStorage.getItem('sm:savedCities') || '[]');
     let currentCityData = null;
+    let debounceTimer;
 
-    // Helper to get Icon
     function getWeatherIcon(code) {
         if (code >= 0 && code <= 2) return 'fa-sun';
         if (code >= 3 && code <= 48) return 'fa-cloud';
@@ -663,6 +683,60 @@
         if (code >= 95) return 'fa-bolt';
         return 'fa-cloud';
     }
+
+    // AUTOCOMPLETE HANDLER
+    function handleInput(event) {
+        if (event.key === 'Enter') {
+            getWeather();
+            document.getElementById('suggestionsList').style.display = 'none';
+            return;
+        }
+        
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            fetchSuggestions(event.target.value);
+        }, 300);
+    }
+
+    async function fetchSuggestions(query) {
+        const list = document.getElementById('suggestionsList');
+        if (query.length < 2) {
+            list.style.display = 'none';
+            return;
+        }
+
+        try {
+            const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5&language=en&format=json`);
+            const data = await res.json();
+            
+            if (data.results) {
+                list.innerHTML = '';
+                list.style.display = 'block';
+                data.results.forEach(city => {
+                    const item = document.createElement('div');
+                    item.className = 'suggestion-item';
+                    item.textContent = `${city.name}, ${city.country}`;
+                    item.onclick = () => {
+                        document.getElementById('cityInput').value = city.name;
+                        list.style.display = 'none';
+                        getWeather(city.name);
+                    };
+                    list.appendChild(item);
+                });
+            } else {
+                list.style.display = 'none';
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    // Close suggestions if clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-wrapper')) {
+            document.getElementById('suggestionsList').style.display = 'none';
+        }
+    });
 
     async function getWeather(cityName = null) {
         const input = document.getElementById('cityInput');

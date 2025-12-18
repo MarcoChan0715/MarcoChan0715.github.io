@@ -168,14 +168,6 @@
     #qrcode img { display: block; margin: 0 auto; }
     .qr-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; margin-bottom: 15px; }
 
-    /* DROP WINDOW STYLE */
-    .drop-window {
-        border: 2px dashed #cbd5e1; border-radius: 16px; padding: 30px;
-        margin-top: 20px; color: var(--muted); cursor: pointer;
-        transition: all 0.2s; background: rgba(0,0,0,0.01);
-    }
-    .drop-window:hover, .drop-window.dragover { border-color: #8b5cf6; background: rgba(139, 92, 246, 0.05); color: #8b5cf6; }
-
     /* === BACK TO TOP BUTTON === */
     .back-to-top {
         position: fixed; bottom: 30px; right: 30px;
@@ -322,7 +314,7 @@
               <div class="app-icon icon-clock" onclick="openApp('clockApp')"><i class="fa-solid fa-clock"></i><div class="app-name">Focus & Clock</div></div>
               <div class="app-icon icon-weather" onclick="openApp('weatherApp')"><i class="fa-solid fa-cloud-sun"></i><div class="app-name">Weather</div></div>
               <div class="app-icon icon-bus" onclick="openApp('busApp')"><i class="fa-solid fa-bus"></i><div class="app-name">Bus Board</div></div>
-              <div class="app-icon icon-food" onclick="openApp('foodApp')"><i class="fa-solid fa-utensils"></i><div class="app-name">What to Eat</div></div>
+              <div class="app-icon icon-food" onclick="openApp('foodApp')"><i class="fa-solid fa-utensils"></i><div class="app-name">What to Eat (Coming Soon)</div></div>
               <div class="app-icon icon-qr" onclick="openApp('qrApp')"><i class="fa-solid fa-qrcode"></i><div class="app-name">Link 2 Phone</div></div>
           </div>
       </div>
@@ -572,12 +564,6 @@
                   <button class="secondary-btn" onclick="clearQR()" style="width:auto;" title="Clear"><i class="fa-solid fa-trash"></i></button>
               </div>
 
-              <div id="dropWindow" class="drop-window">
-                  <i class="fa-solid fa-cloud-arrow-up"></i>
-                  <p>Drop file or Click to load text/link</p>
-                  <small>Accepts .txt files or text contents</small>
-              </div>
-
               <div id="qrcode" class="qr-box">
                   <div style="color:var(--muted); font-size:12px;">QR Code will appear here</div>
               </div>
@@ -653,58 +639,12 @@
         document.getElementById('qrInput').value = "";
         document.getElementById('qrcode').innerHTML = '<div style="color:var(--muted); font-size:12px;">QR Code will appear here</div>';
     }
-
-    // DROP ZONE LOGIC
-    const dropZone = document.getElementById('dropWindow');
-    const qrInput = document.getElementById('qrInput');
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-        });
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        if (files.length > 0) {
-            const file = files[0];
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                qrInput.value = event.target.result;
-                generateQR();
-            };
-            reader.readAsText(file);
-        }
-    });
-
-    dropZone.addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.onchange = (e) => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                qrInput.value = event.target.result;
-                generateQR();
-            };
-            reader.readAsText(file);
-        };
-        input.click();
-    });
   </script>
 
   <script>
     let markers = [];
 
+    // List of reliable Overpass API Servers
     const OVERPASS_SERVERS = [
         "https://overpass-api.de/api/interpreter",
         "https://interpreter.lazurel.openstreetmap.org/api/interpreter",
@@ -734,6 +674,7 @@
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
                 initMap(lat, lon);
+                // Start search with the first server
                 searchOverpassRecursive(lat, lon, query, 0);
             }, () => {
                 alert("Location access denied. Showing Brighton.");
@@ -746,6 +687,7 @@
         }
     }
 
+    // Recursive function to try multiple servers if one fails
     async function searchOverpassRecursive(lat, lon, query, serverIndex) {
         if (serverIndex >= OVERPASS_SERVERS.length) {
             alert("All map servers are busy right now. Please try again in a minute.");
@@ -758,6 +700,7 @@
 
         const overpassUrl = OVERPASS_SERVERS[serverIndex];
         
+        // Optimized Query (Radius 2000m, Timeout 25s)
         const overpassQuery = `
             [out:json][timeout:25];
             (
@@ -794,6 +737,7 @@
 
         } catch (error) {
             console.warn(`Server ${serverIndex} failed, trying next...`);
+            // Automatically try the next server in the list
             searchOverpassRecursive(lat, lon, query, serverIndex + 1);
         }
     }
@@ -940,11 +884,30 @@
   </script>
 
   <script>
+    let savedCities = JSON.parse(localStorage.getItem('sm:savedCities') || '[]');
+    let currentCityData = null; let debounceTimer;
+    function getWeatherIcon(code) { if (code >= 0 && code <= 2) return 'fa-sun'; if (code >= 3 && code <= 48) return 'fa-cloud'; if (code >= 51 && code <= 67) return 'fa-cloud-rain'; if (code >= 71 && code <= 77) return 'fa-snowflake'; if (code >= 80 && code <= 82) return 'fa-cloud-showers-heavy'; if (code >= 95) return 'fa-bolt'; return 'fa-cloud'; }
+    function handleInput(event) { if (event.key === 'Enter') { getWeather(); document.getElementById('suggestionsList').style.display = 'none'; return; } clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { fetchSuggestions(event.target.value); }, 300); }
+    async function fetchSuggestions(query) { const list = document.getElementById('suggestionsList'); if (query.length < 2) { list.style.display = 'none'; return; } try { const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=10&language=en&format=json`); const data = await res.json(); if (data.results) { list.innerHTML = ''; list.style.display = 'block'; const seen = new Set(); data.results.forEach(city => { let displayName = `${city.name}`; if (city.name === "Hong Kong" && (!city.country || city.country_code === "HK")) displayName = "Hong Kong, China"; else if (city.name === "Macau" && (!city.country || city.country_code === "MO")) displayName = "Macau, China"; else if (city.country) displayName = `${city.name}, ${city.country}`; if (!seen.has(displayName)) { seen.add(displayName); const item = document.createElement('div'); item.className = 'suggestion-item'; item.textContent = displayName; item.onclick = () => { document.getElementById('cityInput').value = city.name; list.style.display = 'none'; getWeatherByCoords(city.latitude, city.longitude, displayName.split(',')[0]); }; list.appendChild(item); } }); } else { list.style.display = 'none'; } } catch (e) { console.error(e); } }
+    document.addEventListener('click', function(e) { if (!e.target.closest('.search-wrapper')) document.getElementById('suggestionsList').style.display = 'none'; });
+    async function getWeather(cityName = null) { const input = document.getElementById('cityInput'); const city = cityName || input.value; if(!city) return; try { const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`); const geoData = await geoRes.json(); if(!geoData.results) { alert("City not found"); return; } const { latitude, longitude, name } = geoData.results[0]; getWeatherByCoords(latitude, longitude, name); input.value = ''; } catch(e) { console.error(e); } }
+    async function getWeatherByCoords(lat, lon, name) { try { const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`); const wData = await weatherRes.json(); displayFullWeather(name, wData); currentCityData = name; } catch(e) { console.error(e); } }
+    function displayFullWeather(city, data) { document.getElementById('weatherResult').style.display = 'grid'; const current = data.current; if(city === "Hong Kong") city = "Hong Kong"; document.getElementById('wCity').textContent = city; document.getElementById('wTemp').textContent = `${Math.round(current.temperature_2m)}°C`; document.getElementById('wIcon').innerHTML = `<i class="fa-solid ${getWeatherIcon(current.weather_code)}"></i>`; document.getElementById('wDesc').textContent = getDesc(current.weather_code); const hScroll = document.getElementById('hourlyScroll'); hScroll.innerHTML = ''; const currentHour = new Date().getHours(); for(let i=currentHour; i < currentHour + 24; i++) { if(i >= data.hourly.temperature_2m.length) break; const temp = Math.round(data.hourly.temperature_2m[i]); const code = data.hourly.weather_code[i]; hScroll.innerHTML += `<div class="hourly-card"><div style="margin-bottom:5px; font-weight:600;">${i%24}:00</div><i class="fa-solid ${getWeatherIcon(code)}" style="font-size:20px; color:#f59e0b; margin-bottom:5px;"></i><div style="font-weight:700;">${temp}°</div></div>`; } const dList = document.getElementById('dailyList'); dList.innerHTML = ''; const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; for(let i=0; i<3; i++) { const date = new Date(data.daily.time[i]); const dayName = i===0 ? "Today" : days[date.getDay()]; const min = Math.round(data.daily.temperature_2m_min[i]); const max = Math.round(data.daily.temperature_2m_max[i]); dList.innerHTML += `<div class="daily-row"><div style="width:80px;">${dayName}</div><div style="flex:1; text-align:center;"><i class="fa-solid ${getWeatherIcon(data.daily.weather_code[i])}" style="color:#f59e0b;"></i></div><div>${max}° / ${min}°</div></div>`; } }
+    function getDesc(code) { if(code <= 2) return "Cloudy/Clear"; if(code <= 67) return "Rainy"; return "Stormy"; }
+    function saveCurrentCity() { if(!currentCityData) return; if(!savedCities.includes(currentCityData)) { savedCities.push(currentCityData); localStorage.setItem('sm:savedCities', JSON.stringify(savedCities)); renderSavedCities(); } }
+    function deleteCity(city, event) { event.stopPropagation(); savedCities = savedCities.filter(c => c !== city); localStorage.setItem('sm:savedCities', JSON.stringify(savedCities)); renderSavedCities(); }
+    async function renderSavedCities() { const list = document.getElementById('savedCitiesList'); list.innerHTML = ''; savedCities.forEach(city => { const div = document.createElement('div'); div.className = 'saved-city-card'; div.onclick = () => getWeather(city); div.innerHTML = `<div><div class="saved-city-name">${city}</div></div><div style="display:flex; align-items:center;"><span class="saved-city-temp" id="mini-temp-${city.replace(/\s/g, '')}">--°</span><button class="delete-saved-btn" onclick="deleteCity('${city}', event)"><i class="fa-solid fa-trash"></i></button></div>`; list.appendChild(div); fetchMiniTemp(city); }); }
+    async function fetchMiniTemp(city) { try { const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`); const geoData = await geoRes.json(); if(!geoData.results) return; const { latitude, longitude } = geoData.results[0]; const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`); const wData = await wRes.json(); const tempEl = document.getElementById(`mini-temp-${city.replace(/\s/g, '')}`); if(tempEl) tempEl.textContent = `${Math.round(wData.current_weather.temperature)}°`; } catch(e) {} }
+    renderSavedCities();
+  </script>
+
+  <script>
     function loadBusCreds() {
         document.getElementById('busAppId').value = localStorage.getItem('bus_app_id') || '';
         document.getElementById('busAppKey').value = localStorage.getItem('bus_app_key') || '';
     }
 
+    // Helper for Quick Buttons
     function setStop(code) {
         document.getElementById('busStopCode').value = code;
     }
@@ -960,24 +923,34 @@
             return;
         }
 
+        // Save credentials
         localStorage.setItem('bus_app_id', appId);
         localStorage.setItem('bus_app_key', appKey);
 
         results.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading departures...</div>';
 
         try {
+            // TransportAPI Endpoint
             const url = `https://transportapi.com/v3/uk/bus/stop/${stopCode}/live.json?app_id=${appId}&app_key=${appKey}&group=route&nextbuses=yes`;
+            
             const response = await fetch(url);
             const data = await response.json();
+
             if (data.error) throw new Error(data.error);
 
             results.innerHTML = '';
+            
             if (data.departures) {
                 let allBuses = [];
                 Object.values(data.departures).forEach(route => {
                     route.forEach(bus => allBuses.push(bus));
                 });
-                allBuses.sort((a, b) => (a.best_departure_estimate || a.aimed_departure_time).localeCompare(b.best_departure_estimate || b.aimed_departure_time));
+
+                allBuses.sort((a, b) => {
+                    const timeA = a.best_departure_estimate || a.aimed_departure_time;
+                    const timeB = b.best_departure_estimate || b.aimed_departure_time;
+                    return timeA.localeCompare(timeB);
+                });
 
                 if (allBuses.length === 0) {
                     results.innerHTML = '<div style="text-align:center; color:var(--muted);">No buses found soon.</div>';
@@ -988,12 +961,17 @@
                     const time = bus.best_departure_estimate || bus.aimed_departure_time;
                     const div = document.createElement('div');
                     div.className = 'bus-card';
-                    div.innerHTML = `<div class="bus-route">${bus.line_name}</div><div class="bus-dest">${bus.direction || 'Unknown'}</div><div class="bus-time">${time}</div>`;
+                    div.innerHTML = `
+                        <div class="bus-route">${bus.line_name}</div>
+                        <div class="bus-dest">${bus.direction || 'Unknown'}</div>
+                        <div class="bus-time">${time}</div>
+                    `;
                     results.appendChild(div);
                 });
             } else {
                 results.innerHTML = '<div style="text-align:center;">No live data available.</div>';
             }
+
         } catch (error) {
             results.innerHTML = `<div style="text-align:center; color:#ef4444;">Error: ${error.message}<br><small>Check API Limit or Stop Code</small></div>`;
         }

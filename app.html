@@ -62,12 +62,12 @@
     body.dark-mode .icon-notes { background: #064e3b; color: #34d399; }
     body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
 
-    /* Navigation - FIXED UNRESPONSIVE BUTTON */
+    /* Navigation */
     .app-view { display: none; animation: slideUp 0.3s ease-out; }
     .back-bar { 
         padding: 10px 0 20px; 
         position: relative; 
-        z-index: 100; /* Forces button above header overlap */
+        z-index: 100; 
     }
     
     .back-btn {
@@ -86,8 +86,6 @@
     body.dark-mode { --ink: #eef2ff; --muted: #94a3b8; --card: #1e293b; --border: #334155; }
 
     /* === PREMIUM BUTTON STYLES === */
-    
-    /* 1. Primary Action (Save, Add) */
     .action-btn {
         background: linear-gradient(135deg, #6366f1, #8b5cf6);
         color: white; border: none; padding: 12px 24px;
@@ -96,14 +94,9 @@
         box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
         font-size: 14px;
     }
-    .action-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3);
-        filter: brightness(1.1);
-    }
+    .action-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3); filter: brightness(1.1); }
     .action-btn:active { transform: translateY(0); }
 
-    /* 2. Secondary/Cancel Button */
     .secondary-btn {
         background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0;
         padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer;
@@ -113,19 +106,29 @@
     body.dark-mode .secondary-btn { background: #334155; color: #cbd5e1; border-color: #475569; }
     body.dark-mode .secondary-btn:hover { background: #475569; }
 
-    /* 3. FX Update Button */
     .fx-btn {
         background: linear-gradient(135deg, #10b981, #059669);
         color: white; border: none; padding: 12px;
         border-radius: 12px; font-weight: 600; cursor: pointer;
         width: 100%; margin-top: 15px; font-size: 14px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .fx-btn:hover { transform: scale(1.02); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3); }
 
-    /* 4. Stopwatch Buttons */
+    /* === BACK TO TOP BUTTON === */
+    .back-to-top {
+        position: fixed; bottom: 30px; right: 30px;
+        width: 50px; height: 50px; border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white; border: none; font-size: 18px;
+        cursor: pointer; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        display: none; align-items: center; justify-content: center;
+        transition: all 0.3s ease; z-index: 200;
+    }
+    .back-to-top:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5); }
+
+    /* Stopwatch Buttons */
     .sw-controls { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
     .sw-btn {
         padding: 10px 24px; border: none; border-radius: 12px;
@@ -395,6 +398,10 @@
 
   </div>
 
+  <button id="backToTop" class="back-to-top" onclick="scrollToTop()">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
   <script src="Coursework.js"></script>
 
   <script>
@@ -407,6 +414,22 @@
         document.querySelectorAll('.app-view').forEach(app => app.style.display = 'none');
         document.getElementById('dashboardView').style.display = 'block';
     };
+  </script>
+
+  <script>
+    window.onscroll = function() {
+        const btn = document.getElementById('backToTop');
+        const subApp = document.getElementById('subManager');
+        // Check if Sub Manager is active AND we scrolled down
+        if (subApp.style.display === 'block' && (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300)) {
+            btn.style.display = "flex";
+        } else {
+            btn.style.display = "none";
+        }
+    };
+    function scrollToTop() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
   </script>
 
   <script>

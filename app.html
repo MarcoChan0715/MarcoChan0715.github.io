@@ -13,43 +13,54 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== 1. GLOBAL RESETS & NAVBAR FIXES ===== */
-    * {
-        box-sizing: border-box; /* Fixes padding issues */
-    }
-    
-    body {
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
-        padding: 0;
-    }
+    /* ===== 1. STRICT GLOBAL RESETS ===== */
+    * { box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
 
-    /* Force the logo to stay small so it doesn't stretch the navbar */
-    .header-container .logo {
-        height: 50px; /* Adjust this number to match your other pages if needed */
-        width: auto;
-        object-fit: contain;
-    }
-
-    /* Ensure header aligns perfectly */
+    /* ===== 2. HEADER FIXES ===== */
+    /* Forces the navbar to be a fixed height line */
     .header-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 40px; /* Standard spacing */
-        background: white; /* Ensure background matches */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Subtle shadow */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        height: 80px !important; /* Fixed height matches standard headers */
+        padding: 0 40px !important;
+        background: var(--card);
         position: fixed;
         width: 100%;
         top: 0;
         z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    
-    /* Dark mode header fix */
-    body.dark-mode .header-container {
-        background: #0f172a;
-        border-bottom: 1px solid #334155;
+
+    /* Logo Text Styling */
+    .logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--ink);
+        text-decoration: none;
+        letter-spacing: -0.5px;
     }
+
+    /* Navigation Links */
+    .navbar ul {
+        display: flex;
+        gap: 30px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+    }
+    .navbar a {
+        text-decoration: none;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: 14px;
+        transition: color 0.2s;
+        text-transform: uppercase;
+    }
+    .navbar a:hover { color: #8b5cf6; }
+    .navbar a.active { color: #8b5cf6; }
 
     /* ===== DASHBOARD STYLES ===== */
     .app-container { max-width: 1100px; margin: 0 auto; padding-top: 140px; }
@@ -89,21 +100,15 @@
     .app-view { display: none; animation: slideUp 0.3s ease-out; }
     .back-bar { padding: 10px 0 20px; }
     
-    /* UPDATED BACK BUTTON STYLES */
     .back-btn {
         background: transparent; border: none; 
-        font-size: 16px; font-weight: 700; /* Bold */
-        color: #8b5cf6; /* Bright Purple */
-        cursor: pointer;
+        font-size: 16px; font-weight: 700; 
+        color: #8b5cf6; cursor: pointer;
         display: flex; align-items: center; gap: 8px;
         transition: all 0.2s ease;
     }
     body.dark-mode .back-btn { color: #a78bfa; }
-
-    .back-btn:hover { 
-        color: #6d28d9; 
-        transform: translateX(-5px); 
-    }
+    .back-btn:hover { color: #6d28d9; transform: translateX(-5px); }
     body.dark-mode .back-btn:hover { color: #c4b5fd; }
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -112,6 +117,9 @@
     /* ===== GLOBAL VARIABLES & DARK MODE ===== */
     :root { --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; }
     body.dark-mode { --ink: #eef2ff; --muted: #94a3b8; --card: #1e293b; --border: #334155; }
+    
+    /* Dark mode header background fix */
+    body.dark-mode .header-container { background: #0f172a; border-bottom: 1px solid #334155; }
 
     /* ===== SUBSCRIPTION MANAGER STYLES ===== */
     #sm {
@@ -148,43 +156,26 @@
     }
     body.dark-mode .clock-container { background: #1e293b; }
 
-    /* Digital Time */
     .digital-time { font-size: 70px; font-weight: 800; margin: 0; line-height: 1; color: var(--ink); letter-spacing: -2px; }
     .date-display { font-size: 16px; color: var(--muted); margin-bottom: 30px; font-weight: 500; text-transform: uppercase; letter-spacing: 2px; }
 
-    /* Cute Pomodoro Section */
     .pomo-box {
-        background: #fff0f3; 
-        border-radius: 30px; 
-        padding: 30px; 
-        margin: 20px 0;
-        transition: all 0.4s ease;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        background: #fff0f3; border-radius: 30px; padding: 30px; 
+        margin: 20px 0; transition: all 0.4s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     }
     body.dark-mode .pomo-box { background: #2d1b20; } 
     
     .pomo-timer { 
-        font-size: 80px; font-weight: 800; 
-        font-family: 'Poppins', sans-serif; 
-        color: #ff4d6d; 
-        line-height: 1; margin: 20px 0; 
-        text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+        font-size: 80px; font-weight: 800; font-family: 'Poppins', sans-serif; 
+        color: #ff4d6d; line-height: 1; margin: 20px 0; text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
     }
     
-    .mode-buttons {
-        background: rgba(255,255,255,0.5);
-        display: inline-flex;
-        padding: 5px;
-        border-radius: 50px;
-        margin-bottom: 10px;
-    }
+    .mode-buttons { background: rgba(255,255,255,0.5); display: inline-flex; padding: 5px; border-radius: 50px; margin-bottom: 10px; }
     body.dark-mode .mode-buttons { background: rgba(0,0,0,0.2); }
 
     .mode-btn {
-        background: transparent; border: none;
-        padding: 8px 16px; border-radius: 20px; cursor: pointer;
-        font-size: 13px; color: var(--muted); font-weight: 600;
-        transition: all 0.3s;
+        background: transparent; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer;
+        font-size: 13px; color: var(--muted); font-weight: 600; transition: all 0.3s;
     }
     .mode-btn:hover { background: rgba(0,0,0,0.05); }
     .mode-btn.active { background: #fff; color: #ff4d6d; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -193,44 +184,17 @@
     .control-btn {
         padding: 15px 40px; font-size: 18px; border-radius: 50px;
         border: none; cursor: pointer; font-weight: 700;
-        transition: transform 0.2s, box-shadow 0.2s;
-        display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 auto;
+        transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 auto;
     }
-    .control-btn:hover { transform: scale(1.05); }
-    .control-btn:active { transform: scale(0.95); }
-    
-    .btn-start { 
-        background: #ff4d6d; color: white; 
-        box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3); 
-    }
-    .btn-reset {
-        width: 40px; height: 40px; padding: 0; border-radius: 50%;
-        background: transparent; color: var(--muted); 
-        margin-left: 10px; font-size: 16px;
-    }
+    .control-btn:hover { transform: scale(1.05); } .control-btn:active { transform: scale(0.95); }
+    .btn-start { background: #ff4d6d; color: white; box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3); }
+    .btn-reset { width: 40px; height: 40px; padding: 0; border-radius: 50%; background: transparent; color: var(--muted); margin-left: 10px; font-size: 16px; }
     .btn-reset:hover { background: rgba(0,0,0,0.05); color: var(--ink); }
 
-    /* Stopwatch Styles - WITH HOVER */
     .stopwatch-display { font-size: 40px; font-family: monospace; color: #009688; margin: 10px 0; font-weight: 700; }
-    
-    .sw-btn { 
-        padding: 8px 16px; 
-        margin: 0 5px; 
-        cursor: pointer; 
-        border-radius: 12px; 
-        border: none; 
-        font-weight: bold; 
-        font-size: 13px; 
-        text-transform: uppercase;
-        transition: all 0.2s ease; 
-    }
-    
-    .sw-btn:hover {
-        transform: translateY(-3px); 
-        filter: brightness(0.95); 
-    }
+    .sw-btn { padding: 8px 16px; margin: 0 5px; cursor: pointer; border-radius: 12px; border: none; font-weight: bold; font-size: 13px; text-transform: uppercase; transition: all 0.2s ease; }
+    .sw-btn:hover { transform: translateY(-3px); filter: brightness(0.95); }
     .sw-btn:active { transform: translateY(0); }
-
     .btn-sw-stop { background: #fecaca; color: #ef4444; }
     .btn-sw-start { background: #bbf7d0; color: #16a34a; }
     .btn-sw-reset { background: #e5e7eb; color: #374151; }
@@ -240,9 +204,8 @@
 <body>
 
   <div class="header-container">
-     <a href="index.html">
-        <img src="images/Coursework/Untitled_Artwork.png" class="logo" alt="marcochan.site logo">
-     </a>
+     <a href="index.html" class="logo-text">marcochan.site</a>
+     
      <div class="navbar">
       <ul>
         <li><a href="index.html">Home</a></li>
@@ -416,7 +379,6 @@
   </script>
 
   <script>
-    // Digital Clock
     function updateClock() {
         const now = new Date();
         document.getElementById('digitalTime').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
@@ -427,7 +389,6 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // Stopwatch
     let swTimer = null; let swSec = 0, swMin = 0, swHour = 0;
     window.Start = function() { if(!swTimer) swTimer = setInterval(swUpdate, 1000); };
     window.Stop = function() { clearInterval(swTimer); swTimer = null; };
@@ -438,104 +399,57 @@
         document.getElementById('swDisplay').textContent = `${h}:${m}:${s}`;
     }
 
-    // --- CUTE POMODORO LOGIC ---
-    let pomoTime = 25 * 60; 
-    let pomoInterval = null;
-    let isRunning = false;
-    let currentMode = 'focus';
-
+    let pomoTime = 25 * 60; let pomoInterval = null; let isRunning = false; let currentMode = 'focus';
     window.switchPomoMode = function(mode) {
-        window.resetPomo(); // Stop current timer
-        currentMode = mode;
-        
-        // Update Buttons Visuals
+        window.resetPomo(); currentMode = mode;
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        
         const btns = document.querySelectorAll('.mode-btn');
         if(mode === 'focus') { btns[0].classList.add('active'); pomoTime = 25*60; }
         if(mode === 'short') { btns[1].classList.add('active'); pomoTime = 5*60; }
         if(mode === 'long')  { btns[2].classList.add('active'); pomoTime = 15*60; }
         
-        // Update UI Colors & Text
-        const box = document.getElementById('pomoBox');
-        const btn = document.getElementById('pomoStartBtn');
-        const timerTxt = document.getElementById('pomoTimer');
-
+        const box = document.getElementById('pomoBox'); const btn = document.getElementById('pomoStartBtn'); const timerTxt = document.getElementById('pomoTimer');
         if(mode === 'focus') {
-            box.style.background = "#fff0f3"; 
-            if(document.body.classList.contains('dark-mode')) box.style.background = "#2d1b20";
-            
+            box.style.background = document.body.classList.contains('dark-mode') ? "#2d1b20" : "#fff0f3"; 
             timerTxt.style.color = "#ff4d6d";
             btn.style.background = "#ff4d6d"; btn.style.boxShadow = "0 10px 20px rgba(255, 77, 109, 0.3)";
             btn.innerHTML = `<i class="fa-solid fa-play"></i> Start Focus`;
         } else {
-            box.style.background = "#f0fdf4"; 
-            if(document.body.classList.contains('dark-mode')) box.style.background = "#14281d";
-            
+            box.style.background = document.body.classList.contains('dark-mode') ? "#14281d" : "#f0fdf4"; 
             timerTxt.style.color = "#4ade80";
             btn.style.background = "#4ade80"; btn.style.boxShadow = "0 10px 20px rgba(74, 222, 128, 0.3)";
             btn.innerHTML = `<i class="fa-solid fa-mug-hot"></i> Start Break`;
         }
         updatePomoDisplay();
     };
-
     window.togglePomo = function() {
         const btn = document.getElementById('pomoStartBtn');
-        if(isRunning) {
-            clearInterval(pomoInterval);
-            isRunning = false;
-            btn.innerHTML = `<i class="fa-solid fa-play"></i> Resume`;
-            btn.style.opacity = "1";
-        } else {
+        if(isRunning) { clearInterval(pomoInterval); isRunning = false; btn.innerHTML = `<i class="fa-solid fa-play"></i> Resume`; btn.style.opacity = "1"; } 
+        else {
             pomoInterval = setInterval(() => {
-                pomoTime--;
-                updatePomoDisplay();
-                if(pomoTime <= 0) {
-                    clearInterval(pomoInterval);
-                    isRunning = false;
-                    const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                    audio.play();
-                    alert("Time is up! Great job!");
-                    window.switchPomoMode(currentMode); // Reset
-                }
+                pomoTime--; updatePomoDisplay();
+                if(pomoTime <= 0) { clearInterval(pomoInterval); isRunning = false; const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); audio.play(); alert("Time is up!"); window.switchPomoMode(currentMode); }
             }, 1000);
-            isRunning = true;
-            btn.innerHTML = `<i class="fa-solid fa-pause"></i> Pause`;
-            btn.style.opacity = "0.9";
+            isRunning = true; btn.innerHTML = `<i class="fa-solid fa-pause"></i> Pause`; btn.style.opacity = "0.9";
         }
     };
-
     window.resetPomo = function() {
-        clearInterval(pomoInterval);
-        isRunning = false;
-        // Reset time based on current mode
-        if(currentMode === 'focus') pomoTime = 25*60;
-        else if(currentMode === 'short') pomoTime = 5*60;
-        else pomoTime = 15*60;
-        
+        clearInterval(pomoInterval); isRunning = false;
+        if(currentMode === 'focus') pomoTime = 25*60; else if(currentMode === 'short') pomoTime = 5*60; else pomoTime = 15*60;
         const btn = document.getElementById('pomoStartBtn');
         btn.innerHTML = currentMode === 'focus' ? `<i class="fa-solid fa-play"></i> Start Focus` : `<i class="fa-solid fa-mug-hot"></i> Start Break`;
         updatePomoDisplay();
     };
-
-    function updatePomoDisplay() {
-        const m = Math.floor(pomoTime / 60);
-        const s = pomoTime % 60;
-        document.getElementById('pomoTimer').textContent = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
-    }
+    function updatePomoDisplay() { const m = Math.floor(pomoTime / 60); const s = pomoTime % 60; document.getElementById('pomoTimer').textContent = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`; }
   </script>
 
   <script>
   (function(){
     const $ = (id) => document.getElementById(id);
-    const K_SUBS = 'sm:subs:v2';
-    const K_CURRENCY = 'sm:display_currency';
-    const K_SORT = 'sm:sort_order';
+    const K_SUBS = 'sm:subs:v2'; const K_CURRENCY = 'sm:display_currency'; const K_SORT = 'sm:sort_order';
     let DEFAULT_FX = { USD:1, GBP:0.77, EUR:0.92, HKD:7.8, JPY:157, CAD:1.36, AUD:1.52, CNY:7.23 };
     let subs = []; try { subs = JSON.parse(localStorage.getItem(K_SUBS) || '[]'); } catch(e) { subs = []; }
-    let display = localStorage.getItem(K_CURRENCY) || 'USD';
-    let currentSort = localStorage.getItem(K_SORT) || 'date';
-    let fx = DEFAULT_FX; let editIndex = -1;
+    let display = localStorage.getItem(K_CURRENCY) || 'USD'; let currentSort = localStorage.getItem(K_SORT) || 'date'; let fx = DEFAULT_FX; let editIndex = -1;
 
     function save(){ localStorage.setItem(K_SUBS, JSON.stringify(subs)); }
     function fmtMoney(n, ccy){ return new Intl.NumberFormat('en-US', { style: 'currency', currency: ccy }).format(n); }

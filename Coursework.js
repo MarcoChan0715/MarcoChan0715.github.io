@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Define Paths for Logo Assets
     // Make sure these paths match exactly where you uploaded the files!
     const logoLight = "images/Coursework/Untitled_Artwork.png"; // Original Black Logo
-    const logoDark = "images/Coursework/White logo.png";                   // New White Logo
+    const logoDark = "images/Coursework/White_logo.png";                   // New White Logo
 
     const savedTheme = localStorage.getItem('theme');
     const logoImg = document.querySelector('.logo'); // Find the logo image

@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Apps Dashboard</title>
 
+  <link rel="icon" type="image/png" href="images/Coursework/Website_M.png">
+
   <link rel="stylesheet" href="Coursework.css" />
   <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
- 
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-   <link rel="icon" type="image/png" href="images/Coursework/Website_M.png">
 
   <style>
     /* =========================================
@@ -47,26 +47,20 @@
     .app-icon i { font-size: 40px; margin-bottom: 12px; }
     .app-name { font-weight: 600; font-size: 14px; color: #333; }
     
-    /* === ICON COLORS === */
-    /* Existing */
+    /* Icon Colors */
     .icon-sub { color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
-    
-    /* NEW ICONS */
-    .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } /* Pink */
-    .icon-notes { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } /* Green */
-    .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }  /* Indigo */
+    .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } 
+    .icon-notes { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } 
+    .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }  
     
     /* Dark Mode Overrides for Dashboard */
     body.dark-mode .app-icon { background: #1e293b; border-color: #334155; }
     body.dark-mode .app-name { color: #e2e8f0; }
-    
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
     body.dark-mode .icon-weather { background: #451a03; color: #fbbf24; }
-    
-    /* Dark Mode for New Icons */
     body.dark-mode .icon-music { background: #4c0519; color: #fb7185; }
     body.dark-mode .icon-notes { background: #064e3b; color: #34d399; }
     body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
@@ -338,7 +332,7 @@
 
               <div class="app-icon icon-clock" onclick="openApp('clockApp')">
                   <i class="fa-solid fa-clock"></i>
-                  <div class="app-name">Pomodoro</div>
+                  <div class="app-name">Focus & Clock</div>
               </div>
 
               <div class="app-icon icon-weather" onclick="openApp('weatherApp')">

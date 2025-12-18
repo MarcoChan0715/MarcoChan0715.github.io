@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apps Dashboard</title>
 
-  <link rel="icon" type="image/x-icon" href="images/Coursework/favicon.ico?v=2">
+  <link rel="icon" type="image/png" href="icon.png?v=2">
 
   <link rel="stylesheet" href="Coursework.css" />
+  
   <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
@@ -28,9 +29,7 @@
     .app-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 30px;
-        padding: 20px;
-        justify-items: center;
+        gap: 30px; padding: 20px; justify-items: center;
         animation: fadeIn 0.5s ease;
     }
 
@@ -50,9 +49,8 @@
     .icon-sub { color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
+    .icon-ai { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } /* New AI Color */
     .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } 
-    /* AI Chat Icon Style */
-    .icon-ai { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } 
     .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }  
     
     /* Dark Mode Overrides */
@@ -61,14 +59,13 @@
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
     body.dark-mode .icon-weather { background: #451a03; color: #fbbf24; }
-    body.dark-mode .icon-music { background: #4c0519; color: #fb7185; }
     body.dark-mode .icon-ai { background: #064e3b; color: #34d399; }
+    body.dark-mode .icon-music { background: #4c0519; color: #fb7185; }
     body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
 
-    /* App View & Navigation */
+    /* Navigation */
     .app-view { display: none; animation: slideUp 0.3s ease-out; }
     .back-bar { padding: 10px 0 20px; }
-    
     .back-btn {
         background: transparent; border: none; font-size: 16px; font-weight: 700; 
         color: #8b5cf6; cursor: pointer; display: flex; align-items: center; gap: 8px;
@@ -80,11 +77,53 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Global Variables */
+    /* Global Vars */
     :root { --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; }
     body.dark-mode { --ink: #eef2ff; --muted: #94a3b8; --card: #1e293b; --border: #334155; }
 
-    /* === AI CHAT STYLES === */
+    /* === FIXED SUBSCRIPTION STYLES === */
+    #sm {
+      box-sizing: border-box; width: 100%; padding: 24px 16px 56px;
+      background: rgba(255, 255, 255, 0.95); border-radius: 16px; position: relative; 
+    }
+    body.dark-mode #sm { background: rgba(30, 30, 40, 0.95); }
+    #sm h1 { margin: 0 0 12px; font-size: 26px; font-weight:700; color: var(--ink); }
+    #sm .sm-card { 
+        background: var(--card); border:1px solid var(--border); border-radius:16px; 
+        padding:16px; margin-bottom: 25px; /* Added spacing to fix overlap */
+        box-shadow:0 8px 18px rgba(0,0,0,0.06); 
+    }
+    #sm .sm-input, #sm .sm-select { 
+        background: var(--card); color: var(--ink); border:1px solid var(--border); 
+        border-radius:12px; padding:10px 12px; font-size:14px; outline:none; 
+        min-height:40px; width: 100%; box-sizing: border-box; /* Fix width issues */
+    }
+    #sm .sm-row { display:grid; grid-template-columns: repeat(12, 1fr); gap:10px; margin-top: 10px; }
+    #sm .col-6 { grid-column: span 6; } #sm .col-3 { grid-column: span 3; } #sm .col-12 { grid-column: span 12; }
+    #sm .sm-btn.primary { background: linear-gradient(90deg, #ec4899, #06b6d4); color:#fff; border:0; width: 100%; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 600; margin-top: 15px;}
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+    .modal-box { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 1px solid var(--border); }
+
+    /* === FIXED CLOCK STYLES === */
+    .clock-container { text-align: center; background: rgba(255,255,255,0.95); padding: 40px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto; }
+    body.dark-mode .clock-container { background: #1e293b; }
+    .digital-time { font-size: 70px; font-weight: 800; line-height: 1; color: var(--ink); }
+    .pomo-box { background: #fff0f3; border-radius: 30px; padding: 30px; margin: 20px 0; }
+    body.dark-mode .pomo-box { background: #2d1b20; }
+    .pomo-timer { font-size: 80px; font-weight: 800; color: #ff4d6d; line-height: 1; margin: 20px 0; }
+    .mode-buttons { display: inline-flex; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 50px; gap: 5px; }
+    .mode-btn { border: none; background: transparent; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; color: var(--muted); }
+    .mode-btn.active { background: white; color: #ff4d6d; shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    body.dark-mode .mode-btn.active { background: #4a2c33; }
+    
+    /* Fixed Button Alignment */
+    .pomo-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px; }
+    .control-btn { border: none; cursor: pointer; font-weight: 700; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
+    .btn-start { background: #ff4d6d; color: white; padding: 15px 40px; border-radius: 50px; font-size: 18px; box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3); }
+    .btn-reset { width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.05); color: var(--muted); font-size: 18px; }
+    .btn-reset:hover { background: rgba(0,0,0,0.1); color: var(--ink); }
+
+    /* === NEW AI CHAT STYLES === */
     .chat-container {
         background: var(--card); border-radius: 20px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden;
@@ -103,37 +142,18 @@
     .msg-user { align-self: flex-end; background: #10b981; color: white; border-bottom-right-radius: 2px; }
     .msg-ai { align-self: flex-start; background: #e5e7eb; color: #333; border-bottom-left-radius: 2px; }
     body.dark-mode .msg-ai { background: #334155; color: #e2e8f0; }
-    
-    .chat-input-area {
-        padding: 15px; border-top: 1px solid var(--border); background: var(--card);
-        display: flex; gap: 10px;
-    }
-    .chat-input {
-        flex: 1; padding: 12px; border-radius: 50px; border: 1px solid var(--border);
-        background: rgba(0,0,0,0.05); color: var(--ink); outline: none;
-    }
-    .send-btn {
-        background: #10b981; color: white; border: none; width: 45px; height: 45px;
-        border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        transition: transform 0.2s;
-    }
+    .chat-input-area { padding: 15px; border-top: 1px solid var(--border); background: var(--card); display: flex; gap: 10px; }
+    .chat-input { flex: 1; padding: 12px; border-radius: 50px; border: 1px solid var(--border); background: rgba(0,0,0,0.05); color: var(--ink); outline: none; }
+    .send-btn { background: #10b981; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
     .send-btn:hover { transform: scale(1.1); }
-    .send-btn:disabled { background: #ccc; cursor: not-allowed; }
-
+    
     /* API Key Modal */
-    .api-modal {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8); z-index: 10; display: flex; align-items: center; justify-content: center;
-    }
-    .api-box {
-        background: white; padding: 30px; border-radius: 16px; width: 90%; max-width: 400px; text-align: center;
-    }
+    .api-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10; display: flex; align-items: center; justify-content: center; }
+    .api-box { background: white; padding: 30px; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; }
     body.dark-mode .api-box { background: #1e293b; color: white; }
     .api-input { width: 100%; padding: 10px; margin: 15px 0; border-radius: 8px; border: 1px solid #ccc; }
 
-    /* Existing Styles for Other Apps (Shortened for clarity) */
-    #sm, .clock-container, .weather-container { max-width: 100%; }
-    /* Weather Styles */
+    /* Weather Styles (Preserved) */
     .weather-container { background: rgba(255, 255, 255, 0.95); border-radius: 30px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 1000px; margin: 0 auto; overflow: visible; position: relative; }
     body.dark-mode .weather-container { background: #1e293b; color: white; }
     .search-wrapper { position: relative; max-width: 500px; margin: 0 auto 30px; }
@@ -193,32 +213,14 @@
           <p style="text-align:center; color:var(--muted); margin-bottom:30px;">Select an app to launch</p>
           
           <div class="app-grid">
-              <div class="app-icon icon-sub" onclick="openApp('subManager')">
-                  <i class="fa-solid fa-receipt"></i>
-                  <div class="app-name">Subscriptions</div>
-              </div>
-              <div class="app-icon icon-clock" onclick="openApp('clockApp')">
-                  <i class="fa-solid fa-clock"></i>
-                  <div class="app-name">Focus & Clock</div>
-              </div>
-              <div class="app-icon icon-weather" onclick="openApp('weatherApp')">
-                  <i class="fa-solid fa-cloud-sun"></i>
-                  <div class="app-name">Weather</div>
-              </div>
+              <div class="app-icon icon-sub" onclick="openApp('subManager')"><i class="fa-solid fa-receipt"></i><div class="app-name">Subscriptions</div></div>
+              <div class="app-icon icon-clock" onclick="openApp('clockApp')"><i class="fa-solid fa-clock"></i><div class="app-name">Focus & Clock</div></div>
+              <div class="app-icon icon-weather" onclick="openApp('weatherApp')"><i class="fa-solid fa-cloud-sun"></i><div class="app-name">Weather</div></div>
               
-              <div class="app-icon icon-ai" onclick="openApp('aiApp')">
-                  <i class="fa-solid fa-robot"></i>
-                  <div class="app-name">Study Buddy</div>
-              </div>
+              <div class="app-icon icon-ai" onclick="openApp('aiApp')"><i class="fa-solid fa-robot"></i><div class="app-name">Study Buddy</div></div>
 
-              <div class="app-icon icon-music" onclick="alert('Music Player coming soon!')">
-                  <i class="fa-solid fa-music"></i>
-                  <div class="app-name">Music</div>
-              </div>
-              <div class="app-icon icon-game" onclick="alert('Snake Game coming soon!')">
-                  <i class="fa-solid fa-gamepad"></i>
-                  <div class="app-name">Game</div>
-              </div>
+              <div class="app-icon icon-music" onclick="alert('Music Player coming soon!')"><i class="fa-solid fa-music"></i><div class="app-name">Music</div></div>
+              <div class="app-icon icon-game" onclick="alert('Snake Game coming soon!')"><i class="fa-solid fa-gamepad"></i><div class="app-name">Game</div></div>
           </div>
       </div>
 
@@ -235,17 +237,18 @@
                   <select id="sortOrder" class="sm-select" style="width:auto; margin-right: 15px;">
                      <option value="date">Next Bill Date</option>
                      <option value="priceDesc">Price (High to Low)</option>
-                     <option value="priceAsc">Price (Low to High)</option>
                      <option value="name">Name (A-Z)</option>
                   </select>
                   <label class="sm-label" style="font-size: 12px; color: var(--muted)">Currency:</label>
                   <select id="displayCcy" class="sm-select" style="width:auto;"></select>
                 </div>
               </div>
+              
               <div class="sm-card" style="display:flex; gap:20px; justify-content: space-around; text-align: center;">
                 <div><div style="font-size:12px; color:var(--muted);">Monthly Total</div><div id="totMonthly" style="font-size:24px; font-weight:700; color:var(--ink);">$0.00</div></div>
                 <div><div style="font-size:12px; color:var(--muted);">Yearly Total</div><div id="totYearly" style="font-size:24px; font-weight:700; color:var(--ink);">$0.00</div></div>
               </div>
+
               <section id="upcomingSection" class="sm-card" style="display:none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div style="text-align: left;">
@@ -259,27 +262,31 @@
                     </div>
                 </div>
               </section>
+
               <section class="sm-card">
                 <h3 style="color:var(--ink)">Add Subscription</h3>
                 <div class="sm-row">
                   <div class="col-6"><input id="name" class="sm-input" placeholder="Name (e.g. Netflix)" /></div>
                   <div class="col-3"><input id="cost" type="number" class="sm-input" placeholder="Price" /></div>
                   <div class="col-3"><select id="currency" class="sm-select"></select></div>
-                  <div class="col-6"><select id="cycle" class="sm-select"><option value="monthly">Monthly (Same Date)</option><option value="days30">Every 30 Days</option><option value="yearly">Yearly</option></select></div>
+                  <div class="col-6"><select id="cycle" class="sm-select"><option value="monthly">Monthly</option><option value="days30">Every 30 Days</option><option value="yearly">Yearly</option></select></div>
                    <div class="col-6"><input id="startDate" type="date" class="sm-input" /></div>
                 </div>
-                <button id="addBtn" class="sm-btn primary" style="margin-top: 15px; width: 100%;">+ Add Subscription</button>
+                <button id="addBtn" class="sm-btn primary">+ Add Subscription</button>
               </section>
+
               <section class="sm-card"><h3 style="color:var(--ink)">Active Subscriptions (<span id="countActive">0</span>)</h3><div id="activeList"></div></section>
               <section class="sm-card" id="inactiveSection" style="display:none; border: 1px dashed var(--border); background: rgba(128,128,128,0.02);"><h3 style="color:var(--muted)">Inactive Subscriptions (<span id="countInactive">0</span>)</h3><div id="inactiveList"></div></section>
+              
               <section class="sm-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <h3 style="color:var(--ink); margin:0;">FX Rates</h3>
                     <div id="fxDateDisplay" style="font-size:12px; color:var(--muted); font-style:italic;"></div>
                 </div>
                 <div id="fxGrid" class="fx-grid"></div>
-                <button id="fxUpdate" class="sm-btn">Update Rates</button>
+                <button id="fxUpdate" class="sm-btn" style="width:100%; margin-top:10px;">Update Rates</button>
               </section>
+
               <div id="editModal" class="modal-overlay">
                 <div class="modal-box">
                     <h2 style="color:var(--ink); margin-top:0;">Edit Subscription</h2>
@@ -304,6 +311,7 @@
            <div class="clock-container">
               <div class="digital-time" id="digitalTime">--:--</div>
               <div class="date-display" id="dateDisplay">--/--/----</div>
+
               <div class="pomo-box" id="pomoBox">
                   <div class="mode-buttons">
                       <button class="mode-btn active" onclick="switchPomoMode('focus')">🍅 Focus</button>
@@ -311,11 +319,17 @@
                       <button class="mode-btn" onclick="switchPomoMode('long')">🛋️ Long</button>
                   </div>
                   <div class="pomo-timer" id="pomoTimer">25:00</div>
-                  <div style="display:flex; justify-content:center; align-items:center;">
-                      <button class="control-btn btn-start" id="pomoStartBtn" onclick="togglePomo()"><i class="fa-solid fa-play"></i> Start</button>
-                      <button class="control-btn btn-reset" onclick="resetPomo()"><i class="fa-solid fa-rotate-right"></i></button>
+                  
+                  <div class="pomo-controls">
+                      <button class="control-btn btn-start" id="pomoStartBtn" onclick="togglePomo()">
+                          <i class="fa-solid fa-play"></i> Start
+                      </button>
+                      <button class="control-btn btn-reset" onclick="resetPomo()">
+                          <i class="fa-solid fa-rotate-right"></i>
+                      </button>
                   </div>
               </div>
+
               <hr style="margin: 30px 0; border:0; border-top:1px solid #eee;">
               <h4 style="color:#009688; margin:0; text-transform: uppercase; letter-spacing: 1px;">Stopwatch</h4>
               <div class="stopwatch-display" id="swDisplay">00:00:00</div>
@@ -363,7 +377,6 @@
 
       <div id="aiApp" class="app-view">
           <div class="back-bar"><button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button></div>
-          
           <div class="chat-container">
               <div id="apiModal" class="api-modal" style="display:none;">
                   <div class="api-box">
@@ -375,16 +388,13 @@
                       <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:12px; color:#10b981;">Get a free key here</a>
                   </div>
               </div>
-
               <div class="chat-header">
                   <div><i class="fa-solid fa-robot"></i> Study Buddy AI</div>
                   <button onclick="clearApiKey()" style="background:transparent; border:none; color:white; font-size:12px; cursor:pointer; opacity:0.8;">⚙️ Reset Key</button>
               </div>
-              
               <div id="chatMessages" class="chat-messages">
                   <div class="message msg-ai">Hello! I'm your Study Buddy. How can I help you today?</div>
               </div>
-              
               <div class="chat-input-area">
                   <input type="text" id="userMsg" class="chat-input" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') sendAiMessage()">
                   <button id="sendBtn" class="send-btn" onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
@@ -401,8 +411,7 @@
         document.getElementById('dashboardView').style.display = 'none';
         const app = document.getElementById(appId);
         if(app) { app.style.display = 'block'; window.scrollTo(0, 0); }
-        // Special check for AI app
-        if(appId === 'aiApp') checkApiKey();
+        if(appId === 'aiApp') checkApiKey(); // Trigger AI check
     };
     window.closeApp = function() {
         document.querySelectorAll('.app-view').forEach(app => app.style.display = 'none');
@@ -575,7 +584,7 @@
 
             // Remove loading and add real response (with Markdown support)
             document.getElementById(loadingId).remove();
-            const cleanHtml = marked.parse(aiText); // Convert **bold** to HTML
+            const cleanHtml = marked.parse(aiText); 
             chatBox.innerHTML += `<div class="message msg-ai">${cleanHtml}</div>`;
 
         } catch (error) {

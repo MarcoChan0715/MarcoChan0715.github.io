@@ -157,15 +157,13 @@
     .btn-sw-start { background: #bbf7d0; color: #16a34a; }
     .btn-sw-reset { background: #e5e7eb; color: #374151; }
 
-    /* ===== WEATHER APP STYLES (WIDESCREEN + AUTOCOMPLETE) ===== */
+    /* ===== WEATHER APP STYLES (WIDESCREEN + AUTOCOMPLETE + LIST FIX) ===== */
     .weather-container {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 30px; padding: 30px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        max-width: 1000px;
-        margin: 0 auto;
-        overflow: visible; /* Need visible for suggestion dropdown */
-        position: relative;
+        max-width: 1000px; margin: 0 auto;
+        overflow: visible; position: relative;
     }
     body.dark-mode .weather-container { background: #1e293b; color: white; }
 
@@ -184,64 +182,48 @@
     }
     .weather-btn:hover { transform: scale(1.05); }
 
-    /* SUGGESTIONS DROPDOWN */
+    /* SUGGESTIONS */
     .suggestions-list {
         position: absolute; top: 100%; left: 0; right: 0;
         background: var(--card); border: 1px solid var(--border);
         border-radius: 12px; margin-top: 5px;
         max-height: 200px; overflow-y: auto;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        z-index: 100;
-        display: none; /* Hidden by default */
+        z-index: 100; display: none;
     }
     .suggestion-item {
         padding: 10px 15px; cursor: pointer; text-align: left;
-        font-size: 14px; border-bottom: 1px solid rgba(0,0,0,0.05);
-        color: var(--ink);
+        font-size: 14px; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--ink);
     }
     .suggestion-item:hover { background: rgba(0,0,0,0.03); }
     body.dark-mode .suggestion-item:hover { background: rgba(255,255,255,0.05); }
 
     /* GRID LAYOUT */
     .weather-content-grid {
-        display: grid;
-        grid-template-columns: 1fr 1.5fr; 
-        gap: 40px;
-        align-items: start;
-        margin-top: 20px;
-        animation: fadeIn 0.5s;
-        display: none; 
+        display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: start;
+        margin-top: 20px; animation: fadeIn 0.5s; display: none; 
     }
     @media (max-width: 768px) { .weather-content-grid { grid-template-columns: 1fr; } }
 
-    /* LEFT COL */
     .current-weather-card {
-        text-align: center;
-        padding: 30px;
-        background: rgba(245, 158, 11, 0.05);
-        border-radius: 24px;
-        border: 1px solid rgba(245, 158, 11, 0.1);
+        text-align: center; padding: 30px; background: rgba(245, 158, 11, 0.05);
+        border-radius: 24px; border: 1px solid rgba(245, 158, 11, 0.1);
     }
     .weather-icon { font-size: 100px; color: #f59e0b; margin-bottom: 15px; }
     .weather-temp { font-size: 70px; font-weight: 700; margin: 0; line-height: 1; }
     .weather-desc { font-size: 20px; color: var(--muted); text-transform: capitalize; margin-bottom: 20px; }
 
-    /* RIGHT COL */
     .forecast-section { text-align: left; min-width: 0; }
 
     .rain-alert {
         background: #eff6ff; color: #1d4ed8; padding: 15px;
         border-radius: 12px; font-size: 14px; font-weight: 600;
-        margin-bottom: 25px; border: 1px solid #dbeafe;
-        display: none;
+        margin-bottom: 25px; border: 1px solid #dbeafe; display: none;
     }
     body.dark-mode .rain-alert { background: #172554; color: #93c5fd; border-color: #1e3a8a; }
 
     .hourly-scroll {
-        display: flex; gap: 15px; 
-        overflow-x: auto; 
-        padding-bottom: 15px; margin-bottom: 25px; 
-        scroll-behavior: smooth;
+        display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 25px; scroll-behavior: smooth;
     }
     .hourly-scroll::-webkit-scrollbar { height: 6px; }
     .hourly-scroll::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
@@ -268,17 +250,46 @@
     }
     .save-city-btn:hover { transform: scale(1.05); }
 
-    .saved-cities { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; justify-content: center; }
-    .city-chip {
-        background: #f3f4f6; color: #4b5563; padding: 8px 16px; border-radius: 50px;
-        font-size: 13px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
-        display: flex; align-items: center; gap: 8px; font-weight: 500;
+    /* NEW SAVED CITIES LIST STYLES */
+    .saved-cities-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 25px;
     }
-    .city-chip:hover { background: #e5e7eb; transform: translateY(-2px); }
-    body.dark-mode .city-chip { background: #334155; color: #e2e8f0; }
-    body.dark-mode .city-chip:hover { background: #475569; }
-    .city-delete { color: #9ca3af; font-size: 14px; }
-    .city-delete:hover { color: #ef4444; }
+    
+    .saved-city-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 15px 20px;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .saved-city-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-color: #f59e0b;
+    }
+    
+    .saved-city-name { font-weight: 600; font-size: 14px; color: var(--ink); }
+    
+    /* Temp placeholder style */
+    .saved-city-temp { 
+        font-weight: 700; font-size: 18px; color: #f59e0b; 
+        background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 8px;
+    }
+    
+    .delete-saved-btn {
+        background: transparent; border: none;
+        color: #9ca3af; margin-left: 10px; cursor: pointer; padding: 5px;
+        transition: color 0.2s;
+    }
+    .delete-saved-btn:hover { color: #ef4444; }
 
   </style>
 </head>
@@ -479,22 +490,21 @@
                   </div>
 
                   <div class="forecast-section">
-                      
                       <div id="rainAlert" class="rain-alert"><i class="fa-solid fa-umbrella"></i> Rain likely stopping at 14:00</div>
 
                       <h4 style="text-align:left; font-size:12px; color:var(--muted); text-transform:uppercase;">Next 24 Hours</h4>
-                      <div id="hourlyScroll" class="hourly-scroll">
-                          </div>
+                      <div id="hourlyScroll" class="hourly-scroll"></div>
 
                       <h4 style="text-align:left; font-size:12px; color:var(--muted); text-transform:uppercase;">3-Day Forecast</h4>
-                      <div id="dailyList" class="daily-list">
-                          </div>
+                      <div id="dailyList" class="daily-list"></div>
                   </div>
               </div>
 
               <div style="margin-top:40px; text-align:center;">
-                  <h4 style="color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">Saved Cities</h4>
-                  <div id="savedCitiesList" class="saved-cities"></div>
+                  <h4 style="color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:15px;">Saved Cities</h4>
+                  
+                  <div id="savedCitiesList" class="saved-cities-list">
+                      </div>
               </div>
           </div>
       </div>
@@ -713,14 +723,11 @@
                 list.innerHTML = '';
                 list.style.display = 'block';
                 
-                // --- CLEANING LOGIC START ---
-                // Filter out duplicates based on the displayed name
+                // CLEANING LOGIC (Duplicates / HK / Macau)
                 const seen = new Set();
                 
                 data.results.forEach(city => {
                     let displayName = `${city.name}`;
-                    
-                    // Specific Fixes for Hong Kong & Macau
                     if (city.name === "Hong Kong" && (!city.country || city.country === "undefined" || city.country_code === "HK")) {
                         displayName = "Hong Kong, China";
                     } else if (city.name === "Macau" && (!city.country || city.country === "undefined" || city.country_code === "MO")) {
@@ -729,23 +736,19 @@
                         displayName = `${city.name}, ${city.country}`;
                     }
 
-                    // Only add if we haven't seen this EXACT name before
                     if (!seen.has(displayName)) {
                         seen.add(displayName);
-                        
                         const item = document.createElement('div');
                         item.className = 'suggestion-item';
                         item.textContent = displayName;
                         item.onclick = () => {
-                            document.getElementById('cityInput').value = city.name; // Search uses raw name
+                            document.getElementById('cityInput').value = city.name;
                             list.style.display = 'none';
-                            // Pass specific Lat/Lon to ensure correct location
                             getWeatherByCoords(city.latitude, city.longitude, displayName.split(',')[0]); 
                         };
                         list.appendChild(item);
                     }
                 });
-                // --- CLEANING LOGIC END ---
 
             } else {
                 list.style.display = 'none';
@@ -755,14 +758,13 @@
         }
     }
 
-    // Close suggestions if clicking outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.search-wrapper')) {
             document.getElementById('suggestionsList').style.display = 'none';
         }
     });
 
-    // Main Weather Function (Name Search)
+    // Main Weather Function
     async function getWeather(cityName = null) {
         const input = document.getElementById('cityInput');
         const city = cityName || input.value;
@@ -780,7 +782,6 @@
         } catch(e) { console.error(e); alert("Could not fetch weather data."); }
     }
 
-    // New Helper: Get Weather directly by Lat/Lon (Used by Autocomplete)
     async function getWeatherByCoords(lat, lon, name) {
         try {
             const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`);
@@ -793,19 +794,15 @@
 
     function displayFullWeather(city, data) {
         document.getElementById('weatherResult').style.display = 'grid'; 
-        
-        // 1. Current Weather
         const current = data.current;
-        
-        // Fix display name in result too
-        if(city === "Hong Kong") city = "Hong Kong"; // Keep clean name
+        if(city === "Hong Kong") city = "Hong Kong"; 
         
         document.getElementById('wCity').textContent = city;
         document.getElementById('wTemp').textContent = `${Math.round(current.temperature_2m)}°C`;
         document.getElementById('wIcon').innerHTML = `<i class="fa-solid ${getWeatherIcon(current.weather_code)}"></i>`;
         document.getElementById('wDesc').textContent = getDesc(current.weather_code);
 
-        // 2. Rain Forecast Logic
+        // Rain Logic
         const hourProbs = data.hourly.precipitation_probability;
         const currentHourIndex = new Date().getHours();
         const currentProb = hourProbs[currentHourIndex];
@@ -813,77 +810,46 @@
         
         if(currentProb > 40) {
             let stopIndex = -1;
-            for(let i=currentHourIndex; i < currentHourIndex+12; i++) {
-                if(hourProbs[i] < 20) { stopIndex = i; break; }
-            }
-            if(stopIndex !== -1) {
-                alertBox.style.display = 'block';
-                alertBox.innerHTML = `<i class="fa-solid fa-umbrella"></i> Rain likely stopping around ${stopIndex}:00`;
-            } else {
-                alertBox.style.display = 'block';
-                alertBox.innerHTML = `<i class="fa-solid fa-cloud-showers-heavy"></i> Rain expected to continue for hours.`;
-            }
+            for(let i=currentHourIndex; i < currentHourIndex+12; i++) { if(hourProbs[i] < 20) { stopIndex = i; break; } }
+            alertBox.style.display = 'block';
+            alertBox.innerHTML = stopIndex !== -1 ? `<i class="fa-solid fa-umbrella"></i> Rain likely stopping around ${stopIndex}:00` : `<i class="fa-solid fa-cloud-showers-heavy"></i> Rain expected to continue for hours.`;
         } else {
             let startIndex = -1;
-            for(let i=currentHourIndex; i < currentHourIndex+12; i++) {
-                if(hourProbs[i] > 50) { startIndex = i; break; }
-            }
+            for(let i=currentHourIndex; i < currentHourIndex+12; i++) { if(hourProbs[i] > 50) { startIndex = i; break; } }
             if(startIndex !== -1) {
                 alertBox.style.display = 'block';
                 alertBox.innerHTML = `<i class="fa-solid fa-cloud-rain"></i> Rain might start around ${startIndex}:00`;
-            } else {
-                alertBox.style.display = 'none';
-            }
+            } else { alertBox.style.display = 'none'; }
         }
 
-        // 3. Hourly Scroll (Next 24h)
+        // Hourly Scroll
         const hScroll = document.getElementById('hourlyScroll');
         hScroll.innerHTML = '';
         for(let i=currentHourIndex; i < currentHourIndex + 24; i++) {
             if(i >= data.hourly.temperature_2m.length) break;
-            
             const temp = Math.round(data.hourly.temperature_2m[i]);
             const code = data.hourly.weather_code[i];
             const time = i % 24;
             const timeStr = `${time}:00`;
-            
-            hScroll.innerHTML += `
-                <div class="hourly-card">
-                    <div style="margin-bottom:5px; font-weight:600;">${timeStr}</div>
-                    <i class="fa-solid ${getWeatherIcon(code)}" style="font-size:20px; color:#f59e0b; margin-bottom:5px;"></i>
-                    <div style="font-weight:700;">${temp}°</div>
-                </div>
-            `;
+            hScroll.innerHTML += `<div class="hourly-card"><div style="margin-bottom:5px; font-weight:600;">${timeStr}</div><i class="fa-solid ${getWeatherIcon(code)}" style="font-size:20px; color:#f59e0b; margin-bottom:5px;"></i><div style="font-weight:700;">${temp}°</div></div>`;
         }
 
-        // 4. Daily Forecast (Next 3 Days)
+        // Daily Forecast
         const dList = document.getElementById('dailyList');
         dList.innerHTML = '';
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        
         for(let i=0; i<3; i++) {
             const date = new Date(data.daily.time[i]);
             const dayName = i===0 ? "Today" : days[date.getDay()];
             const min = Math.round(data.daily.temperature_2m_min[i]);
             const max = Math.round(data.daily.temperature_2m_max[i]);
             const code = data.daily.weather_code[i];
-            
-            dList.innerHTML += `
-                <div class="daily-row">
-                    <div style="width:80px;">${dayName}</div>
-                    <div style="flex:1; text-align:center;"><i class="fa-solid ${getWeatherIcon(code)}" style="color:#f59e0b;"></i></div>
-                    <div>${max}° / ${min}°</div>
-                </div>
-            `;
+            dList.innerHTML += `<div class="daily-row"><div style="width:80px;">${dayName}</div><div style="flex:1; text-align:center;"><i class="fa-solid ${getWeatherIcon(code)}" style="color:#f59e0b;"></i></div><div>${max}° / ${min}°</div></div>`;
         }
     }
 
     function getDesc(code) {
-        if(code <= 2) return "Clear/Cloudy";
-        if(code <= 48) return "Foggy";
-        if(code <= 67) return "Rainy";
-        if(code <= 77) return "Snowy";
-        return "Stormy";
+        if(code <= 2) return "Clear/Cloudy"; if(code <= 48) return "Foggy"; if(code <= 67) return "Rainy"; if(code <= 77) return "Snowy"; return "Stormy";
     }
 
     function saveCurrentCity() {
@@ -902,16 +868,53 @@
         renderSavedCities();
     }
 
-    function renderSavedCities() {
+    // --- NEW: RENDER SAVED CITIES AS CARDS WITH TEMP FETCH ---
+    async function renderSavedCities() {
         const list = document.getElementById('savedCitiesList');
         list.innerHTML = '';
+        
+        // Loop through saved cities and create cards
         savedCities.forEach(city => {
-            const chip = document.createElement('div');
-            chip.className = 'city-chip';
-            chip.onclick = () => getWeather(city);
-            chip.innerHTML = `${city} <span class="city-delete" onclick="deleteCity('${city}', event)"><i class="fa-solid fa-times"></i></span>`;
-            list.appendChild(chip);
+            const div = document.createElement('div');
+            div.className = 'saved-city-card';
+            div.onclick = () => getWeather(city); // Click card to load full weather
+            
+            div.innerHTML = `
+                <div>
+                    <div class="saved-city-name">${city}</div>
+                </div>
+                <div style="display:flex; align-items:center;">
+                    <span class="saved-city-temp" id="mini-temp-${city.replace(/\s/g, '')}">--°</span>
+                    <button class="delete-saved-btn" onclick="deleteCity('${city}', event)">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            list.appendChild(div);
+            
+            // Fetch individual temperature for this card
+            fetchMiniTemp(city);
         });
+    }
+
+    async function fetchMiniTemp(city) {
+        try {
+            // 1. Geocode
+            const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`);
+            const geoData = await geoRes.json();
+            if(!geoData.results) return;
+            const { latitude, longitude } = geoData.results[0];
+
+            // 2. Fetch JUST current temp
+            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+            const wData = await wRes.json();
+            
+            // 3. Update DOM
+            const tempEl = document.getElementById(`mini-temp-${city.replace(/\s/g, '')}`);
+            if(tempEl) {
+                tempEl.textContent = `${Math.round(wData.current_weather.temperature)}°`;
+            }
+        } catch(e) { console.error("Mini fetch error", e); }
     }
 
     renderSavedCities();

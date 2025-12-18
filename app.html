@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="Coursework.css" />
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-
   <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,10 +52,8 @@
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
     .icon-food { color: #ec4899; background: linear-gradient(135deg, #fdf2f8, #fce7f3); } 
-    .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } 
-    .icon-notes { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } 
-    .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }
     .icon-bus { color: #ef4444; background: linear-gradient(135deg, #fef2f2, #fee2e2); } 
+    .icon-qr { color: #1e293b; background: linear-gradient(135deg, #f8fafc, #f1f5f9); } /* Dark/Grey for QR */
     
     /* Dark Mode Overrides */
     body.dark-mode .app-icon { background: #1e293b; border-color: #334155; }
@@ -64,10 +62,8 @@
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
     body.dark-mode .icon-weather { background: #451a03; color: #fbbf24; }
     body.dark-mode .icon-food { background: #831843; color: #f472b6; }
-    body.dark-mode .icon-music { background: #4c0519; color: #fb7185; }
-    body.dark-mode .icon-notes { background: #064e3b; color: #34d399; }
-    body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
     body.dark-mode .icon-bus { background: #450a0a; color: #fca5a5; }
+    body.dark-mode .icon-qr { background: #0f172a; color: #94a3b8; }
 
     /* Navigation */
     .app-view { display: none; animation: slideUp 0.3s ease-out; }
@@ -125,29 +121,21 @@
         border: 1px solid var(--border);
     }
     body.dark-mode .food-container { background: #1e293b; }
-    
     #foodMap { height: 400px; width: 100%; border-radius: 16px; margin-top: 20px; z-index: 1; border: 1px solid var(--border); }
-    
     .food-input-group { display: flex; gap: 10px; margin-top: 10px; }
     .food-input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; }
-    
-    /* VARIETY TAGS */
     .food-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 25px; margin-bottom: 15px; }
-    
     .food-tag { 
         background: rgba(236, 72, 153, 0.1); color: #ec4899; 
         padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; 
         cursor: pointer; border: 1px solid rgba(236, 72, 153, 0.2); transition: all 0.2s;
     }
     .food-tag:hover { background: #ec4899; color: white; }
-
-    /* RESTAURANT INFO CARD */
     .rest-card {
         background: var(--card); border: 1px solid var(--border);
         border-radius: 16px; padding: 20px; margin-top: 20px;
         text-align: left; animation: slideUp 0.3s ease;
-        display: none; 
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        display: none; box-shadow: 0 5px 20px rgba(0,0,0,0.05);
     }
     .rest-title { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
     .rest-meta { color: var(--muted); font-size: 13px; margin-bottom: 15px; }
@@ -160,6 +148,18 @@
         transition: transform 0.2s;
     }
     .review-link-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+    /* === QR APP STYLES (NEW!) === */
+    .qr-container { background: var(--card); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 40px; max-width: 500px; margin: 0 auto; text-align: center; border: 1px solid var(--border); }
+    body.dark-mode .qr-container { background: #1e293b; }
+    .qr-box { 
+        background: white; padding: 20px; border-radius: 16px; 
+        margin: 30px auto; width: 220px; height: 220px; 
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.05); border: 1px solid #eee;
+    }
+    #qrcode img { display: block; margin: 0 auto; }
+    .qr-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; margin-bottom: 15px; }
 
     /* === BACK TO TOP BUTTON === */
     .back-to-top {
@@ -308,7 +308,7 @@
               <div class="app-icon icon-weather" onclick="openApp('weatherApp')"><i class="fa-solid fa-cloud-sun"></i><div class="app-name">Weather</div></div>
               <div class="app-icon icon-bus" onclick="openApp('busApp')"><i class="fa-solid fa-bus"></i><div class="app-name">Bus Board</div></div>
               <div class="app-icon icon-food" onclick="openApp('foodApp')"><i class="fa-solid fa-utensils"></i><div class="app-name">What to Eat</div></div>
-              <div class="app-icon icon-notes" onclick="alert('Notes App coming soon!')"><i class="fa-solid fa-note-sticky"></i><div class="app-name">Notes</div></div>
+              <div class="app-icon icon-qr" onclick="openApp('qrApp')"><i class="fa-solid fa-qrcode"></i><div class="app-name">Link 2 Phone</div></div>
           </div>
       </div>
 
@@ -544,6 +544,22 @@
           </div>
       </div>
 
+      <div id="qrApp" class="app-view">
+          <div class="back-bar"><button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button></div>
+          <div class="qr-container">
+              <h2 style="color:var(--ink);">Link to Phone</h2>
+              <p style="color:var(--muted); font-size:13px; margin-bottom:25px;">Send any tab or text to your mobile instantly.</p>
+              
+              <input type="text" id="qrInput" class="qr-input" placeholder="Paste link or text here..." onkeyup="if(event.key==='Enter') generateQR()">
+              
+              <button class="action-btn" onclick="generateQR()" style="width:100%;"><i class="fa-solid fa-qrcode"></i> Generate Code</button>
+
+              <div id="qrcode" class="qr-box">
+                  <div style="color:var(--muted); font-size:12px;">QR Code will appear here</div>
+              </div>
+          </div>
+      </div>
+
   </div>
 
   <button id="backToTop" class="back-to-top" onclick="scrollToTop()">
@@ -585,6 +601,28 @@
     };
     function scrollToTop() {
         window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  </script>
+
+  <script>
+    function generateQR() {
+        const text = document.getElementById('qrInput').value.trim();
+        const container = document.getElementById('qrcode');
+        container.innerHTML = ""; // Clear previous
+        
+        if (!text) {
+            container.innerHTML = '<div style="color:var(--muted); font-size:12px;">Please enter text first</div>';
+            return;
+        }
+
+        new QRCode(container, {
+            text: text,
+            width: 180,
+            height: 180,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
     }
   </script>
 
@@ -722,6 +760,7 @@
                 contactEl.textContent = contact;
             }
             contactEl.style.color = "var(--ink)";
+            contactEl.style.fontStyle = "normal";
         } else {
             contactEl.textContent = "No contact info available";
             contactEl.style.color = "var(--muted)";

@@ -51,7 +51,7 @@
     .icon-sub { color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
-    .icon-food { color: #ec4899; background: linear-gradient(135deg, #fdf2f8, #fce7f3); } /* Pink for Food */
+    .icon-food { color: #ec4899; background: linear-gradient(135deg, #fdf2f8, #fce7f3); } 
     .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } 
     .icon-notes { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } 
     .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }
@@ -141,7 +141,7 @@
     }
     .food-tag:hover { background: #ec4899; color: white; }
 
-    /* RESTAURANT INFO CARD (NEW) */
+    /* RESTAURANT INFO CARD */
     .rest-card {
         background: var(--card); border: 1px solid var(--border);
         border-radius: 16px; padding: 20px; margin-top: 20px;
@@ -651,9 +651,6 @@
 
             data.elements.forEach(place => {
                 if(place.lat && place.lon) {
-                    const name = place.tags.name || "Unknown Place";
-                    const cuisine = place.tags.cuisine || "Food";
-                    
                     const marker = L.marker([place.lat, place.lon]).addTo(map);
                     
                     // ON CLICK: Show Bottom Details
@@ -676,24 +673,53 @@
         const name = tags.name || "Unknown Restaurant";
         
         document.getElementById('rTitle').textContent = name;
-        document.getElementById('rCuisine').textContent = (tags.cuisine || "Restaurant") + " • " + (tags['addr:street'] || "Brighton");
         
-        // Handle Opening Hours
-        let hours = tags.opening_hours || "Not listed";
-        if(hours.length > 30) hours = hours.substring(0, 30) + "...";
-        document.getElementById('rHours').textContent = hours;
+        // Smart Cuisine & Location Text
+        const cuisine = tags.cuisine ? tags.cuisine.charAt(0).toUpperCase() + tags.cuisine.slice(1) : "Restaurant";
+        const street = tags['addr:street'] || "Brighton";
+        document.getElementById('rCuisine').textContent = `${cuisine} • ${street}`;
+        
+        // Handle Opening Hours (With "Not Listed" Fallback)
+        const hoursEl = document.getElementById('rHours');
+        if (tags.opening_hours) {
+            // Truncate if too long (some OSM hours are huge strings)
+            let hours = tags.opening_hours.replace(/;/g, "\n"); 
+            if(hours.length > 40) hours = "See Google for full hours";
+            hoursEl.textContent = hours;
+            hoursEl.style.color = "var(--ink)";
+            hoursEl.style.fontStyle = "normal";
+        } else {
+            hoursEl.textContent = "Not listed on OpenStreetMap";
+            hoursEl.style.color = "var(--muted)";
+            hoursEl.style.fontStyle = "italic";
+        }
 
-        // Handle Contact
-        let contact = tags.phone || tags.website || "No info";
-        if(contact.startsWith("http")) contact = "Website available";
-        document.getElementById('rContact').textContent = contact;
+        // Handle Contact (With "No Info" Fallback)
+        const contactEl = document.getElementById('rContact');
+        let contact = tags.phone || tags.website;
+        
+        if (contact) {
+            if(contact.startsWith("http")) {
+                contactEl.innerHTML = `<a href="${contact}" target="_blank" style="color:#ec4899; text-decoration:none;">Visit Website</a>`;
+            } else {
+                contactEl.textContent = contact;
+            }
+            contactEl.style.color = "var(--ink)";
+            contactEl.style.fontStyle = "normal";
+        } else {
+            contactEl.textContent = "No contact info available";
+            contactEl.style.color = "var(--muted)";
+            contactEl.style.fontStyle = "italic";
+        }
 
-        // Review Link
-        const googleLink = `https://www.google.com/search?q=${encodeURIComponent(name + " Brighton reviews")}`;
+        // Robust Google Search Link
+        const googleQuery = encodeURIComponent(`${name} ${street} Brighton reviews`);
+        const googleLink = `https://www.google.com/search?q=${googleQuery}`;
         document.getElementById('rReviewLink').href = googleLink;
 
+        // Show the card
         card.style.display = "block";
-        card.scrollIntoView({ behavior: 'smooth' });
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   </script>
 

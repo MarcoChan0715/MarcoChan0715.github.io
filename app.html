@@ -13,12 +13,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== FIX: GLOBAL PAGE STYLES ===== */
-    /* This ensures the header uses the correct font and spacing */
+    /* ===== 1. GLOBAL RESETS & NAVBAR FIXES ===== */
+    * {
+        box-sizing: border-box; /* Fixes padding issues */
+    }
+    
     body {
         font-family: 'Poppins', sans-serif;
         margin: 0;
         padding: 0;
+    }
+
+    /* Force the logo to stay small so it doesn't stretch the navbar */
+    .header-container .logo {
+        height: 50px; /* Adjust this number to match your other pages if needed */
+        width: auto;
+        object-fit: contain;
+    }
+
+    /* Ensure header aligns perfectly */
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 40px; /* Standard spacing */
+        background: white; /* Ensure background matches */
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Subtle shadow */
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    /* Dark mode header fix */
+    body.dark-mode .header-container {
+        background: #0f172a;
+        border-bottom: 1px solid #334155;
     }
 
     /* ===== DASHBOARD STYLES ===== */
@@ -68,12 +98,11 @@
         display: flex; align-items: center; gap: 8px;
         transition: all 0.2s ease;
     }
-    /* Dark Mode Back Button Color */
     body.dark-mode .back-btn { color: #a78bfa; }
 
     .back-btn:hover { 
-        color: #6d28d9; /* Darker purple on hover */
-        transform: translateX(-5px); /* Slide left animation */
+        color: #6d28d9; 
+        transform: translateX(-5px); 
     }
     body.dark-mode .back-btn:hover { color: #c4b5fd; }
 
@@ -113,7 +142,7 @@
     /* ===== CLOCK & CUTE POMODORO STYLES ===== */
     .clock-container {
         text-align: center; background: rgba(255,255,255,0.95);
-        padding: 40px; border-radius: 30px; /* Rounder */
+        padding: 40px; border-radius: 30px; 
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         max-width: 500px; margin: 0 auto;
     }
@@ -125,18 +154,18 @@
 
     /* Cute Pomodoro Section */
     .pomo-box {
-        background: #fff0f3; /* Default Cute Pink */
+        background: #fff0f3; 
         border-radius: 30px; 
         padding: 30px; 
         margin: 20px 0;
         transition: all 0.4s ease;
         box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     }
-    body.dark-mode .pomo-box { background: #2d1b20; } /* Dark mode pinkish bg */
+    body.dark-mode .pomo-box { background: #2d1b20; } 
     
     .pomo-timer { 
         font-size: 80px; font-weight: 800; 
-        font-family: 'Poppins', sans-serif; /* Use rounded font */
+        font-family: 'Poppins', sans-serif; 
         color: #ff4d6d; 
         line-height: 1; margin: 20px 0; 
         text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
@@ -181,7 +210,7 @@
     }
     .btn-reset:hover { background: rgba(0,0,0,0.05); color: var(--ink); }
 
-    /* Stopwatch Styles - UPDATED WITH HOVER */
+    /* Stopwatch Styles - WITH HOVER */
     .stopwatch-display { font-size: 40px; font-family: monospace; color: #009688; margin: 10px 0; font-weight: 700; }
     
     .sw-btn { 
@@ -193,17 +222,15 @@
         font-weight: bold; 
         font-size: 13px; 
         text-transform: uppercase;
-        transition: all 0.2s ease; /* Smooth animation */
+        transition: all 0.2s ease; 
     }
     
-    /* Hover Effects for Stopwatch Buttons */
     .sw-btn:hover {
-        transform: translateY(-3px); /* Lifts up */
-        filter: brightness(0.95); /* Slightly dims for effect */
+        transform: translateY(-3px); 
+        filter: brightness(0.95); 
     }
     .sw-btn:active { transform: translateY(0); }
 
-    /* Specific Button Colors */
     .btn-sw-stop { background: #fecaca; color: #ef4444; }
     .btn-sw-start { background: #bbf7d0; color: #16a34a; }
     .btn-sw-reset { background: #e5e7eb; color: #374151; }
@@ -214,7 +241,7 @@
 
   <div class="header-container">
      <a href="index.html">
-        <img src="images/Coursework/Black_logo.PNG" class="logo" alt="Logo">
+        <img src="images/Coursework/Untitled_Artwork.png" class="logo" alt="marcochan.site logo">
      </a>
      <div class="navbar">
       <ul>

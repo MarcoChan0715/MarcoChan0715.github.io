@@ -1,44 +1,47 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Marco's Site</title>
-  <link rel="stylesheet" href="Coursework.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <link rel="icon" type="image/png" href="icon.png?v=2">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+    <title>Marco's Site</title>
+    <link rel="stylesheet" href="Coursework.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="icon.png?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <div class="header-container">
         <a href="index.html">
             <img src="images/Coursework/Black_logo.PNG" class="logo" alt="Logo">
         </a>
-        
-<div class="navbar">
-  <ul>
-                <li><a href="index.html">Home</a></li>
+        <div class="navbar">
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="Hobbies.html">Hobbies</a></li>
                 <li><a href="Video.html">Video</a></li>
                 <li><a href="app.html">Apps</a></li>
                 <li><a href="Clock.html">Clock</a></li>
-  </ul>
-</div>
-    
-
-    <div class="main-content-spacer">
-        <div class="home-container">
-            <h1>Welcome to my website!</h1>
-            <p>Updates:<br>Apps section created. More features will be implemented soon.</p>
-            
-            <a href="https://youtu.be/dQw4w9WgXcQ?si=y1BCJpDKXBtAe6NK">
-                <img src="images/Coursework/00764944-BF2D-498D-8D24-B1A67B73220F.jpg" class="home-photo" alt="My Photo">
-            </a>
+            </ul>
         </div>
     </div>
-  <script src="Coursework.js"></script>
+
+    <div class="main-content-spacer">
+        <div class="welcome-section">
+            <h1>Welcome to my website!</h1>
+            <p>Updates:</p>
+            <p>Apps section created. More features will be implemented soon.</p>
+            
+            <div class="hero-image-container">
+                <img src="images/Coursework/Brighton_night.jpg" alt="Brighton at Night" class="hero-image">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple dark mode check if you have the toggle logic in Coursework.js
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 </body>
 </html>

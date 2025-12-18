@@ -130,3 +130,17 @@ body.dark-mode #sec {
     background-image: url('images/White secondhand.png') !important;
 }
 */
+
+/* =========================================
+   SMOOTH THEME TRANSITION ANIMATION
+   ========================================= */
+
+/* Animate the main page background and text */
+body {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Animate all other elements (cards, buttons, inputs) */
+* {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}

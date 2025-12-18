@@ -9,8 +9,10 @@
 
   <link rel="stylesheet" href="Coursework.css" />
   
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
   <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +51,8 @@
     .icon-sub { color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
-    .icon-spin { color: #ec4899; background: linear-gradient(135deg, #fdf2f8, #fce7f3); } /* Pink for Spinner */
+    .icon-food { color: #ec4899; background: linear-gradient(135deg, #fdf2f8, #fce7f3); } /* Pink for Food */
+    .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } 
     .icon-notes { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } 
     .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }
     .icon-bus { color: #ef4444; background: linear-gradient(135deg, #fef2f2, #fee2e2); } 
@@ -60,7 +63,8 @@
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
     body.dark-mode .icon-weather { background: #451a03; color: #fbbf24; }
-    body.dark-mode .icon-spin { background: #831843; color: #f472b6; }
+    body.dark-mode .icon-food { background: #831843; color: #f472b6; }
+    body.dark-mode .icon-music { background: #4c0519; color: #fb7185; }
     body.dark-mode .icon-notes { background: #064e3b; color: #34d399; }
     body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
     body.dark-mode .icon-bus { background: #450a0a; color: #fca5a5; }
@@ -113,34 +117,36 @@
     }
     .fx-btn:hover { transform: scale(1.02); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3); }
 
-    /* === SPINNER STYLES (NEW) === */
-    .spin-container { 
+    /* === FOOD MAP STYLES (NEW) === */
+    .food-container { 
         background: var(--card); border-radius: 20px; 
         box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 30px; 
-        max-width: 600px; margin: 0 auto; text-align: center; 
+        max-width: 900px; margin: 0 auto; text-align: center; 
         border: 1px solid var(--border);
     }
-    body.dark-mode .spin-container { background: #1e293b; }
+    body.dark-mode .food-container { background: #1e293b; }
     
-    .spin-wheel-box { 
-        position: relative; width: 300px; height: 300px; margin: 20px auto; 
+    #foodMap { height: 400px; width: 100%; border-radius: 16px; margin-top: 20px; z-index: 1; }
+    
+    .food-input-group { display: flex; gap: 10px; margin-top: 10px; }
+    .food-input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; }
+    .food-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
+    .food-tag { 
+        background: rgba(236, 72, 153, 0.1); color: #ec4899; 
+        padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; 
+        cursor: pointer; border: 1px solid rgba(236, 72, 153, 0.2); transition: all 0.2s;
     }
-    .spin-canvas { width: 100%; height: 100%; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
-    .spin-arrow {
-        position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-        width: 0; height: 0; border-left: 15px solid transparent;
-        border-right: 15px solid transparent; border-top: 25px solid #ec4899; z-index: 10;
+    .food-tag:hover { background: #ec4899; color: white; }
+
+    /* Custom Map Popup Style */
+    .leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; overflow: hidden; }
+    .leaflet-popup-content { margin: 10px; font-family: 'Poppins', sans-serif; text-align: center; }
+    .popup-title { font-weight: 700; color: #333; font-size: 14px; margin-bottom: 5px; }
+    .popup-btn { 
+        display: inline-block; background: #ec4899; color: white; text-decoration: none; 
+        padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-top: 5px;
     }
-    .spin-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
-    .spin-category-btn {
-        background: rgba(0,0,0,0.05); border: none; padding: 8px 16px; 
-        border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--muted); 
-        cursor: pointer; transition: all 0.2s;
-    }
-    .spin-category-btn:hover { background: rgba(0,0,0,0.1); color: var(--ink); }
-    .spin-input-group { display: flex; gap: 10px; margin-top: 20px; }
-    .spin-input { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--ink); }
-    .spin-result { margin-top: 20px; font-size: 24px; font-weight: 700; color: #ec4899; min-height: 40px; }
+    .popup-btn:hover { opacity: 0.9; }
 
     /* === BACK TO TOP BUTTON === */
     .back-to-top {
@@ -288,7 +294,7 @@
               <div class="app-icon icon-clock" onclick="openApp('clockApp')"><i class="fa-solid fa-clock"></i><div class="app-name">Focus & Clock</div></div>
               <div class="app-icon icon-weather" onclick="openApp('weatherApp')"><i class="fa-solid fa-cloud-sun"></i><div class="app-name">Weather</div></div>
               <div class="app-icon icon-bus" onclick="openApp('busApp')"><i class="fa-solid fa-bus"></i><div class="app-name">Bus Board</div></div>
-              <div class="app-icon icon-spin" onclick="openApp('spinApp')"><i class="fa-solid fa-spinner"></i><div class="app-name">Decide For Me</div></div>
+              <div class="app-icon icon-food" onclick="openApp('foodApp')"><i class="fa-solid fa-utensils"></i><div class="app-name">What to Eat</div></div>
               <div class="app-icon icon-notes" onclick="alert('Notes App coming soon!')"><i class="fa-solid fa-note-sticky"></i><div class="app-name">Notes</div></div>
           </div>
       </div>
@@ -466,11 +472,7 @@
                   <input type="password" id="busAppKey" class="bus-input" placeholder="App Key" style="width:30%;">
                   <input type="text" id="busStopCode" class="bus-input" placeholder="Stop Code" style="flex:1;">
               </div>
-              
-              <button class="action-btn" onclick="getBusTimes()" style="width:100%; margin-bottom:20px;">
-                  <i class="fa-solid fa-bus"></i> Get Live Times
-              </button>
-
+              <button class="action-btn" onclick="getBusTimes()" style="width:100%; margin-bottom:20px;"><i class="fa-solid fa-bus"></i> Get Live Times</button>
               <div id="busResults">
                   <div style="text-align:center; padding:20px; color:var(--muted);">
                       Enter your TransportAPI credentials to see live buses.<br>
@@ -480,31 +482,27 @@
           </div>
       </div>
 
-      <div id="spinApp" class="app-view">
+      <div id="foodApp" class="app-view">
           <div class="back-bar"><button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button></div>
-          <div class="spin-container">
-              <h2 style="color:var(--ink);">Decide For Me</h2>
-              <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Can't make up your mind? Spin the wheel!</p>
+          <div class="food-container">
+              <h2 style="color:var(--ink);">What to Eat?</h2>
+              <p style="color:var(--muted); font-size:13px;">Find top-rated food near you instantly.</p>
               
-              <div class="spin-controls">
-                  <button class="spin-category-btn" onclick="loadSpinCategory('eat')">🍕 What to Eat</button>
-                  <button class="spin-category-btn" onclick="loadSpinCategory('watch')">🎬 What to Watch</button>
-                  <button class="spin-category-btn" onclick="loadSpinCategory('do')">🏃 What to Do</button>
-                  <button class="spin-category-btn" onclick="clearSpinList()" style="color:#ef4444;">🗑️ Clear</button>
+              <div class="food-input-group">
+                  <input type="text" id="foodSearch" class="food-input" placeholder="Enter food type (e.g. Sushi, Burger, Pizza)">
+                  <button class="action-btn" style="width:auto; padding: 10px 20px;" onclick="findFood()">Search</button>
               </div>
 
-              <div class="spin-wheel-box">
-                  <div class="spin-arrow"></div>
-                  <canvas id="wheelCanvas" width="300" height="300" class="spin-canvas"></canvas>
+              <div class="food-tags">
+                  <span class="food-tag" onclick="setFood('Chinese')">Chinese</span>
+                  <span class="food-tag" onclick="setFood('Burger')">Burger</span>
+                  <span class="food-tag" onclick="setFood('Sushi')">Sushi</span>
+                  <span class="food-tag" onclick="setFood('Italian')">Italian</span>
+                  <span class="food-tag" onclick="setFood('Indian')">Indian</span>
+                  <span class="food-tag" onclick="setFood('Cafe')">Cafe</span>
               </div>
 
-              <div id="spinResult" class="spin-result"></div>
-
-              <div class="spin-input-group">
-                  <input type="text" id="spinInput" class="spin-input" placeholder="Add option (e.g. Tacos)">
-                  <button class="action-btn" style="width:auto; padding: 10px 20px;" onclick="addSpinOption()">Add</button>
-              </div>
-              <button class="action-btn" style="margin-top:20px; width:100%; font-size:18px;" onclick="spinTheWheel()">SPIN!</button>
+              <div id="foodMap"></div>
           </div>
       </div>
 
@@ -517,12 +515,20 @@
   <script src="Coursework.js"></script>
 
   <script>
+    let map = null; // Global map variable
+
     window.openApp = function(appId) {
         document.getElementById('dashboardView').style.display = 'none';
         const app = document.getElementById(appId);
-        if(app) { app.style.display = 'block'; window.scrollTo(0, 0); }
+        if(app) { 
+            app.style.display = 'block'; 
+            window.scrollTo(0, 0); 
+            // Re-render map if opening food app
+            if(appId === 'foodApp' && map) { 
+                setTimeout(() => { map.invalidateSize(); }, 200); 
+            }
+        }
         if(appId === 'busApp') loadBusCreds();
-        if(appId === 'spinApp') drawWheel();
     };
     window.closeApp = function() {
         document.querySelectorAll('.app-view').forEach(app => app.style.display = 'none');
@@ -546,78 +552,107 @@
   </script>
 
   <script>
-    let spinOptions = ["Pizza", "Sushi", "Burger", "Salad", "Pasta", "Tacos"];
-    let colors = ["#f87171", "#fb923c", "#fbbf24", "#a3e635", "#34d399", "#22d3ee", "#818cf8", "#c084fc"];
-    let currentRotation = 0;
+    let markers = [];
 
-    function loadSpinCategory(type) {
-        if(type === 'eat') spinOptions = ["Pizza", "Sushi", "Burger", "Salad", "Pasta", "Tacos"];
-        if(type === 'watch') spinOptions = ["Action Movie", "Comedy", "Documentary", "Sci-Fi", "Anime", "Thriller"];
-        if(type === 'do') spinOptions = ["Go for a Run", "Read a Book", "Clean Room", "Call a Friend", "Study Code", "Sleep"];
-        drawWheel();
-        document.getElementById('spinResult').textContent = "";
-    }
-
-    function clearSpinList() { spinOptions = []; drawWheel(); }
-    
-    function addSpinOption() {
-        const val = document.getElementById('spinInput').value.trim();
-        if(val) { spinOptions.push(val); document.getElementById('spinInput').value = ""; drawWheel(); }
-    }
-
-    function drawWheel() {
-        const canvas = document.getElementById('wheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const arc = Math.PI * 2 / (spinOptions.length || 1);
-        ctx.clearRect(0,0,300,300);
+    function initMap(lat, lon) {
+        if(map) { map.remove(); } // Reset map
         
-        if(spinOptions.length === 0) {
-            ctx.font = "16px Poppins"; ctx.fillStyle = "#666"; ctx.textAlign = "center";
-            ctx.fillText("Add options to spin!", 150, 150); return;
+        map = L.map('foodMap').setView([lat, lon], 14);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // User Marker
+        L.marker([lat, lon]).addTo(map)
+            .bindPopup("📍 You are here").openPopup();
+    }
+
+    function setFood(type) {
+        document.getElementById('foodSearch').value = type;
+        findFood();
+    }
+
+    function findFood() {
+        const query = document.getElementById('foodSearch').value;
+        if(!query) return alert("Please enter a food type!");
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                
+                initMap(lat, lon);
+                searchOverpass(lat, lon, query);
+            }, () => {
+                alert("Location access denied. Showing Brighton center.");
+                const lat = 50.8225; const lon = -0.1372;
+                initMap(lat, lon);
+                searchOverpass(lat, lon, query);
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
         }
-
-        spinOptions.forEach((opt, i) => {
-            ctx.beginPath();
-            ctx.fillStyle = colors[i % colors.length];
-            ctx.moveTo(150, 150);
-            ctx.arc(150, 150, 140, i * arc, (i + 1) * arc);
-            ctx.fill();
-            ctx.save();
-            ctx.translate(150, 150);
-            ctx.rotate(i * arc + arc / 2);
-            ctx.fillStyle = "white"; ctx.font = "bold 14px Poppins";
-            ctx.fillText(opt, 60, 5);
-            ctx.restore();
-        });
     }
 
-    function spinTheWheel() {
-        if(spinOptions.length === 0) return;
-        const canvas = document.getElementById('wheelCanvas');
-        const spinResult = document.getElementById('spinResult');
-        spinResult.textContent = "";
-        
-        const extraSpins = 5 + Math.random() * 5; 
-        const duration = 4000; 
-        const arc = 360 / spinOptions.length;
-        const randomOffset = Math.floor(Math.random() * 360);
-        const finalRotation = currentRotation + (extraSpins * 360) + randomOffset;
-        
-        canvas.style.transform = `rotate(-${finalRotation}deg)`;
-        currentRotation = finalRotation;
+    async function searchOverpass(lat, lon, query) {
+        // Clear old markers
+        markers.forEach(m => map.removeLayer(m));
+        markers = [];
 
-        setTimeout(() => {
-            const actualRotation = finalRotation % 360;
-            const index = Math.floor((360 - actualRotation + (arc/2)) / arc) % spinOptions.length;
-            const winner = spinOptions[index >= 0 ? index : spinOptions.length - 1]; // Safe index
-            
-            spinResult.textContent = "🎉 " + winner + "!";
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        }, duration);
+        // Overpass API Query (Free, Open Source)
+        const overpassUrl = "https://overpass-api.de/api/interpreter";
+        const overpassQuery = `
+            [out:json];
+            (
+              node["amenity"="restaurant"]["cuisine"~"${query}",i](around:2000, ${lat}, ${lon});
+              node["amenity"="fast_food"]["cuisine"~"${query}",i](around:2000, ${lat}, ${lon});
+              node["name"~"${query}",i]["amenity"="restaurant"](around:2000, ${lat}, ${lon});
+            );
+            out;
+        `;
+
+        try {
+            const response = await fetch(overpassUrl, {
+                method: "POST",
+                body: overpassQuery
+            });
+            const data = await response.json();
+
+            if(data.elements.length === 0) {
+                alert("No " + query + " places found nearby. Try 'Burger' or 'Cafe'.");
+                return;
+            }
+
+            data.elements.forEach(place => {
+                if(place.lat && place.lon) {
+                    const name = place.tags.name || "Unknown Restaurant";
+                    const cuisine = place.tags.cuisine || "Food";
+                    
+                    // Create Google Search Link for Reviews
+                    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(name + " Brighton reviews")}`;
+
+                    const popupContent = `
+                        <div class="popup-title">${name}</div>
+                        <div style="font-size:12px; color:#666;">${cuisine}</div>
+                        <a href="${googleSearchUrl}" target="_blank" class="popup-btn">
+                           ⭐ Read Reviews
+                        </a>
+                    `;
+
+                    const marker = L.marker([place.lat, place.lon])
+                        .addTo(map)
+                        .bindPopup(popupContent);
+                    
+                    markers.push(marker);
+                }
+            });
+
+        } catch (error) {
+            console.error(error);
+            alert("Could not fetch data. Please try again.");
+        }
     }
-    
-    // Init Wheel
-    setTimeout(drawWheel, 500); 
   </script>
 
   <script>

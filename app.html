@@ -591,6 +591,13 @@
   <script>
     let markers = [];
 
+    // List of reliable Overpass API Servers
+    const OVERPASS_SERVERS = [
+        "https://overpass-api.de/api/interpreter",
+        "https://interpreter.lazurel.openstreetmap.org/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter"
+    ];
+
     function initMap(lat, lon) {
         if(map) { map.remove(); }
         map = L.map('foodMap').setView([lat, lon], 14);
@@ -614,41 +621,49 @@
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
                 initMap(lat, lon);
-                searchOverpass(lat, lon, query);
+                // Start search with the first server
+                searchOverpassRecursive(lat, lon, query, 0);
             }, () => {
                 alert("Location access denied. Showing Brighton.");
                 const lat = 50.8225; const lon = -0.1372;
                 initMap(lat, lon);
-                searchOverpass(lat, lon, query);
+                searchOverpassRecursive(lat, lon, query, 0);
             });
         } else {
             alert("Geolocation is not supported by this browser.");
         }
     }
 
-    async function searchOverpass(lat, lon, query) {
+    // Recursive function to try multiple servers if one fails
+    async function searchOverpassRecursive(lat, lon, query, serverIndex) {
+        if (serverIndex >= OVERPASS_SERVERS.length) {
+            alert("All map servers are busy right now. Please try again in a minute.");
+            return;
+        }
+
         markers.forEach(m => map.removeLayer(m));
         markers = [];
         document.getElementById('foodDetails').style.display = 'none';
 
-        const overpassUrl = "https://overpass-api.de/api/interpreter";
+        const overpassUrl = OVERPASS_SERVERS[serverIndex];
         
-        // --- THE "SUPER SEARCH" QUERY ---
-        // This looks for NWR (Nodes, Ways, Relations) that match Cuisine, Name, or Shop tags.
-        // It covers Restaurants, Fast Food, Cafes, Bars, Pubs, and Shops (e.g. Bubble Tea).
+        // Optimized Query (Radius 2000m, Timeout 25s)
         const overpassQuery = `
             [out:json][timeout:25];
             (
-              nwr["cuisine"~"${query}",i](around:3000, ${lat}, ${lon});
-              nwr["name"~"${query}",i]["amenity"~"restaurant|fast_food|cafe|bar|pub|ice_cream"](around:3000, ${lat}, ${lon});
-              nwr["shop"~"tea|bubble_tea|food"](around:3000, ${lat}, ${lon});
-              nwr["name"~"${query}",i]["shop"="food"](around:3000, ${lat}, ${lon});
+              nwr["cuisine"~"${query}",i](around:2000, ${lat}, ${lon});
+              nwr["name"~"${query}",i]["amenity"~"restaurant|fast_food|cafe|bar|pub|ice_cream"](around:2000, ${lat}, ${lon});
+              nwr["shop"~"tea|bubble_tea|food"](around:2000, ${lat}, ${lon});
+              nwr["name"~"${query}",i]["shop"="food"](around:2000, ${lat}, ${lon});
             );
             out center;
         `;
 
         try {
             const response = await fetch(overpassUrl, { method: "POST", body: overpassQuery });
+            
+            if (!response.ok) throw new Error("Server Error");
+            
             const data = await response.json();
 
             if(data.elements.length === 0) {
@@ -657,25 +672,20 @@
             }
 
             data.elements.forEach(place => {
-                // Handle both Points (Node) and Shapes (Way/Relation)
                 const lat = place.lat || (place.center && place.center.lat);
                 const lon = place.lon || (place.center && place.center.lon);
 
                 if(lat && lon) {
-                    const name = place.tags.name || "Unknown Place";
                     const marker = L.marker([lat, lon]).addTo(map);
-                    
-                    marker.on('click', () => {
-                        showRestaurantDetails(place.tags);
-                    });
-                    
+                    marker.on('click', () => showRestaurantDetails(place.tags));
                     markers.push(marker);
                 }
             });
 
         } catch (error) {
-            console.error(error);
-            alert("Could not fetch data.");
+            console.warn(`Server ${serverIndex} failed, trying next...`);
+            // Automatically try the next server in the list
+            searchOverpassRecursive(lat, lon, query, serverIndex + 1);
         }
     }
 

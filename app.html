@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="Coursework.css" />
   
   <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,8 +48,8 @@
     .icon-sub { color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
-    .icon-ai { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
     .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } 
+    .icon-notes { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } 
     .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }  
     
     /* Dark Mode Overrides */
@@ -59,8 +58,8 @@
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
     body.dark-mode .icon-weather { background: #451a03; color: #fbbf24; }
-    body.dark-mode .icon-ai { background: #064e3b; color: #34d399; }
     body.dark-mode .icon-music { background: #4c0519; color: #fb7185; }
+    body.dark-mode .icon-notes { background: #064e3b; color: #34d399; }
     body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
 
     /* Navigation */
@@ -83,7 +82,7 @@
 
     /* === PREMIUM BUTTON STYLES === */
     
-    /* 1. Primary Action (Save, Add, Start Chat) */
+    /* 1. Primary Action (Save, Add) */
     .action-btn {
         background: linear-gradient(135deg, #6366f1, #8b5cf6);
         color: white; border: none; padding: 12px 24px;
@@ -173,23 +172,6 @@
     .btn-reset { width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.05); color: var(--muted); font-size: 18px; }
     .btn-reset:hover { background: rgba(0,0,0,0.1); color: var(--ink); }
 
-    /* === AI CHAT === */
-    .chat-container { background: var(--card); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 600px; max-width: 800px; margin: 0 auto; border: 1px solid var(--border); position: relative; }
-    .chat-header { background: #10b981; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
-    .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: rgba(0,0,0,0.02); }
-    .message { max-width: 80%; padding: 12px 16px; border-radius: 12px; font-size: 15px; line-height: 1.5; }
-    .msg-user { align-self: flex-end; background: #10b981; color: white; border-bottom-right-radius: 2px; }
-    .msg-ai { align-self: flex-start; background: #e5e7eb; color: #333; border-bottom-left-radius: 2px; }
-    body.dark-mode .msg-ai { background: #334155; color: #e2e8f0; }
-    .chat-input-area { padding: 15px; border-top: 1px solid var(--border); background: var(--card); display: flex; gap: 10px; }
-    .chat-input { flex: 1; padding: 12px; border-radius: 50px; border: 1px solid var(--border); background: rgba(0,0,0,0.05); color: var(--ink); outline: none; }
-    .send-btn { background: #10b981; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
-    .send-btn:hover { transform: scale(1.1); }
-    .api-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10; display: flex; align-items: center; justify-content: center; }
-    .api-box { background: white; padding: 30px; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; }
-    body.dark-mode .api-box { background: #1e293b; color: white; }
-    .api-input { width: 100%; padding: 10px; margin: 15px 0; border-radius: 8px; border: 1px solid #ccc; }
-
     /* Weather Styles */
     .weather-container { background: rgba(255, 255, 255, 0.95); border-radius: 30px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 1000px; margin: 0 auto; overflow: visible; position: relative; }
     body.dark-mode .weather-container { background: #1e293b; color: white; }
@@ -253,7 +235,9 @@
               <div class="app-icon icon-sub" onclick="openApp('subManager')"><i class="fa-solid fa-receipt"></i><div class="app-name">Subscriptions</div></div>
               <div class="app-icon icon-clock" onclick="openApp('clockApp')"><i class="fa-solid fa-clock"></i><div class="app-name">Focus & Clock</div></div>
               <div class="app-icon icon-weather" onclick="openApp('weatherApp')"><i class="fa-solid fa-cloud-sun"></i><div class="app-name">Weather</div></div>
-              <div class="app-icon icon-ai" onclick="openApp('aiApp')"><i class="fa-solid fa-robot"></i><div class="app-name">Study Buddy</div></div>
+              
+              <div class="app-icon icon-notes" onclick="alert('Notes App coming soon!')"><i class="fa-solid fa-note-sticky"></i><div class="app-name">Notes</div></div>
+
               <div class="app-icon icon-music" onclick="alert('Music Player coming soon!')"><i class="fa-solid fa-music"></i><div class="app-name">Music</div></div>
               <div class="app-icon icon-game" onclick="alert('Snake Game coming soon!')"><i class="fa-solid fa-gamepad"></i><div class="app-name">Game</div></div>
           </div>
@@ -404,33 +388,6 @@
           </div>
       </div>
 
-      <div id="aiApp" class="app-view">
-          <div class="back-bar"><button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button></div>
-          <div class="chat-container">
-              <div id="apiModal" class="api-modal" style="display:none;">
-                  <div class="api-box">
-                      <h2>Setup Study Buddy</h2>
-                      <p style="font-size:13px; color:var(--muted);">To use the AI, you need a free API Key from Google.</p>
-                      <input type="password" id="apiKeyInput" class="api-input" placeholder="Paste your AIza... key here">
-                      <button class="action-btn" style="width:100%; margin-top:15px;" onclick="saveApiKey()">Start Chatting</button>
-                      <p style="font-size:11px; color:#999; margin-top:15px;">Your key is stored only on your device.</p>
-                      <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:12px; color:#10b981;">Get a free key here</a>
-                  </div>
-              </div>
-              <div class="chat-header">
-                  <div><i class="fa-solid fa-robot"></i> Study Buddy AI</div>
-                  <button onclick="clearApiKey()" style="background:transparent; border:none; color:white; font-size:12px; cursor:pointer; opacity:0.8;">⚙️ Reset Key</button>
-              </div>
-              <div id="chatMessages" class="chat-messages">
-                  <div class="message msg-ai">Hello! I'm your Study Buddy. How can I help you today?</div>
-              </div>
-              <div class="chat-input-area">
-                  <input type="text" id="userMsg" class="chat-input" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') sendAiMessage()">
-                  <button id="sendBtn" class="send-btn" onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-              </div>
-          </div>
-      </div>
-
   </div>
 
   <script src="Coursework.js"></script>
@@ -440,7 +397,6 @@
         document.getElementById('dashboardView').style.display = 'none';
         const app = document.getElementById(appId);
         if(app) { app.style.display = 'block'; window.scrollTo(0, 0); }
-        if(appId === 'aiApp') checkApiKey();
     };
     window.closeApp = function() {
         document.querySelectorAll('.app-view').forEach(app => app.style.display = 'none');
@@ -556,94 +512,6 @@
     async function renderSavedCities() { const list = document.getElementById('savedCitiesList'); list.innerHTML = ''; savedCities.forEach(city => { const div = document.createElement('div'); div.className = 'saved-city-card'; div.onclick = () => getWeather(city); div.innerHTML = `<div><div class="saved-city-name">${city}</div></div><div style="display:flex; align-items:center;"><span class="saved-city-temp" id="mini-temp-${city.replace(/\s/g, '')}">--°</span><button class="delete-saved-btn" onclick="deleteCity('${city}', event)"><i class="fa-solid fa-trash"></i></button></div>`; list.appendChild(div); fetchMiniTemp(city); }); }
     async function fetchMiniTemp(city) { try { const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`); const geoData = await geoRes.json(); if(!geoData.results) return; const { latitude, longitude } = geoData.results[0]; const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`); const wData = await wRes.json(); const tempEl = document.getElementById(`mini-temp-${city.replace(/\s/g, '')}`); if(tempEl) tempEl.textContent = `${Math.round(wData.current_weather.temperature)}°`; } catch(e) {} }
     renderSavedCities();
-  </script>
-
-  <script>
-    let aiKey = localStorage.getItem("sm:ai_key") || "";
-
-    function checkApiKey() {
-        if(!aiKey) {
-            document.getElementById('apiModal').style.display = "flex";
-        } else {
-            document.getElementById('apiModal').style.display = "none";
-        }
-    }
-
-    function saveApiKey() {
-        const input = document.getElementById('apiKeyInput').value.trim();
-        if(input.length < 10) return alert("That doesn't look like a valid key.");
-        aiKey = input;
-        localStorage.setItem("sm:ai_key", aiKey);
-        checkApiKey();
-    }
-
-    function clearApiKey() {
-        localStorage.removeItem("sm:ai_key");
-        aiKey = "";
-        location.reload();
-    }
-
-    // --- REUSABLE CHAT FUNCTION ---
-    async function attemptChat(modelName, userText) {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${aiKey}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: "You are a helpful study assistant. Keep answers concise. User says: " + userText }] }]
-            })
-        });
-        const data = await response.json();
-        
-        if (data.error) {
-            throw new Error(data.error.message); // Throw error to trigger fallback
-        }
-        return data.candidates[0].content.parts[0].text;
-    }
-
-    // --- MAIN SEND FUNCTION ---
-    async function sendAiMessage() {
-        const input = document.getElementById('userMsg');
-        const text = input.value.trim();
-        if(!text) return;
-
-        const chatBox = document.getElementById('chatMessages');
-        chatBox.innerHTML += `<div class="message msg-user">${text}</div>`;
-        input.value = "";
-        
-        const loadingId = "load-" + Date.now();
-        chatBox.innerHTML += `<div id="${loadingId}" class="message msg-ai">Thinking... <i class="fa-solid fa-spinner fa-spin"></i></div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        try {
-            let aiText = "";
-            
-            // 1. Try GEMINI 1.5 FLASH (Best)
-            try {
-                aiText = await attemptChat("gemini-1.5-flash", text);
-            } catch (err1) {
-                console.warn("Flash model failed, trying Pro fallback...", err1);
-                
-                // 2. If 1.5 fails, try GEMINI PRO (Legacy/Compatible)
-                if(err1.message.includes("not found") || err1.message.includes("404")) {
-                     aiText = await attemptChat("gemini-pro", text);
-                } else {
-                    throw err1; // If it's a real error (like bad key), stop here
-                }
-            }
-
-            // Success! Show Text
-            document.getElementById(loadingId).remove();
-            const cleanHtml = marked.parse(aiText); 
-            chatBox.innerHTML += `<div class="message msg-ai">${cleanHtml}</div>`;
-
-        } catch (error) {
-            document.getElementById(loadingId).innerHTML = `<b>Error:</b> ${error.message}`;
-            document.getElementById(loadingId).style.color = "#ef4444";
-            document.getElementById(loadingId).style.background = "#fee2e2";
-        }
-        
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
   </script>
 
 </body>

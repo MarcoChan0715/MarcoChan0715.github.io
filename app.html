@@ -131,7 +131,7 @@
     .food-input-group { display: flex; gap: 10px; margin-top: 10px; }
     .food-input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; }
     
-    /* ADDED MARGIN TOP FOR SPACING */
+    /* VARIETY TAGS */
     .food-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 25px; margin-bottom: 15px; }
     
     .food-tag { 
@@ -146,7 +146,7 @@
         background: var(--card); border: 1px solid var(--border);
         border-radius: 16px; padding: 20px; margin-top: 20px;
         text-align: left; animation: slideUp 0.3s ease;
-        display: none; /* Hidden until clicked */
+        display: none; 
         box-shadow: 0 5px 20px rgba(0,0,0,0.05);
     }
     .rest-title { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
@@ -514,6 +514,10 @@
                   <span class="food-tag" onclick="setFood('Italian')">Italian</span>
                   <span class="food-tag" onclick="setFood('Indian')">Indian</span>
                   <span class="food-tag" onclick="setFood('Cafe')">Cafe</span>
+                  <span class="food-tag" onclick="setFood('Bubble Tea')">Bubble Tea</span>
+                  <span class="food-tag" onclick="setFood('Chicken')">Chicken</span>
+                  <span class="food-tag" onclick="setFood('Dessert')">Dessert</span>
+                  <span class="food-tag" onclick="setFood('Pizza')">Pizza</span>
               </div>
 
               <div id="foodMap"></div>
@@ -625,19 +629,22 @@
     async function searchOverpass(lat, lon, query) {
         markers.forEach(m => map.removeLayer(m));
         markers = [];
-        
-        // Hide details initially
         document.getElementById('foodDetails').style.display = 'none';
 
         const overpassUrl = "https://overpass-api.de/api/interpreter";
+        
+        // --- THE "SUPER SEARCH" QUERY ---
+        // This looks for NWR (Nodes, Ways, Relations) that match Cuisine, Name, or Shop tags.
+        // It covers Restaurants, Fast Food, Cafes, Bars, Pubs, and Shops (e.g. Bubble Tea).
         const overpassQuery = `
-            [out:json];
+            [out:json][timeout:25];
             (
-              node["amenity"="restaurant"]["cuisine"~"${query}",i](around:2000, ${lat}, ${lon});
-              node["amenity"="fast_food"]["cuisine"~"${query}",i](around:2000, ${lat}, ${lon});
-              node["name"~"${query}",i]["amenity"="restaurant"](around:2000, ${lat}, ${lon});
+              nwr["cuisine"~"${query}",i](around:3000, ${lat}, ${lon});
+              nwr["name"~"${query}",i]["amenity"~"restaurant|fast_food|cafe|bar|pub|ice_cream"](around:3000, ${lat}, ${lon});
+              nwr["shop"~"tea|bubble_tea|food"](around:3000, ${lat}, ${lon});
+              nwr["name"~"${query}",i]["shop"="food"](around:3000, ${lat}, ${lon});
             );
-            out;
+            out center;
         `;
 
         try {
@@ -645,15 +652,19 @@
             const data = await response.json();
 
             if(data.elements.length === 0) {
-                alert("No places found. Try a different food type.");
+                alert("No places found for '" + query + "'. Try a broader term.");
                 return;
             }
 
             data.elements.forEach(place => {
-                if(place.lat && place.lon) {
-                    const marker = L.marker([place.lat, place.lon]).addTo(map);
+                // Handle both Points (Node) and Shapes (Way/Relation)
+                const lat = place.lat || (place.center && place.center.lat);
+                const lon = place.lon || (place.center && place.center.lon);
+
+                if(lat && lon) {
+                    const name = place.tags.name || "Unknown Place";
+                    const marker = L.marker([lat, lon]).addTo(map);
                     
-                    // ON CLICK: Show Bottom Details
                     marker.on('click', () => {
                         showRestaurantDetails(place.tags);
                     });
@@ -674,15 +685,12 @@
         
         document.getElementById('rTitle').textContent = name;
         
-        // Smart Cuisine & Location Text
-        const cuisine = tags.cuisine ? tags.cuisine.charAt(0).toUpperCase() + tags.cuisine.slice(1) : "Restaurant";
+        const cuisine = tags.cuisine ? tags.cuisine.charAt(0).toUpperCase() + tags.cuisine.slice(1) : (tags.amenity || "Restaurant");
         const street = tags['addr:street'] || "Brighton";
         document.getElementById('rCuisine').textContent = `${cuisine} • ${street}`;
         
-        // Handle Opening Hours (With "Not Listed" Fallback)
         const hoursEl = document.getElementById('rHours');
         if (tags.opening_hours) {
-            // Truncate if too long (some OSM hours are huge strings)
             let hours = tags.opening_hours.replace(/;/g, "\n"); 
             if(hours.length > 40) hours = "See Google for full hours";
             hoursEl.textContent = hours;
@@ -694,7 +702,6 @@
             hoursEl.style.fontStyle = "italic";
         }
 
-        // Handle Contact (With "No Info" Fallback)
         const contactEl = document.getElementById('rContact');
         let contact = tags.phone || tags.website;
         
@@ -705,19 +712,16 @@
                 contactEl.textContent = contact;
             }
             contactEl.style.color = "var(--ink)";
-            contactEl.style.fontStyle = "normal";
         } else {
             contactEl.textContent = "No contact info available";
             contactEl.style.color = "var(--muted)";
             contactEl.style.fontStyle = "italic";
         }
 
-        // Robust Google Search Link
         const googleQuery = encodeURIComponent(`${name} ${street} Brighton reviews`);
         const googleLink = `https://www.google.com/search?q=${googleQuery}`;
         document.getElementById('rReviewLink').href = googleLink;
 
-        // Show the card
         card.style.display = "block";
         card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }

@@ -62,9 +62,14 @@
     body.dark-mode .icon-notes { background: #064e3b; color: #34d399; }
     body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
 
-    /* Navigation */
+    /* Navigation - FIXED UNRESPONSIVE BUTTON */
     .app-view { display: none; animation: slideUp 0.3s ease-out; }
-    .back-bar { padding: 10px 0 20px; }
+    .back-bar { 
+        padding: 10px 0 20px; 
+        position: relative; 
+        z-index: 100; /* Forces button above header overlap */
+    }
+    
     .back-btn {
         background: transparent; border: none; font-size: 16px; font-weight: 700; 
         color: #8b5cf6; cursor: pointer; display: flex; align-items: center; gap: 8px;

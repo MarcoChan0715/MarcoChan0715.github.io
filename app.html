@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="Coursework.css" />
   
   <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,7 +49,7 @@
     .icon-sub { color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
-    .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } 
+    .icon-spin { color: #ec4899; background: linear-gradient(135deg, #fdf2f8, #fce7f3); } /* Pink for Spinner */
     .icon-notes { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } 
     .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }
     .icon-bus { color: #ef4444; background: linear-gradient(135deg, #fef2f2, #fee2e2); } 
@@ -59,7 +60,7 @@
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
     body.dark-mode .icon-weather { background: #451a03; color: #fbbf24; }
-    body.dark-mode .icon-music { background: #4c0519; color: #fb7185; }
+    body.dark-mode .icon-spin { background: #831843; color: #f472b6; }
     body.dark-mode .icon-notes { background: #064e3b; color: #34d399; }
     body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
     body.dark-mode .icon-bus { background: #450a0a; color: #fca5a5; }
@@ -88,8 +89,7 @@
         color: white; border: none; padding: 12px 24px;
         border-radius: 12px; font-weight: 600; cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
-        font-size: 14px;
+        box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2); font-size: 14px;
     }
     .action-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3); filter: brightness(1.1); }
     .action-btn:active { transform: translateY(0); }
@@ -112,6 +112,35 @@
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .fx-btn:hover { transform: scale(1.02); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3); }
+
+    /* === SPINNER STYLES (NEW) === */
+    .spin-container { 
+        background: var(--card); border-radius: 20px; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 30px; 
+        max-width: 600px; margin: 0 auto; text-align: center; 
+        border: 1px solid var(--border);
+    }
+    body.dark-mode .spin-container { background: #1e293b; }
+    
+    .spin-wheel-box { 
+        position: relative; width: 300px; height: 300px; margin: 20px auto; 
+    }
+    .spin-canvas { width: 100%; height: 100%; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
+    .spin-arrow {
+        position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+        width: 0; height: 0; border-left: 15px solid transparent;
+        border-right: 15px solid transparent; border-top: 25px solid #ec4899; z-index: 10;
+    }
+    .spin-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .spin-category-btn {
+        background: rgba(0,0,0,0.05); border: none; padding: 8px 16px; 
+        border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--muted); 
+        cursor: pointer; transition: all 0.2s;
+    }
+    .spin-category-btn:hover { background: rgba(0,0,0,0.1); color: var(--ink); }
+    .spin-input-group { display: flex; gap: 10px; margin-top: 20px; }
+    .spin-input { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--ink); }
+    .spin-result { margin-top: 20px; font-size: 24px; font-weight: 700; color: #ec4899; min-height: 40px; }
 
     /* === BACK TO TOP BUTTON === */
     .back-to-top {
@@ -140,33 +169,6 @@
     .btn-sw-start:hover { background: #bbf7d0; }
     .btn-sw-reset { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
     .btn-sw-reset:hover { background: #e2e8f0; }
-
-    /* === BUS BOARD STYLES === */
-    .bus-container { background: var(--card); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 30px; max-width: 600px; margin: 0 auto; border: 1px solid var(--border); }
-    body.dark-mode .bus-container { background: #1e293b; border-color: #334155; }
-    .bus-header { text-align: center; margin-bottom: 25px; }
-    .bus-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-    .bus-input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; }
-    .bus-card { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border); animation: fadeIn 0.3s ease; }
-    .bus-route { font-size: 20px; font-weight: 700; color: #ef4444; width: 60px; }
-    .bus-dest { flex: 1; font-weight: 500; color: var(--ink); }
-    .bus-time { font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 8px; }
-    
-    /* NEW: Bus Help Box */
-    .bus-help-box {
-        background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.2); 
-        border-radius: 12px; padding: 15px; margin-bottom: 25px; text-align: left;
-    }
-    .bus-help-title { color: #6366f1; font-weight: 700; font-size: 14px; margin-bottom: 8px; display:flex; align-items:center; gap:6px;}
-    .bus-help-list { margin: 0; padding-left: 20px; font-size: 13px; color: var(--ink); line-height: 1.6; }
-    .bus-quick-area { margin-top: 15px; border-top: 1px solid rgba(99, 102, 241, 0.15); padding-top: 10px; }
-    .quick-stop-btn {
-        background: var(--card); border: 1px solid var(--border); padding: 6px 12px; 
-        border-radius: 8px; font-size: 12px; cursor: pointer; transition: all 0.2s; 
-        color: var(--ink); margin-right: 5px; margin-bottom: 5px;
-    }
-    .quick-stop-btn:hover { background: #eef2ff; border-color: #6366f1; color: #6366f1; transform: translateY(-2px); }
-    body.dark-mode .quick-stop-btn { background: #334155; border-color: #475569; }
 
     /* === SUBSCRIPTION MANAGER === */
     #sm { box-sizing: border-box; width: 100%; padding: 24px 16px 56px; background: rgba(255, 255, 255, 0.95); border-radius: 16px; position: relative; }
@@ -238,6 +240,24 @@
     .saved-city-temp { font-weight: 700; font-size: 18px; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 8px; }
     .delete-saved-btn { background: transparent; border: none; color: #9ca3af; margin-left: 10px; cursor: pointer; padding: 5px; transition: color 0.2s; }
     .delete-saved-btn:hover { color: #ef4444; }
+
+    /* === BUS BOARD STYLES === */
+    .bus-container { background: var(--card); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 30px; max-width: 600px; margin: 0 auto; border: 1px solid var(--border); }
+    body.dark-mode .bus-container { background: #1e293b; border-color: #334155; }
+    .bus-header { text-align: center; margin-bottom: 25px; }
+    .bus-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+    .bus-input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; }
+    .bus-card { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border); animation: fadeIn 0.3s ease; }
+    .bus-route { font-size: 20px; font-weight: 700; color: #ef4444; width: 60px; }
+    .bus-dest { flex: 1; font-weight: 500; color: var(--ink); }
+    .bus-time { font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 8px; }
+    .bus-help-box { background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; padding: 15px; margin-bottom: 25px; text-align: left; }
+    .bus-help-title { color: #6366f1; font-weight: 700; font-size: 14px; margin-bottom: 8px; display:flex; align-items:center; gap:6px;}
+    .bus-help-list { margin: 0; padding-left: 20px; font-size: 13px; color: var(--ink); line-height: 1.6; }
+    .bus-quick-area { margin-top: 15px; border-top: 1px solid rgba(99, 102, 241, 0.15); padding-top: 10px; }
+    .quick-stop-btn { background: var(--card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all 0.2s; color: var(--ink); margin-right: 5px; margin-bottom: 5px; }
+    .quick-stop-btn:hover { background: #eef2ff; border-color: #6366f1; color: #6366f1; transform: translateY(-2px); }
+    body.dark-mode .quick-stop-btn { background: #334155; border-color: #475569; }
   </style>
 </head>
 <body>
@@ -267,11 +287,9 @@
               <div class="app-icon icon-sub" onclick="openApp('subManager')"><i class="fa-solid fa-receipt"></i><div class="app-name">Subscriptions</div></div>
               <div class="app-icon icon-clock" onclick="openApp('clockApp')"><i class="fa-solid fa-clock"></i><div class="app-name">Focus & Clock</div></div>
               <div class="app-icon icon-weather" onclick="openApp('weatherApp')"><i class="fa-solid fa-cloud-sun"></i><div class="app-name">Weather</div></div>
-              
               <div class="app-icon icon-bus" onclick="openApp('busApp')"><i class="fa-solid fa-bus"></i><div class="app-name">Bus Board</div></div>
-
+              <div class="app-icon icon-spin" onclick="openApp('spinApp')"><i class="fa-solid fa-spinner"></i><div class="app-name">Decide For Me</div></div>
               <div class="app-icon icon-notes" onclick="alert('Notes App coming soon!')"><i class="fa-solid fa-note-sticky"></i><div class="app-name">Notes</div></div>
-              <div class="app-icon icon-music" onclick="alert('Music Player coming soon!')"><i class="fa-solid fa-music"></i><div class="app-name">Music</div></div>
           </div>
       </div>
 
@@ -377,7 +395,6 @@
               <hr style="margin: 30px 0; border:0; border-top:1px solid #eee;">
               <h4 style="color:#009688; margin:0; text-transform: uppercase; letter-spacing: 1px;">Stopwatch</h4>
               <div class="stopwatch-display" id="swDisplay">00:00:00</div>
-              
               <div class="sw-controls">
                   <button class="sw-btn btn-sw-stop" onclick="Stop()">Stop</button>
                   <button class="sw-btn btn-sw-start" onclick="Start()">Start</button>
@@ -463,6 +480,34 @@
           </div>
       </div>
 
+      <div id="spinApp" class="app-view">
+          <div class="back-bar"><button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button></div>
+          <div class="spin-container">
+              <h2 style="color:var(--ink);">Decide For Me</h2>
+              <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Can't make up your mind? Spin the wheel!</p>
+              
+              <div class="spin-controls">
+                  <button class="spin-category-btn" onclick="loadSpinCategory('eat')">🍕 What to Eat</button>
+                  <button class="spin-category-btn" onclick="loadSpinCategory('watch')">🎬 What to Watch</button>
+                  <button class="spin-category-btn" onclick="loadSpinCategory('do')">🏃 What to Do</button>
+                  <button class="spin-category-btn" onclick="clearSpinList()" style="color:#ef4444;">🗑️ Clear</button>
+              </div>
+
+              <div class="spin-wheel-box">
+                  <div class="spin-arrow"></div>
+                  <canvas id="wheelCanvas" width="300" height="300" class="spin-canvas"></canvas>
+              </div>
+
+              <div id="spinResult" class="spin-result"></div>
+
+              <div class="spin-input-group">
+                  <input type="text" id="spinInput" class="spin-input" placeholder="Add option (e.g. Tacos)">
+                  <button class="action-btn" style="width:auto; padding: 10px 20px;" onclick="addSpinOption()">Add</button>
+              </div>
+              <button class="action-btn" style="margin-top:20px; width:100%; font-size:18px;" onclick="spinTheWheel()">SPIN!</button>
+          </div>
+      </div>
+
   </div>
 
   <button id="backToTop" class="back-to-top" onclick="scrollToTop()">
@@ -477,6 +522,7 @@
         const app = document.getElementById(appId);
         if(app) { app.style.display = 'block'; window.scrollTo(0, 0); }
         if(appId === 'busApp') loadBusCreds();
+        if(appId === 'spinApp') drawWheel();
     };
     window.closeApp = function() {
         document.querySelectorAll('.app-view').forEach(app => app.style.display = 'none');
@@ -497,6 +543,81 @@
     function scrollToTop() {
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
+  </script>
+
+  <script>
+    let spinOptions = ["Pizza", "Sushi", "Burger", "Salad", "Pasta", "Tacos"];
+    let colors = ["#f87171", "#fb923c", "#fbbf24", "#a3e635", "#34d399", "#22d3ee", "#818cf8", "#c084fc"];
+    let currentRotation = 0;
+
+    function loadSpinCategory(type) {
+        if(type === 'eat') spinOptions = ["Pizza", "Sushi", "Burger", "Salad", "Pasta", "Tacos"];
+        if(type === 'watch') spinOptions = ["Action Movie", "Comedy", "Documentary", "Sci-Fi", "Anime", "Thriller"];
+        if(type === 'do') spinOptions = ["Go for a Run", "Read a Book", "Clean Room", "Call a Friend", "Study Code", "Sleep"];
+        drawWheel();
+        document.getElementById('spinResult').textContent = "";
+    }
+
+    function clearSpinList() { spinOptions = []; drawWheel(); }
+    
+    function addSpinOption() {
+        const val = document.getElementById('spinInput').value.trim();
+        if(val) { spinOptions.push(val); document.getElementById('spinInput').value = ""; drawWheel(); }
+    }
+
+    function drawWheel() {
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const arc = Math.PI * 2 / (spinOptions.length || 1);
+        ctx.clearRect(0,0,300,300);
+        
+        if(spinOptions.length === 0) {
+            ctx.font = "16px Poppins"; ctx.fillStyle = "#666"; ctx.textAlign = "center";
+            ctx.fillText("Add options to spin!", 150, 150); return;
+        }
+
+        spinOptions.forEach((opt, i) => {
+            ctx.beginPath();
+            ctx.fillStyle = colors[i % colors.length];
+            ctx.moveTo(150, 150);
+            ctx.arc(150, 150, 140, i * arc, (i + 1) * arc);
+            ctx.fill();
+            ctx.save();
+            ctx.translate(150, 150);
+            ctx.rotate(i * arc + arc / 2);
+            ctx.fillStyle = "white"; ctx.font = "bold 14px Poppins";
+            ctx.fillText(opt, 60, 5);
+            ctx.restore();
+        });
+    }
+
+    function spinTheWheel() {
+        if(spinOptions.length === 0) return;
+        const canvas = document.getElementById('wheelCanvas');
+        const spinResult = document.getElementById('spinResult');
+        spinResult.textContent = "";
+        
+        const extraSpins = 5 + Math.random() * 5; 
+        const duration = 4000; 
+        const arc = 360 / spinOptions.length;
+        const randomOffset = Math.floor(Math.random() * 360);
+        const finalRotation = currentRotation + (extraSpins * 360) + randomOffset;
+        
+        canvas.style.transform = `rotate(-${finalRotation}deg)`;
+        currentRotation = finalRotation;
+
+        setTimeout(() => {
+            const actualRotation = finalRotation % 360;
+            const index = Math.floor((360 - actualRotation + (arc/2)) / arc) % spinOptions.length;
+            const winner = spinOptions[index >= 0 ? index : spinOptions.length - 1]; // Safe index
+            
+            spinResult.textContent = "🎉 " + winner + "!";
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }, duration);
+    }
+    
+    // Init Wheel
+    setTimeout(drawWheel, 500); 
   </script>
 
   <script>

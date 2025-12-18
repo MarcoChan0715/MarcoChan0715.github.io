@@ -117,7 +117,7 @@
     }
     .fx-btn:hover { transform: scale(1.02); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3); }
 
-    /* === FOOD MAP STYLES (NEW) === */
+    /* === FOOD MAP STYLES === */
     .food-container { 
         background: var(--card); border-radius: 20px; 
         box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 30px; 
@@ -126,11 +126,14 @@
     }
     body.dark-mode .food-container { background: #1e293b; }
     
-    #foodMap { height: 400px; width: 100%; border-radius: 16px; margin-top: 20px; z-index: 1; }
+    #foodMap { height: 400px; width: 100%; border-radius: 16px; margin-top: 20px; z-index: 1; border: 1px solid var(--border); }
     
     .food-input-group { display: flex; gap: 10px; margin-top: 10px; }
     .food-input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; }
-    .food-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
+    
+    /* ADDED MARGIN TOP FOR SPACING */
+    .food-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 25px; margin-bottom: 15px; }
+    
     .food-tag { 
         background: rgba(236, 72, 153, 0.1); color: #ec4899; 
         padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; 
@@ -138,15 +141,25 @@
     }
     .food-tag:hover { background: #ec4899; color: white; }
 
-    /* Custom Map Popup Style */
-    .leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; overflow: hidden; }
-    .leaflet-popup-content { margin: 10px; font-family: 'Poppins', sans-serif; text-align: center; }
-    .popup-title { font-weight: 700; color: #333; font-size: 14px; margin-bottom: 5px; }
-    .popup-btn { 
-        display: inline-block; background: #ec4899; color: white; text-decoration: none; 
-        padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-top: 5px;
+    /* RESTAURANT INFO CARD (NEW) */
+    .rest-card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 16px; padding: 20px; margin-top: 20px;
+        text-align: left; animation: slideUp 0.3s ease;
+        display: none; /* Hidden until clicked */
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
     }
-    .popup-btn:hover { opacity: 0.9; }
+    .rest-title { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+    .rest-meta { color: var(--muted); font-size: 13px; margin-bottom: 15px; }
+    .rest-details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+    .rest-detail-item { font-size: 13px; color: var(--ink); }
+    .rest-label { font-weight: 600; color: #ec4899; display: block; margin-bottom: 3px; }
+    .review-link-btn {
+        background: #ec4899; color: white; text-decoration: none; display: block;
+        text-align: center; padding: 10px; border-radius: 10px; font-weight: 600;
+        transition: transform 0.2s;
+    }
+    .review-link-btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
     /* === BACK TO TOP BUTTON === */
     .back-to-top {
@@ -401,6 +414,7 @@
               <hr style="margin: 30px 0; border:0; border-top:1px solid #eee;">
               <h4 style="color:#009688; margin:0; text-transform: uppercase; letter-spacing: 1px;">Stopwatch</h4>
               <div class="stopwatch-display" id="swDisplay">00:00:00</div>
+              
               <div class="sw-controls">
                   <button class="sw-btn btn-sw-stop" onclick="Stop()">Stop</button>
                   <button class="sw-btn btn-sw-start" onclick="Start()">Start</button>
@@ -503,6 +517,26 @@
               </div>
 
               <div id="foodMap"></div>
+
+              <div id="foodDetails" class="rest-card">
+                  <div class="rest-title" id="rTitle">Select a restaurant</div>
+                  <div class="rest-meta" id="rCuisine">Click a blue pin on the map</div>
+                  
+                  <div class="rest-details">
+                      <div>
+                          <span class="rest-label"><i class="fa-regular fa-clock"></i> Opening Hours</span>
+                          <div id="rHours" class="rest-detail-item">--</div>
+                      </div>
+                      <div>
+                          <span class="rest-label"><i class="fa-solid fa-globe"></i> Contact</span>
+                          <div id="rContact" class="rest-detail-item">--</div>
+                      </div>
+                  </div>
+
+                  <a id="rReviewLink" href="#" target="_blank" class="review-link-btn">
+                      <i class="fa-brands fa-google"></i> Read Reviews on Google
+                  </a>
+              </div>
           </div>
       </div>
 
@@ -515,7 +549,7 @@
   <script src="Coursework.js"></script>
 
   <script>
-    let map = null; // Global map variable
+    let map = null; 
 
     window.openApp = function(appId) {
         document.getElementById('dashboardView').style.display = 'none';
@@ -523,7 +557,6 @@
         if(app) { 
             app.style.display = 'block'; 
             window.scrollTo(0, 0); 
-            // Re-render map if opening food app
             if(appId === 'foodApp' && map) { 
                 setTimeout(() => { map.invalidateSize(); }, 200); 
             }
@@ -555,17 +588,12 @@
     let markers = [];
 
     function initMap(lat, lon) {
-        if(map) { map.remove(); } // Reset map
-        
+        if(map) { map.remove(); }
         map = L.map('foodMap').setView([lat, lon], 14);
-        
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
-
-        // User Marker
-        L.marker([lat, lon]).addTo(map)
-            .bindPopup("📍 You are here").openPopup();
+        L.marker([lat, lon]).addTo(map).bindPopup("📍 You are here").openPopup();
     }
 
     function setFood(type) {
@@ -581,11 +609,10 @@
             navigator.geolocation.getCurrentPosition(position => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                
                 initMap(lat, lon);
                 searchOverpass(lat, lon, query);
             }, () => {
-                alert("Location access denied. Showing Brighton center.");
+                alert("Location access denied. Showing Brighton.");
                 const lat = 50.8225; const lon = -0.1372;
                 initMap(lat, lon);
                 searchOverpass(lat, lon, query);
@@ -596,11 +623,12 @@
     }
 
     async function searchOverpass(lat, lon, query) {
-        // Clear old markers
         markers.forEach(m => map.removeLayer(m));
         markers = [];
+        
+        // Hide details initially
+        document.getElementById('foodDetails').style.display = 'none';
 
-        // Overpass API Query (Free, Open Source)
         const overpassUrl = "https://overpass-api.de/api/interpreter";
         const overpassQuery = `
             [out:json];
@@ -613,36 +641,25 @@
         `;
 
         try {
-            const response = await fetch(overpassUrl, {
-                method: "POST",
-                body: overpassQuery
-            });
+            const response = await fetch(overpassUrl, { method: "POST", body: overpassQuery });
             const data = await response.json();
 
             if(data.elements.length === 0) {
-                alert("No " + query + " places found nearby. Try 'Burger' or 'Cafe'.");
+                alert("No places found. Try a different food type.");
                 return;
             }
 
             data.elements.forEach(place => {
                 if(place.lat && place.lon) {
-                    const name = place.tags.name || "Unknown Restaurant";
+                    const name = place.tags.name || "Unknown Place";
                     const cuisine = place.tags.cuisine || "Food";
                     
-                    // Create Google Search Link for Reviews
-                    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(name + " Brighton reviews")}`;
-
-                    const popupContent = `
-                        <div class="popup-title">${name}</div>
-                        <div style="font-size:12px; color:#666;">${cuisine}</div>
-                        <a href="${googleSearchUrl}" target="_blank" class="popup-btn">
-                           ⭐ Read Reviews
-                        </a>
-                    `;
-
-                    const marker = L.marker([place.lat, place.lon])
-                        .addTo(map)
-                        .bindPopup(popupContent);
+                    const marker = L.marker([place.lat, place.lon]).addTo(map);
+                    
+                    // ON CLICK: Show Bottom Details
+                    marker.on('click', () => {
+                        showRestaurantDetails(place.tags);
+                    });
                     
                     markers.push(marker);
                 }
@@ -650,8 +667,33 @@
 
         } catch (error) {
             console.error(error);
-            alert("Could not fetch data. Please try again.");
+            alert("Could not fetch data.");
         }
+    }
+
+    function showRestaurantDetails(tags) {
+        const card = document.getElementById('foodDetails');
+        const name = tags.name || "Unknown Restaurant";
+        
+        document.getElementById('rTitle').textContent = name;
+        document.getElementById('rCuisine').textContent = (tags.cuisine || "Restaurant") + " • " + (tags['addr:street'] || "Brighton");
+        
+        // Handle Opening Hours
+        let hours = tags.opening_hours || "Not listed";
+        if(hours.length > 30) hours = hours.substring(0, 30) + "...";
+        document.getElementById('rHours').textContent = hours;
+
+        // Handle Contact
+        let contact = tags.phone || tags.website || "No info";
+        if(contact.startsWith("http")) contact = "Website available";
+        document.getElementById('rContact').textContent = contact;
+
+        // Review Link
+        const googleLink = `https://www.google.com/search?q=${encodeURIComponent(name + " Brighton reviews")}`;
+        document.getElementById('rReviewLink').href = googleLink;
+
+        card.style.display = "block";
+        card.scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 

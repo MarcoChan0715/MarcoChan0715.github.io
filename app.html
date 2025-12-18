@@ -18,7 +18,7 @@
 
   <style>
     /* =========================================
-       GLOBAL & LAYOUT STYLES
+       GLOBAL STYLES
        ========================================= */
     body { font-family: 'Poppins', sans-serif; }
     * { box-sizing: border-box; }
@@ -81,9 +81,9 @@
     :root { --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; }
     body.dark-mode { --ink: #eef2ff; --muted: #94a3b8; --card: #1e293b; --border: #334155; }
 
-    /* === IMPROVED BUTTON STYLES === */
+    /* === PREMIUM BUTTON STYLES === */
     
-    /* 1. General Action Button (Used for Add Sub, API Start) */
+    /* Action Button (Add Sub, API Start) */
     .action-btn {
         background: linear-gradient(135deg, #6366f1, #8b5cf6);
         color: white; border: none; padding: 12px 24px;
@@ -99,7 +99,7 @@
     }
     .action-btn:active { transform: translateY(0); }
 
-    /* 2. FX Update Button (Specific Style) */
+    /* FX Update Button (Pulsing Green) */
     .fx-btn {
         background: linear-gradient(135deg, #10b981, #059669);
         color: white; border: none; padding: 12px;
@@ -113,8 +113,8 @@
         transform: scale(1.02);
         box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
     }
-    
-    /* 3. Stopwatch Buttons (3D Effect) */
+
+    /* Stopwatch Buttons (3D Effect) */
     .sw-controls { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
     
     .sw-btn {
@@ -131,15 +131,10 @@
     }
     
     .btn-sw-stop { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
-    .btn-sw-stop:hover { background: #fecaca; }
-    
     .btn-sw-start { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
-    .btn-sw-start:hover { background: #bbf7d0; }
-    
     .btn-sw-reset { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
-    .btn-sw-reset:hover { background: #e2e8f0; }
 
-    /* === SUBSCRIPTION STYLES === */
+    /* === SUBSCRIPTION MANAGER === */
     #sm { box-sizing: border-box; width: 100%; padding: 24px 16px 56px; background: rgba(255, 255, 255, 0.95); border-radius: 16px; position: relative; }
     body.dark-mode #sm { background: rgba(30, 30, 40, 0.95); }
     #sm h1 { margin: 0 0 5px; font-size: 26px; font-weight:700; color: var(--ink); }
@@ -159,7 +154,7 @@
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     .modal-box { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 1px solid var(--border); }
 
-    /* === CLOCK STYLES === */
+    /* === CLOCK & POMODORO === */
     .clock-container { text-align: center; background: rgba(255,255,255,0.95); padding: 40px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto; }
     body.dark-mode .clock-container { background: #1e293b; }
     .digital-time { font-size: 70px; font-weight: 800; line-height: 1; color: var(--ink); }
@@ -177,7 +172,7 @@
     .btn-reset { width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.05); color: var(--muted); font-size: 18px; }
     .btn-reset:hover { background: rgba(0,0,0,0.1); color: var(--ink); }
 
-    /* === AI CHAT STYLES === */
+    /* === AI CHAT === */
     .chat-container { background: var(--card); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 600px; max-width: 800px; margin: 0 auto; border: 1px solid var(--border); position: relative; }
     .chat-header { background: #10b981; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
     .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: rgba(0,0,0,0.02); }
@@ -258,9 +253,7 @@
               <div class="app-icon icon-sub" onclick="openApp('subManager')"><i class="fa-solid fa-receipt"></i><div class="app-name">Subscriptions</div></div>
               <div class="app-icon icon-clock" onclick="openApp('clockApp')"><i class="fa-solid fa-clock"></i><div class="app-name">Focus & Clock</div></div>
               <div class="app-icon icon-weather" onclick="openApp('weatherApp')"><i class="fa-solid fa-cloud-sun"></i><div class="app-name">Weather</div></div>
-              
               <div class="app-icon icon-ai" onclick="openApp('aiApp')"><i class="fa-solid fa-robot"></i><div class="app-name">Study Buddy</div></div>
-
               <div class="app-icon icon-music" onclick="alert('Music Player coming soon!')"><i class="fa-solid fa-music"></i><div class="app-name">Music</div></div>
               <div class="app-icon icon-game" onclick="alert('Snake Game coming soon!')"><i class="fa-solid fa-gamepad"></i><div class="app-name">Game</div></div>
           </div>
@@ -359,14 +352,9 @@
                       <button class="mode-btn" onclick="switchPomoMode('long')">🛋️ Long</button>
                   </div>
                   <div class="pomo-timer" id="pomoTimer">25:00</div>
-                  
                   <div class="pomo-controls">
-                      <button class="control-btn btn-start" id="pomoStartBtn" onclick="togglePomo()">
-                          <i class="fa-solid fa-play"></i> Start
-                      </button>
-                      <button class="control-btn btn-reset" onclick="resetPomo()">
-                          <i class="fa-solid fa-rotate-right"></i>
-                      </button>
+                      <button class="control-btn btn-start" id="pomoStartBtn" onclick="togglePomo()"><i class="fa-solid fa-play"></i> Start</button>
+                      <button class="control-btn btn-reset" onclick="resetPomo()"><i class="fa-solid fa-rotate-right"></i></button>
                   </div>
               </div>
 
@@ -452,7 +440,7 @@
         document.getElementById('dashboardView').style.display = 'none';
         const app = document.getElementById(appId);
         if(app) { app.style.display = 'block'; window.scrollTo(0, 0); }
-        if(appId === 'aiApp') checkApiKey(); // Trigger AI check
+        if(appId === 'aiApp') checkApiKey();
     };
     window.closeApp = function() {
         document.querySelectorAll('.app-view').forEach(app => app.style.display = 'none');
@@ -621,15 +609,29 @@
             });
 
             const data = await response.json();
-            const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't understand that.";
 
-            // Remove loading and add real response (with Markdown support)
+            // ✅ ERROR CHECKING LOGIC
+            if (data.error) {
+                // If Google sends an error (like invalid key), throw it so catch() handles it
+                throw new Error(data.error.message || "Unknown API Error");
+            }
+
+            // Check if candidates exist (Safety block)
+            if (!data.candidates || data.candidates.length === 0) {
+                 throw new Error("No response. The AI might have been blocked by safety settings.");
+            }
+
+            const aiText = data.candidates[0].content.parts[0].text;
+
+            // Remove loading and add real response
             document.getElementById(loadingId).remove();
             const cleanHtml = marked.parse(aiText); 
             chatBox.innerHTML += `<div class="message msg-ai">${cleanHtml}</div>`;
 
         } catch (error) {
-            document.getElementById(loadingId).innerHTML = "Error: Check your API Key or connection.";
+            // Show the REAL error message to the user
+            document.getElementById(loadingId).innerHTML = `Error: ${error.message}`;
+            document.getElementById(loadingId).style.color = "#ef4444";
         }
         
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -638,3 +640,4 @@
 
 </body>
 </html>
+

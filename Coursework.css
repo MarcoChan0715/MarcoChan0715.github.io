@@ -84,7 +84,7 @@ body {
 
 /* ================= DARK MODE OVERRIDES ================= */
 body.dark-mode {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/Coursework/MountainBanner.jpg') no-repeat center center fixed;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/Coursework/Website_background.png') no-repeat center center fixed;
     background-size: cover;
     color: #e0e0e0;
 }

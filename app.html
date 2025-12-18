@@ -14,10 +14,10 @@
 
   <style>
     /* =========================================
-       APP-SPECIFIC STYLES ONLY
+       APP-SPECIFIC STYLES
        ========================================= */
     
-    /* Global Reset for App Content */
+    /* Global Reset */
     body { font-family: 'Poppins', sans-serif; }
     * { box-sizing: border-box; }
 
@@ -157,13 +157,15 @@
     .btn-sw-start { background: #bbf7d0; color: #16a34a; }
     .btn-sw-reset { background: #e5e7eb; color: #374151; }
 
-    /* ===== WEATHER APP STYLES (WIDESCREEN FIX) ===== */
+    /* ===== WEATHER APP STYLES (FIXED) ===== */
     .weather-container {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 30px; padding: 30px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        max-width: 1000px; /* INCREASED WIDTH */
+        max-width: 1000px;
         margin: 0 auto;
+        /* Ensure the box itself handles overflow just in case */
+        overflow: hidden; 
     }
     body.dark-mode .weather-container { background: #1e293b; color: white; }
 
@@ -180,24 +182,23 @@
     }
     .weather-btn:hover { transform: scale(1.05); }
 
-    /* GRID LAYOUT FOR WEATHER INFO */
+    /* GRID LAYOUT */
     .weather-content-grid {
         display: grid;
-        grid-template-columns: 1fr 1.5fr; /* Left (Current) takes less space than Right (Forecast) */
+        grid-template-columns: 1fr 1.5fr; 
         gap: 40px;
         align-items: start;
         margin-top: 20px;
         animation: fadeIn 0.5s;
-        display: none; /* Hidden until search */
+        display: none; 
     }
-    /* Mobile stack */
     @media (max-width: 768px) { .weather-content-grid { grid-template-columns: 1fr; } }
 
-    /* LEFT COL: CURRENT WEATHER */
+    /* LEFT COL */
     .current-weather-card {
         text-align: center;
         padding: 30px;
-        background: rgba(245, 158, 11, 0.05); /* Light orange tint */
+        background: rgba(245, 158, 11, 0.05);
         border-radius: 24px;
         border: 1px solid rgba(245, 158, 11, 0.1);
     }
@@ -205,10 +206,13 @@
     .weather-temp { font-size: 70px; font-weight: 700; margin: 0; line-height: 1; }
     .weather-desc { font-size: 20px; color: var(--muted); text-transform: capitalize; margin-bottom: 20px; }
 
-    /* RIGHT COL: FORECASTS */
-    .forecast-section { text-align: left; }
+    /* RIGHT COL - FIXED OVERFLOW HERE */
+    .forecast-section { 
+        text-align: left; 
+        /* CRITICAL FIX: prevents horizontal scrolling blowout */
+        min-width: 0; 
+    }
 
-    /* Rain Alert Box */
     .rain-alert {
         background: #eff6ff; color: #1d4ed8; padding: 15px;
         border-radius: 12px; font-size: 14px; font-weight: 600;
@@ -217,10 +221,11 @@
     }
     body.dark-mode .rain-alert { background: #172554; color: #93c5fd; border-color: #1e3a8a; }
 
-    /* Horizontal Hourly Scroll */
     .hourly-scroll {
-        display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px;
-        margin-bottom: 25px; scroll-behavior: smooth;
+        display: flex; gap: 15px; 
+        overflow-x: auto; /* Allow scrolling */
+        padding-bottom: 15px; margin-bottom: 25px; 
+        scroll-behavior: smooth;
     }
     .hourly-scroll::-webkit-scrollbar { height: 6px; }
     .hourly-scroll::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
@@ -232,7 +237,6 @@
     }
     body.dark-mode .hourly-card { background: rgba(255,255,255,0.05); }
 
-    /* Daily Vertical List */
     .daily-list { display: flex; flex-direction: column; gap: 10px; }
     .daily-row {
         display: flex; justify-content: space-between; align-items: center;

@@ -17,6 +17,10 @@
        APP-SPECIFIC STYLES ONLY
        ========================================= */
     
+    /* Global Reset for App Content */
+    body { font-family: 'Poppins', sans-serif; }
+    * { box-sizing: border-box; }
+
     /* Dashboard Layout */
     .app-container { max-width: 1100px; margin: 0 auto; padding-top: 160px; padding-bottom: 50px; }
     
@@ -46,7 +50,7 @@
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
     
-    /* Dark Mode Overrides for Dashboard */
+    /* Dark Mode Overrides */
     body.dark-mode .app-icon { background: #1e293b; border-color: #334155; }
     body.dark-mode .app-name { color: #e2e8f0; }
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
@@ -153,17 +157,17 @@
     .btn-sw-start { background: #bbf7d0; color: #16a34a; }
     .btn-sw-reset { background: #e5e7eb; color: #374151; }
 
-    /* ===== WEATHER APP STYLES (ENHANCED) ===== */
+    /* ===== WEATHER APP STYLES (WIDESCREEN FIX) ===== */
     .weather-container {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 30px; padding: 30px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        text-align: center;
-        max-width: 600px; margin: 0 auto;
+        max-width: 1000px; /* INCREASED WIDTH */
+        margin: 0 auto;
     }
     body.dark-mode .weather-container { background: #1e293b; color: white; }
 
-    .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+    .search-box { display: flex; gap: 10px; margin-bottom: 30px; max-width: 500px; margin-left:auto; margin-right:auto; }
     .weather-input {
         flex: 1; padding: 12px 20px; border-radius: 50px;
         border: 1px solid var(--border); background: var(--card); color: var(--ink);
@@ -176,25 +180,47 @@
     }
     .weather-btn:hover { transform: scale(1.05); }
 
-    .weather-info { margin-top: 20px; animation: fadeIn 0.5s; display: none; }
-    .main-temp-box { margin-bottom: 20px; }
-    .weather-icon { font-size: 80px; color: #f59e0b; margin-bottom: 5px; }
-    .weather-temp { font-size: 60px; font-weight: 700; margin: 0; line-height: 1; }
-    .weather-desc { font-size: 18px; color: var(--muted); text-transform: capitalize; margin-bottom: 10px; }
+    /* GRID LAYOUT FOR WEATHER INFO */
+    .weather-content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr; /* Left (Current) takes less space than Right (Forecast) */
+        gap: 40px;
+        align-items: start;
+        margin-top: 20px;
+        animation: fadeIn 0.5s;
+        display: none; /* Hidden until search */
+    }
+    /* Mobile stack */
+    @media (max-width: 768px) { .weather-content-grid { grid-template-columns: 1fr; } }
+
+    /* LEFT COL: CURRENT WEATHER */
+    .current-weather-card {
+        text-align: center;
+        padding: 30px;
+        background: rgba(245, 158, 11, 0.05); /* Light orange tint */
+        border-radius: 24px;
+        border: 1px solid rgba(245, 158, 11, 0.1);
+    }
+    .weather-icon { font-size: 100px; color: #f59e0b; margin-bottom: 15px; }
+    .weather-temp { font-size: 70px; font-weight: 700; margin: 0; line-height: 1; }
+    .weather-desc { font-size: 20px; color: var(--muted); text-transform: capitalize; margin-bottom: 20px; }
+
+    /* RIGHT COL: FORECASTS */
+    .forecast-section { text-align: left; }
 
     /* Rain Alert Box */
     .rain-alert {
-        background: #eff6ff; color: #1d4ed8; padding: 12px;
+        background: #eff6ff; color: #1d4ed8; padding: 15px;
         border-radius: 12px; font-size: 14px; font-weight: 600;
-        margin-bottom: 20px; border: 1px solid #dbeafe;
-        display: none; /* Hidden unless needed */
+        margin-bottom: 25px; border: 1px solid #dbeafe;
+        display: none;
     }
     body.dark-mode .rain-alert { background: #172554; color: #93c5fd; border-color: #1e3a8a; }
 
     /* Horizontal Hourly Scroll */
     .hourly-scroll {
         display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px;
-        margin-bottom: 20px; scroll-behavior: smooth;
+        margin-bottom: 25px; scroll-behavior: smooth;
     }
     .hourly-scroll::-webkit-scrollbar { height: 6px; }
     .hourly-scroll::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
@@ -216,20 +242,19 @@
     body.dark-mode .daily-row { background: rgba(255,255,255,0.05); }
 
     .save-city-btn {
-        background: transparent; border: 1px solid #f59e0b; color: #f59e0b;
-        padding: 8px 20px; border-radius: 50px; margin-top: 20px; cursor: pointer;
-        font-weight: 600; font-size: 13px; transition: all 0.2s;
+        background: #f59e0b; border: none; color: white;
+        padding: 10px 25px; border-radius: 50px; margin-top: 10px; cursor: pointer;
+        font-weight: 700; font-size: 14px; transition: all 0.2s; box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
     }
-    .save-city-btn:hover { background: #fffbeb; }
-    body.dark-mode .save-city-btn:hover { background: #451a03; }
+    .save-city-btn:hover { transform: scale(1.05); }
 
-    .saved-cities { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; justify-content: center; }
+    .saved-cities { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; justify-content: center; }
     .city-chip {
-        background: #f3f4f6; color: #4b5563; padding: 6px 14px; border-radius: 50px;
-        font-size: 12px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
-        display: flex; align-items: center; gap: 6px; font-weight: 500;
+        background: #f3f4f6; color: #4b5563; padding: 8px 16px; border-radius: 50px;
+        font-size: 13px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
+        display: flex; align-items: center; gap: 8px; font-weight: 500;
     }
-    .city-chip:hover { background: #e5e7eb; }
+    .city-chip:hover { background: #e5e7eb; transform: translateY(-2px); }
     body.dark-mode .city-chip { background: #334155; color: #e2e8f0; }
     body.dark-mode .city-chip:hover { background: #475569; }
     .city-delete { color: #9ca3af; font-size: 14px; }
@@ -411,37 +436,40 @@
            <div class="back-bar">
               <button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button>
           </div>
+          
           <div class="weather-container">
-              <h2 style="color:var(--ink); margin-bottom:20px;">Weather Search</h2>
+              <h2 style="color:var(--ink); margin-bottom:10px;">Weather Search</h2>
               <div class="search-box">
                   <input type="text" id="cityInput" class="weather-input" placeholder="Enter city name (e.g. London)" onkeypress="if(event.key === 'Enter') getWeather()">
                   <button class="weather-btn" onclick="getWeather()"><i class="fa-solid fa-search"></i></button>
               </div>
 
-              <div id="weatherResult" class="weather-info">
+              <div id="weatherResult" class="weather-content-grid">
                   
-                  <div id="rainAlert" class="rain-alert"><i class="fa-solid fa-umbrella"></i> Rain likely stopping at 14:00</div>
-
-                  <div class="main-temp-box">
+                  <div class="current-weather-card">
                       <div id="wIcon" class="weather-icon"><i class="fa-solid fa-cloud"></i></div>
-                      <h3 id="wCity" style="margin:0; color:var(--ink);">London</h3>
-                      <div id="wTemp" class="weather-temp">15°C</div>
+                      <h3 id="wCity" style="margin:0; color:var(--ink); font-size:24px;">London</h3>
+                      <div id="wTemp" class="weather-temp">15°</div>
                       <div id="wDesc" class="weather-desc">Cloudy</div>
+                      <button class="save-city-btn" onclick="saveCurrentCity()">❤️ Save City</button>
                   </div>
 
-                  <h4 style="text-align:left; font-size:12px; color:var(--muted); text-transform:uppercase;">Next 24 Hours</h4>
-                  <div id="hourlyScroll" class="hourly-scroll">
-                      </div>
+                  <div class="forecast-section">
+                      
+                      <div id="rainAlert" class="rain-alert"><i class="fa-solid fa-umbrella"></i> Rain likely stopping at 14:00</div>
 
-                  <h4 style="text-align:left; font-size:12px; color:var(--muted); text-transform:uppercase;">3-Day Forecast</h4>
-                  <div id="dailyList" class="daily-list">
-                      </div>
-                  
-                  <button class="save-city-btn" onclick="saveCurrentCity()">❤️ Save City</button>
+                      <h4 style="text-align:left; font-size:12px; color:var(--muted); text-transform:uppercase;">Next 24 Hours</h4>
+                      <div id="hourlyScroll" class="hourly-scroll">
+                          </div>
+
+                      <h4 style="text-align:left; font-size:12px; color:var(--muted); text-transform:uppercase;">3-Day Forecast</h4>
+                      <div id="dailyList" class="daily-list">
+                          </div>
+                  </div>
               </div>
 
-              <div style="margin-top:40px; text-align:left;">
-                  <h4 style="color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Saved Cities</h4>
+              <div style="margin-top:40px; text-align:center;">
+                  <h4 style="color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">Saved Cities</h4>
                   <div id="savedCitiesList" class="saved-cities"></div>
               </div>
           </div>
@@ -551,7 +579,6 @@
         while (due < today) { if (cycle === 'monthly') due.setMonth(due.getMonth() + 1); else if (cycle === 'days30') due.setDate(due.getDate() + 30); else due.setFullYear(due.getFullYear() + 1); }
         return due.getTime();
     }
-    
     async function fetchLiveRates() {
         const btn = $('fxUpdate'); if(!btn) return; 
         const originalText = btn.textContent; btn.textContent = "Fetching..."; btn.disabled = true;
@@ -661,7 +688,7 @@
     }
 
     function displayFullWeather(city, data) {
-        document.getElementById('weatherResult').style.display = 'block';
+        document.getElementById('weatherResult').style.display = 'grid'; // MUST BE GRID
         
         // 1. Current Weather
         const current = data.current;
@@ -707,8 +734,6 @@
         const hScroll = document.getElementById('hourlyScroll');
         hScroll.innerHTML = '';
         for(let i=currentHourIndex; i < currentHourIndex + 24; i++) {
-            // Handle array overflow (e.g. if looking at tomorrow's hours)
-            // OpenMeteo gives 7 days of hourly, so we are safe for 24h usually
             if(i >= data.hourly.temperature_2m.length) break;
             
             const temp = Math.round(data.hourly.temperature_2m[i]);

@@ -47,25 +47,32 @@
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
 
-    /* ===== APP VIEW CONTAINER ===== */
+    /* ===== APP VIEW CONTAINER & BACK BUTTON ===== */
     .app-view { display: none; animation: slideUp 0.3s ease-out; }
     .back-bar { padding: 10px 0 20px; }
+    
+    /* UPDATED BACK BUTTON STYLES */
     .back-btn {
         background: transparent; border: none; 
-        font-size: 16px; font-weight: 600; 
-        color: var(--muted); cursor: pointer;
+        font-size: 16px; font-weight: 700; /* Made bolder */
+        color: #8b5cf6; /* UPDATED: Bright Purple */
+        cursor: pointer;
         display: flex; align-items: center; gap: 8px;
-        transition: color 0.2s;
+        transition: all 0.2s;
     }
-    .back-btn:hover { color: var(--ink); }
+    /* Dark Mode Back Button Color */
+    body.dark-mode .back-btn { color: #a78bfa; }
+
+    .back-btn:hover { 
+        color: var(--ink); /* Keep hover effect */
+        transform: translateX(-3px); /* Tiny nudge animation */
+    }
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ===== GLOBAL VARIABLES & DARK MODE (FIXED) ===== */
+    /* ===== GLOBAL VARIABLES & DARK MODE ===== */
     :root { --ink: #0f172a; --muted:#64748b; --card:#ffffff; --border:#e5e7eb; }
-    
-    /* FIX: Applied globally to body, not just #sm, so Clock gets white text too */
     body.dark-mode { --ink: #eef2ff; --muted: #94a3b8; --card: #1e293b; --border: #334155; }
 
     /* ===== SUBSCRIPTION MANAGER STYLES ===== */
@@ -212,7 +219,7 @@
 
       <div id="subManager" class="app-view">
           <div class="back-bar">
-              <button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-arrow-left"></i> Back to Home</button>
+              <button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button>
           </div>
           <div id="sm">
               <div class="sm-top">
@@ -295,7 +302,7 @@
 
       <div id="clockApp" class="app-view">
            <div class="back-bar">
-              <button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-arrow-left"></i> Back to Home</button>
+              <button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button>
           </div>
           <div class="clock-container">
               

@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+<DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marco's Site</title>
-    <link rel="stylesheet" href="Coursework.css">
-    <link rel="icon" type="image/png" href="icon.png?v=2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/f65489be61.js" crossorigin="anonymous"></script>
+  <title>Marco's Site</title>
+  <link rel="stylesheet" href="Coursework.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <link rel="icon" type="image/png" href="icon.png?v=2">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
 </head>
 <body>
     <div class="header-container">
@@ -18,39 +19,25 @@
         </a>
         <div class="navbar">
             <ul>
-                <li><a href="index.html" class="active">HOME</a></li>
-                <li><a href="Hobbies.html">HOBBIES</a></li>
-                <li><a href="Video.html">VIDEO</a></li>
-                <li><a href="app.html">APPS</a></li>
-                <li><a href="Clock.html">CLOCK</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Hobbies.html">Hobbies</a></li>
+                <li><a href="Video.html">Video</a></li>
+                <li><a href="app.html">Apps</a></li>
+                <li><a href="Clock.html">Clock</a></li>
             </ul>
-            <div class="mode-toggle" onclick="toggleDarkMode()" style="cursor: pointer; margin-left: 20px;">
-                <i class="fa-solid fa-moon" id="modeIcon"></i>
-            </div>
         </div>
     </div>
 
     <div class="main-content-spacer">
-        <div class="welcome-section" style="text-align: center; padding-top: 50px;">
+        <div class="home-container">
             <h1>Welcome to my website!</h1>
-            <p>Updates:</p>
-            <p>Apps section created. More features will be implemented soon.</p>
+            <p>Updates:<br>Apps section created. More features will be implemented soon.</p>
             
-            <div class="hero-image-container" style="margin-top: 30px;">
-                <img src="images/Coursework/Brighton_night.jpg" alt="Brighton at Night" style="max-width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            </div>
+            <a href="https://youtu.be/dQw4w9WgXcQ?si=y1BCJpDKXBtAe6NK">
+                <img src="images/Coursework/00764944-BF2D-498D-8D24-B1A67B73220F.jpg" class="home-photo" alt="My Photo">
+            </a>
         </div>
     </div>
-
-    <script src="Coursework.js"></script>
-    <script>
-        // Force check on load
-        if (localStorage.getItem('dark-mode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            if(document.getElementById('modeIcon')) {
-                document.getElementById('modeIcon').classList.replace('fa-moon', 'fa-sun');
-            }
-        }
-    </script>
+  <script src="Coursework.js"></script>
 </body>
 </html>

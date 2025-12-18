@@ -48,6 +48,7 @@
     .icon-sub { color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
     .icon-clock { color: #06b6d4; background: linear-gradient(135deg, #ecfeff, #cffafe); }
     .icon-weather { color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fef3c7); }
+    .icon-bus { color: #ef4444; background: linear-gradient(135deg, #fef2f2, #fee2e2); } /* Red for Brighton Buses */
     .icon-music { color: #f43f5e; background: linear-gradient(135deg, #fff1f2, #ffe4e6); } 
     .icon-notes { color: #10b981; background: linear-gradient(135deg, #ecfdf5, #d1fae5); } 
     .icon-game { color: #6366f1; background: linear-gradient(135deg, #eef2ff, #e0e7ff); }  
@@ -58,18 +59,14 @@
     body.dark-mode .icon-sub { background: #2e1065; color: #a78bfa; }
     body.dark-mode .icon-clock { background: #083344; color: #22d3ee; }
     body.dark-mode .icon-weather { background: #451a03; color: #fbbf24; }
+    body.dark-mode .icon-bus { background: #450a0a; color: #fca5a5; }
     body.dark-mode .icon-music { background: #4c0519; color: #fb7185; }
     body.dark-mode .icon-notes { background: #064e3b; color: #34d399; }
     body.dark-mode .icon-game { background: #312e81; color: #818cf8; }
 
     /* Navigation */
     .app-view { display: none; animation: slideUp 0.3s ease-out; }
-    .back-bar { 
-        padding: 10px 0 20px; 
-        position: relative; 
-        z-index: 100; 
-    }
-    
+    .back-bar { padding: 10px 0 20px; position: relative; z-index: 100; }
     .back-btn {
         background: transparent; border: none; font-size: 16px; font-weight: 700; 
         color: #8b5cf6; cursor: pointer; display: flex; align-items: center; gap: 8px;
@@ -143,6 +140,22 @@
     .btn-sw-start:hover { background: #bbf7d0; }
     .btn-sw-reset { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
     .btn-sw-reset:hover { background: #e2e8f0; }
+
+    /* === BUS BOARD STYLES === */
+    .bus-container { background: var(--card); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 30px; max-width: 600px; margin: 0 auto; border: 1px solid var(--border); }
+    body.dark-mode .bus-container { background: #1e293b; border-color: #334155; }
+    .bus-header { text-align: center; margin-bottom: 25px; }
+    .bus-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+    .bus-input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; }
+    .bus-card { 
+        display: flex; justify-content: space-between; align-items: center; 
+        padding: 15px; border-bottom: 1px solid var(--border); 
+        animation: fadeIn 0.3s ease; 
+    }
+    .bus-route { font-size: 20px; font-weight: 700; color: #ef4444; width: 60px; }
+    .bus-dest { flex: 1; font-weight: 500; color: var(--ink); }
+    .bus-time { font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 8px; }
+    .bus-api-alert { background: #fffbeb; color: #b45309; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 15px; border: 1px solid #fcd34d; display: none; }
 
     /* === SUBSCRIPTION MANAGER === */
     #sm { box-sizing: border-box; width: 100%; padding: 24px 16px 56px; background: rgba(255, 255, 255, 0.95); border-radius: 16px; position: relative; }
@@ -244,10 +257,10 @@
               <div class="app-icon icon-clock" onclick="openApp('clockApp')"><i class="fa-solid fa-clock"></i><div class="app-name">Focus & Clock</div></div>
               <div class="app-icon icon-weather" onclick="openApp('weatherApp')"><i class="fa-solid fa-cloud-sun"></i><div class="app-name">Weather</div></div>
               
-              <div class="app-icon icon-notes" onclick="alert('Notes App coming soon!')"><i class="fa-solid fa-note-sticky"></i><div class="app-name">Notes</div></div>
+              <div class="app-icon icon-bus" onclick="openApp('busApp')"><i class="fa-solid fa-bus"></i><div class="app-name">Bus Board</div></div>
 
+              <div class="app-icon icon-notes" onclick="alert('Notes App coming soon!')"><i class="fa-solid fa-note-sticky"></i><div class="app-name">Notes</div></div>
               <div class="app-icon icon-music" onclick="alert('Music Player coming soon!')"><i class="fa-solid fa-music"></i><div class="app-name">Music</div></div>
-              <div class="app-icon icon-game" onclick="alert('Snake Game coming soon!')"><i class="fa-solid fa-gamepad"></i><div class="app-name">Game</div></div>
           </div>
       </div>
 
@@ -396,6 +409,38 @@
           </div>
       </div>
 
+      <div id="busApp" class="app-view">
+          <div class="back-bar"><button class="back-btn" onclick="closeApp()"><i class="fa-solid fa-chevron-left"></i> Back to Apps</button></div>
+          <div class="bus-container">
+              <div class="bus-header">
+                  <h2 style="color:var(--ink); margin:0;">Live Bus Board</h2>
+                  <p style="font-size:13px; color:var(--muted);">Real-time departures for Brighton & Hove</p>
+              </div>
+
+              <div id="busApiAlert" class="bus-api-alert">
+                  <i class="fa-solid fa-triangle-exclamation"></i> 
+                  <b>Note:</b> This uses the TransportAPI free tier (30 hits/day). If it stops working, the limit was reached.
+              </div>
+
+              <div class="bus-input-group">
+                  <input type="text" id="busAppId" class="bus-input" placeholder="App ID" style="width:30%;">
+                  <input type="password" id="busAppKey" class="bus-input" placeholder="App Key" style="width:30%;">
+                  <input type="text" id="busStopCode" class="bus-input" placeholder="Stop Code (e.g. 1490000060328)" value="1490000060328" style="flex:1;">
+              </div>
+              
+              <button class="action-btn" onclick="getBusTimes()" style="width:100%; margin-bottom:20px;">
+                  <i class="fa-solid fa-bus"></i> Get Live Times
+              </button>
+
+              <div id="busResults">
+                  <div style="text-align:center; padding:20px; color:var(--muted);">
+                      Enter your TransportAPI credentials to see live buses.<br>
+                      <a href="https://developer.transportapi.com/signup" target="_blank" style="color:#6366f1; font-size:12px;">Get Free API Key Here</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+
   </div>
 
   <button id="backToTop" class="back-to-top" onclick="scrollToTop()">
@@ -409,6 +454,7 @@
         document.getElementById('dashboardView').style.display = 'none';
         const app = document.getElementById(appId);
         if(app) { app.style.display = 'block'; window.scrollTo(0, 0); }
+        if(appId === 'busApp') loadBusCreds();
     };
     window.closeApp = function() {
         document.querySelectorAll('.app-view').forEach(app => app.style.display = 'none');
@@ -420,7 +466,6 @@
     window.onscroll = function() {
         const btn = document.getElementById('backToTop');
         const subApp = document.getElementById('subManager');
-        // Check if Sub Manager is active AND we scrolled down
         if (subApp.style.display === 'block' && (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300)) {
             btn.style.display = "flex";
         } else {
@@ -540,6 +585,82 @@
     async function renderSavedCities() { const list = document.getElementById('savedCitiesList'); list.innerHTML = ''; savedCities.forEach(city => { const div = document.createElement('div'); div.className = 'saved-city-card'; div.onclick = () => getWeather(city); div.innerHTML = `<div><div class="saved-city-name">${city}</div></div><div style="display:flex; align-items:center;"><span class="saved-city-temp" id="mini-temp-${city.replace(/\s/g, '')}">--°</span><button class="delete-saved-btn" onclick="deleteCity('${city}', event)"><i class="fa-solid fa-trash"></i></button></div>`; list.appendChild(div); fetchMiniTemp(city); }); }
     async function fetchMiniTemp(city) { try { const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`); const geoData = await geoRes.json(); if(!geoData.results) return; const { latitude, longitude } = geoData.results[0]; const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`); const wData = await wRes.json(); const tempEl = document.getElementById(`mini-temp-${city.replace(/\s/g, '')}`); if(tempEl) tempEl.textContent = `${Math.round(wData.current_weather.temperature)}°`; } catch(e) {} }
     renderSavedCities();
+  </script>
+
+  <script>
+    function loadBusCreds() {
+        document.getElementById('busAppId').value = localStorage.getItem('bus_app_id') || '';
+        document.getElementById('busAppKey').value = localStorage.getItem('bus_app_key') || '';
+    }
+
+    async function getBusTimes() {
+        const appId = document.getElementById('busAppId').value.trim();
+        const appKey = document.getElementById('busAppKey').value.trim();
+        const stopCode = document.getElementById('busStopCode').value.trim();
+        const results = document.getElementById('busResults');
+        const alertBox = document.getElementById('busApiAlert');
+
+        if (!appId || !appKey) {
+            results.innerHTML = '<div style="color:#ef4444; text-align:center;">Please enter App ID and Key</div>';
+            return;
+        }
+
+        // Save credentials
+        localStorage.setItem('bus_app_id', appId);
+        localStorage.setItem('bus_app_key', appKey);
+
+        results.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading departures...</div>';
+        alertBox.style.display = "block"; // Show usage warning
+
+        try {
+            // TransportAPI Endpoint
+            const url = `https://transportapi.com/v3/uk/bus/stop/${stopCode}/live.json?app_id=${appId}&app_key=${appKey}&group=route&nextbuses=yes`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.error) throw new Error(data.error);
+
+            results.innerHTML = '';
+            
+            if (data.departures) {
+                // Flatten all departures into one array
+                let allBuses = [];
+                Object.values(data.departures).forEach(route => {
+                    route.forEach(bus => allBuses.push(bus));
+                });
+
+                // Sort by time
+                allBuses.sort((a, b) => {
+                    const timeA = a.best_departure_estimate || a.aimed_departure_time;
+                    const timeB = b.best_departure_estimate || b.aimed_departure_time;
+                    return timeA.localeCompare(timeB);
+                });
+
+                if (allBuses.length === 0) {
+                    results.innerHTML = '<div style="text-align:center; color:var(--muted);">No buses found soon.</div>';
+                    return;
+                }
+
+                allBuses.slice(0, 8).forEach(bus => {
+                    const time = bus.best_departure_estimate || bus.aimed_departure_time;
+                    const div = document.createElement('div');
+                    div.className = 'bus-card';
+                    div.innerHTML = `
+                        <div class="bus-route">${bus.line_name}</div>
+                        <div class="bus-dest">${bus.direction || 'Unknown'}</div>
+                        <div class="bus-time">${time}</div>
+                    `;
+                    results.appendChild(div);
+                });
+            } else {
+                results.innerHTML = '<div style="text-align:center;">No live data available.</div>';
+            }
+
+        } catch (error) {
+            results.innerHTML = `<div style="text-align:center; color:#ef4444;">Error: ${error.message}<br><small>Check API Limit or Stop Code</small></div>`;
+        }
+    }
   </script>
 
 </body>

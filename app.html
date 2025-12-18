@@ -54,19 +54,20 @@
     /* UPDATED BACK BUTTON STYLES */
     .back-btn {
         background: transparent; border: none; 
-        font-size: 16px; font-weight: 700; /* Made bolder */
-        color: #8b5cf6; /* UPDATED: Bright Purple */
+        font-size: 16px; font-weight: 700; /* Bold */
+        color: #8b5cf6; /* Bright Purple */
         cursor: pointer;
         display: flex; align-items: center; gap: 8px;
-        transition: all 0.2s;
+        transition: all 0.2s ease;
     }
     /* Dark Mode Back Button Color */
     body.dark-mode .back-btn { color: #a78bfa; }
 
     .back-btn:hover { 
-        color: var(--ink); /* Keep hover effect */
-        transform: translateX(-3px); /* Tiny nudge animation */
+        color: #6d28d9; /* Darker purple on hover */
+        transform: translateX(-5px); /* Slide left animation */
     }
+    body.dark-mode .back-btn:hover { color: #c4b5fd; }
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -172,9 +173,32 @@
     }
     .btn-reset:hover { background: rgba(0,0,0,0.05); color: var(--ink); }
 
-    /* Stopwatch Styles */
+    /* Stopwatch Styles - UPDATED WITH HOVER */
     .stopwatch-display { font-size: 40px; font-family: monospace; color: #009688; margin: 10px 0; font-weight: 700; }
-    .sw-btn { padding: 8px 16px; margin: 0 5px; cursor: pointer; border-radius: 12px; border: none; font-weight: bold; font-size: 13px; text-transform: uppercase; }
+    
+    .sw-btn { 
+        padding: 8px 16px; 
+        margin: 0 5px; 
+        cursor: pointer; 
+        border-radius: 12px; 
+        border: none; 
+        font-weight: bold; 
+        font-size: 13px; 
+        text-transform: uppercase;
+        transition: all 0.2s ease; /* Smooth animation */
+    }
+    
+    /* Hover Effects for Stopwatch Buttons */
+    .sw-btn:hover {
+        transform: translateY(-3px); /* Lifts up */
+        filter: brightness(0.95); /* Slightly dims for effect */
+    }
+    .sw-btn:active { transform: translateY(0); }
+
+    /* Specific Button Colors */
+    .btn-sw-stop { background: #fecaca; color: #ef4444; }
+    .btn-sw-start { background: #bbf7d0; color: #16a34a; }
+    .btn-sw-reset { background: #e5e7eb; color: #374151; }
 
   </style>
 </head>
@@ -333,9 +357,9 @@
               <h4 style="color:#009688; margin:0; text-transform: uppercase; letter-spacing: 1px;">Stopwatch</h4>
               <div class="stopwatch-display" id="swDisplay">00:00:00</div>
               <div>
-                  <button class="sw-btn" style="background:#fecaca; color:#ef4444;" onclick="Stop()">Stop</button>
-                  <button class="sw-btn" style="background:#bbf7d0; color:#16a34a;" onclick="Start()">Start</button>
-                  <button class="sw-btn" style="background:#e5e7eb; color:#374151;" onclick="Reset()">Reset</button>
+                  <button class="sw-btn btn-sw-stop" onclick="Stop()">Stop</button>
+                  <button class="sw-btn btn-sw-start" onclick="Start()">Start</button>
+                  <button class="sw-btn btn-sw-reset" onclick="Reset()">Reset</button>
               </div>
           </div>
       </div>

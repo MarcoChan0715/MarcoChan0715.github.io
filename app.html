@@ -168,6 +168,19 @@
     #qrcode img { display: block; margin: 0 auto; }
     .qr-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.03); color: var(--ink); outline: none; margin-bottom: 15px; }
 
+    /* === DROP WINDOW STYLE (Added) === */
+    .drop-window {
+        border: 2px dashed #cbd5e1; border-radius: 16px; padding: 30px;
+        margin-top: 20px; color: var(--muted); cursor: pointer;
+        transition: all 0.2s; background: rgba(0,0,0,0.01);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center;
+    }
+    .drop-window:hover, .drop-window.dragover { border-color: #8b5cf6; background: rgba(139, 92, 246, 0.05); color: #8b5cf6; }
+    .drop-window i { font-size: 30px; margin-bottom: 10px; opacity: 0.5; }
+    .drop-window p { margin: 0; font-weight: 600; font-size: 14px; }
+    .drop-window small { font-size: 12px; opacity: 0.7; margin-top: 5px; }
+
     /* === BACK TO TOP BUTTON === */
     .back-to-top {
         position: fixed; bottom: 30px; right: 30px;
@@ -321,15 +334,28 @@
                   <i class="fa-solid fa-pen-to-square"></i>
                   <div class="app-name">Quick Notes (Coming Soon)</div>
               </div>
-
               <div class="app-icon" onclick="alert('Currency Converter coming soon!')" style="color: #059669; background: linear-gradient(135deg, #ecfdf5, #d1fae5);">
                   <i class="fa-solid fa-money-bill-transfer"></i>
                   <div class="app-name">Converter (Coming Soon)</div>
               </div>
-
               <div class="app-icon" onclick="alert('Deadline Tracker coming soon!')" style="color: #d97706; background: linear-gradient(135deg, #fffbeb, #fef3c7);">
                   <i class="fa-solid fa-calendar-check"></i>
                   <div class="app-name">Deadlines (Coming Soon)</div>
+              </div>
+
+              <div class="app-icon" onclick="alert('Bill Splitter coming soon!')" style="color: #14b8a6; background: linear-gradient(135deg, #ccfbf1, #99f6e4);">
+                  <i class="fa-solid fa-file-invoice-dollar"></i>
+                  <div class="app-name">Split the Bill (Coming Soon)</div>
+              </div>
+
+              <div class="app-icon" onclick="alert('Password Generator coming soon!')" style="color: #475569; background: linear-gradient(135deg, #f1f5f9, #e2e8f0);">
+                  <i class="fa-solid fa-key"></i>
+                  <div class="app-name">Password Gen (Coming Soon)</div>
+              </div>
+
+              <div class="app-icon" onclick="alert('Discount Calculator coming soon!')" style="color: #db2777; background: linear-gradient(135deg, #fce7f3, #fbcfe8);">
+                  <i class="fa-solid fa-tags"></i>
+                  <div class="app-name">Discount Calc (Coming Soon)</div>
               </div>
           </div>
       </div>
@@ -579,6 +605,12 @@
                   <button class="secondary-btn" onclick="clearQR()" style="width:auto;" title="Clear"><i class="fa-solid fa-trash"></i></button>
               </div>
 
+              <div id="dropWindow" class="drop-window">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <p>Drop file or Click to load text/link</p>
+                  <small>Accepts .txt files or text contents</small>
+              </div>
+
               <div id="qrcode" class="qr-box">
                   <div style="color:var(--muted); font-size:12px;">QR Code will appear here</div>
               </div>
@@ -654,6 +686,53 @@
         document.getElementById('qrInput').value = "";
         document.getElementById('qrcode').innerHTML = '<div style="color:var(--muted); font-size:12px;">QR Code will appear here</div>';
     }
+
+    // DROP ZONE LOGIC
+    const dropZone = document.getElementById('dropWindow');
+    const qrInput = document.getElementById('qrInput');
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length > 0) {
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                qrInput.value = event.target.result;
+                generateQR();
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    dropZone.addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                qrInput.value = event.target.result;
+                generateQR();
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    });
   </script>
 
   <script>

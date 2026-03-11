@@ -1474,7 +1474,6 @@ function processVoiceCommand() {
                 if (val > 100) val = 100;
                 if (val < 0) val = 0;
                 
-                // Target Room Lights
                 if (command.includes('room') || !command.includes('desk')) {
                     if(document.getElementById('light-card').getAttribute('data-offline') === 'false') {
                         document.getElementById('brightness-slider').value = val;
@@ -1489,7 +1488,6 @@ function processVoiceCommand() {
                     }
                 }
                 
-                // Target Desk Lamp
                 if (command.includes('desk') || command.includes('lamp')) {
                     if(document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
                         document.getElementById('desk-lamp-slider').value = val;
@@ -1518,7 +1516,7 @@ function processVoiceCommand() {
                     updateSliderFill(document.getElementById('temp-slider'));
                     
                     if(!heatingOn) document.getElementById('toggle-heating-btn').click();
-                    if(ecoModeOn) document.getElementById('eco-mode-btn').click(); // Turn off eco if manually setting temp
+                    if(ecoModeOn) document.getElementById('eco-mode-btn').click(); 
                     
                     successText.textContent = `Set heating to ${val}°C.`;
                     executed = true;
@@ -1545,6 +1543,24 @@ function processVoiceCommand() {
                     updateSliderFill(document.getElementById('speaker-vol-slider'));
                     if(!speakerOn && val > 0) document.getElementById('toggle-speaker-btn').click();
                     successText.textContent = `Set speaker volume to ${val}.`;
+                    executed = true;
+                }
+            }
+
+            // NEW: FAN SPEED (Dyson)
+            else if (command.includes('fan') || command.includes('dyson') || command.includes('speed')) {
+                if(document.getElementById('fan-card').getAttribute('data-offline') === 'false') {
+                    let val = extractedNum;
+                    if (val > 10) val = 10; // Max speed is 10
+                    if (val < 1) val = 1;   // Min speed is 1
+                    
+                    document.getElementById('fan-speed-slider').value = val;
+                    document.getElementById('fan-speed-val').textContent = val;
+                    updateSliderFill(document.getElementById('fan-speed-slider'));
+                    
+                    if(!fanOn) document.getElementById('toggle-fan-btn').click(); // Turn on if off
+                    
+                    successText.textContent = `Set fan speed to ${val}.`;
                     executed = true;
                 }
             }

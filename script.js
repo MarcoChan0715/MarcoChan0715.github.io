@@ -234,7 +234,7 @@ document.body.addEventListener('click', (e) => {
         }
     }
 
-    // DEVICE OFFLINE LOGIC WITH LOADING ANIMATION!
+    // DEVICE OFFLINE LOGIC WITH LOADING ANIMATION
     if (e.target.closest('.simulate-error-opt')) {
         const errorBtn = e.target.closest('.simulate-error-opt');
         const card = errorBtn.closest('.device-card');
@@ -256,7 +256,6 @@ document.body.addEventListener('click', (e) => {
             addLog(`⚠️ Connection lost to "${deviceName}".`);
             updateEnergyDraw(); 
         } else {
-            // SHOW CONNECTING STATE
             statusEl.innerHTML = '<span class="material-icons spin-icon" style="font-size: 14px; vertical-align: middle;">sync</span> Reconnecting...';
             statusEl.style.color = '#f29900'; 
             toggleBtn.textContent = 'Connecting...';
@@ -265,7 +264,6 @@ document.body.addEventListener('click', (e) => {
             
             addLog(`Attempting to reconnect "${deviceName}"...`);
 
-            // WAIT 2 SECONDS, THEN FIX IT
             setTimeout(() => {
                 card.setAttribute('data-offline', 'false');
                 card.classList.remove('offline');
@@ -1448,6 +1446,7 @@ voiceInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') processVoiceCommand();
 });
 
+// UPGRADED SMART PARSER
 function processVoiceCommand() {
     const command = voiceInput.value.toLowerCase().trim();
     if (!command) return;
@@ -1461,148 +1460,232 @@ function processVoiceCommand() {
         stateProcessing.style.display = 'none';
         stateSuccess.style.display = 'block';
         let executed = false;
-
-        // === SMART KEYWORD PARSING ENGINE ===
-
-        // 1. Check for Automations / Routines first
-        if (command.includes('morning')) {
-            const btn = document.querySelector('.run-routine-btn[data-routine="morning"]');
-            if (btn) btn.click();
-            successText.textContent = "Running Good Morning routine.";
-            executed = true;
-        } 
-        else if (command.includes('leav') || command.includes('away')) {
-            const btn = document.querySelector('.run-routine-btn[data-routine="leaving"]');
-            if (btn) btn.click();
-            successText.textContent = "Running Leaving Home routine.";
-            executed = true;
-        } 
-        else if (command.includes('movie')) {
-            const btn = document.querySelector('.run-routine-btn[data-routine="movie"]');
-            if (btn) btn.click();
-            successText.textContent = "Running Movie Time routine.";
-            executed = true;
-        }
         
-        // 2. Check for Specific Devices OFF
-        else if (command.includes('off')) {
-            if (command.includes('all device') || command.includes('everything')) {
-                document.getElementById('macro-all-off').click();
-                successText.textContent = "Turning off all devices.";
-                executed = true;
-            } else if (command.includes('all light')) {
-                document.getElementById('macro-lights-off').click();
-                successText.textContent = "Turning off all lights.";
-                executed = true;
-            } else if (command.includes('room light')) {
-                if(lightsOn && document.getElementById('light-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-lights-btn').click();
+        // 0. SMART NUMBER EXTRACTION (Regex)
+        // Looks for any digits in the spoken sentence
+        const match = command.match(/(\d+)/);
+        const extractedNum = match ? parseInt(match[0]) : null;
+
+        // 1. Check for specific slider commands IF a number was found!
+        if (extractedNum !== null) {
+            // LIGHTS BRIGHTNESS
+            if (command.includes('light') || command.includes('brightness')) {
+                let val = extractedNum;
+                if (val > 100) val = 100;
+                if (val < 0) val = 0;
+                
+                // Target Room Lights
+                if (command.includes('room') || !command.includes('desk')) {
+                    if(document.getElementById('light-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('brightness-slider').value = val;
+                        document.getElementById('brightness-val').textContent = val + "%";
+                        updateSliderFill(document.getElementById('brightness-slider'));
+                        
+                        if(val > 0 && !lightsOn) document.getElementById('toggle-lights-btn').click();
+                        else if(val === 0 && lightsOn) document.getElementById('toggle-lights-btn').click();
+                        
+                        successText.textContent = `Set room lights to ${val}%.`;
+                        executed = true;
+                    }
                 }
-                successText.textContent = "Turning off room lights.";
-                executed = true;
-            } else if (command.includes('desk lamp') || command.includes('lamp')) {
-                if(deskLampOn && document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-desk-lamp-btn').click();
+                
+                // Target Desk Lamp
+                if (command.includes('desk') || command.includes('lamp')) {
+                    if(document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('desk-lamp-slider').value = val;
+                        document.getElementById('desk-lamp-val').textContent = val + "%";
+                        updateSliderFill(document.getElementById('desk-lamp-slider'));
+                        
+                        if(val > 0 && !deskLampOn) document.getElementById('toggle-desk-lamp-btn').click();
+                        else if(val === 0 && deskLampOn) document.getElementById('toggle-desk-lamp-btn').click();
+                        
+                        successText.textContent = `Set desk lamp to ${val}%.`;
+                        executed = true;
+                    }
                 }
-                successText.textContent = "Turning off desk lamp.";
-                executed = true;
-            } else if (command.includes('tv') || command.includes('television')) {
-                if(tvOn && document.getElementById('tv-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-tv-btn').click();
-                }
-                successText.textContent = "Turning off TV.";
-                executed = true;
-            } else if (command.includes('fan') || command.includes('dyson')) {
-                if(fanOn && document.getElementById('fan-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-fan-btn').click();
-                }
-                successText.textContent = "Turning off fan.";
-                executed = true;
-            } else if (command.includes('speaker') || command.includes('sonos')) {
-                if(speakerOn && document.getElementById('speaker-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-speaker-btn').click();
-                }
-                successText.textContent = "Turning off speaker.";
-                executed = true;
-            } else if (command.includes('heat') || command.includes('boiler')) {
-                if(heatingOn && document.getElementById('heating-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-heating-btn').click();
-                }
-                successText.textContent = "Turning off heating.";
-                executed = true;
-            } else if (command.includes('light')) {
-                // Fallback: If they just say "turn off lights", trigger the macro
-                document.getElementById('macro-lights-off').click();
-                successText.textContent = "Turning off lights.";
-                executed = true;
             }
-        } 
-        
-        // 3. Check for Specific Devices ON
-        else if (command.includes('on')) {
-            if (command.includes('all device') || command.includes('everything')) {
-                document.getElementById('macro-all-on').click();
-                successText.textContent = "Turning on all devices.";
-                executed = true;
-            } else if (command.includes('all light')) {
-                document.getElementById('macro-lights-on').click();
-                successText.textContent = "Turning on all lights.";
-                executed = true;
-            } else if (command.includes('room light')) {
-                if(!lightsOn && document.getElementById('light-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-lights-btn').click();
+            
+            // HEATING TEMPERATURE
+            else if (command.includes('heat') || command.includes('boiler') || command.includes('temperature') || command.includes('degrees')) {
+                if(document.getElementById('heating-card').getAttribute('data-offline') === 'false') {
+                    let val = extractedNum;
+                    if (val > 35) val = 35;
+                    if (val < 10) val = 10;
+                    
+                    document.getElementById('temp-slider').value = val;
+                    document.getElementById('target-temp-val').textContent = val + "°C";
+                    document.getElementById('temp-status').textContent = val + "°C";
+                    updateSliderFill(document.getElementById('temp-slider'));
+                    
+                    if(!heatingOn) document.getElementById('toggle-heating-btn').click();
+                    if(ecoModeOn) document.getElementById('eco-mode-btn').click(); // Turn off eco if manually setting temp
+                    
+                    successText.textContent = `Set heating to ${val}°C.`;
+                    executed = true;
                 }
-                successText.textContent = "Turning on room lights.";
-                executed = true;
-            } else if (command.includes('desk lamp') || command.includes('lamp')) {
-                if(!deskLampOn && document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-desk-lamp-btn').click();
+            }
+            
+            // VOLUME (TV or Speaker)
+            else if (command.includes('volume') || command.includes('tv') || command.includes('speaker') || command.includes('sonos')) {
+                let val = extractedNum;
+                if (val > 100) val = 100;
+                if (val < 0) val = 0;
+                
+                if (command.includes('tv') && document.getElementById('tv-card').getAttribute('data-offline') === 'false') {
+                    document.getElementById('tv-vol-slider').value = val;
+                    document.getElementById('tv-vol-val').textContent = val;
+                    updateSliderFill(document.getElementById('tv-vol-slider'));
+                    if(!tvOn && val > 0) document.getElementById('toggle-tv-btn').click();
+                    successText.textContent = `Set TV volume to ${val}.`;
+                    executed = true;
+                } 
+                else if (document.getElementById('speaker-card').getAttribute('data-offline') === 'false') {
+                    document.getElementById('speaker-vol-slider').value = val;
+                    document.getElementById('speaker-vol-val').textContent = val;
+                    updateSliderFill(document.getElementById('speaker-vol-slider'));
+                    if(!speakerOn && val > 0) document.getElementById('toggle-speaker-btn').click();
+                    successText.textContent = `Set speaker volume to ${val}.`;
+                    executed = true;
                 }
-                successText.textContent = "Turning on desk lamp.";
-                executed = true;
-            } else if (command.includes('tv') || command.includes('television')) {
-                if(!tvOn && document.getElementById('tv-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-tv-btn').click();
-                }
-                successText.textContent = "Turning on TV.";
-                executed = true;
-            } else if (command.includes('fan') || command.includes('dyson')) {
-                if(!fanOn && document.getElementById('fan-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-fan-btn').click();
-                }
-                successText.textContent = "Turning on fan.";
-                executed = true;
-            } else if (command.includes('speaker') || command.includes('sonos')) {
-                if(!speakerOn && document.getElementById('speaker-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-speaker-btn').click();
-                }
-                successText.textContent = "Turning on speaker.";
-                executed = true;
-            } else if (command.includes('heat') || command.includes('boiler')) {
-                if(!heatingOn && document.getElementById('heating-card').getAttribute('data-offline') === 'false') {
-                    document.getElementById('toggle-heating-btn').click();
-                }
-                successText.textContent = "Turning on heating.";
-                executed = true;
-            } else if (command.includes('light')) {
-                // Fallback: If they just say "turn on lights", trigger the macro
-                document.getElementById('macro-lights-on').click();
-                successText.textContent = "Turning on lights.";
-                executed = true;
             }
         }
-        
-        // 4. Special Commands
-        else if (command.includes('eco') || (command.includes('heat') && command.includes('save'))) {
-            document.getElementById('macro-eco').click();
-            successText.textContent = "Setting heating to Eco mode.";
-            executed = true;
+
+        // 2. If no numbers were found (or it wasn't a slider command), run standard keywords
+        if (!executed) {
+            if (command.includes('morning')) {
+                const btn = document.querySelector('.run-routine-btn[data-routine="morning"]');
+                if (btn) btn.click();
+                successText.textContent = "Running Good Morning routine.";
+                executed = true;
+            } 
+            else if (command.includes('leav') || command.includes('away')) {
+                const btn = document.querySelector('.run-routine-btn[data-routine="leaving"]');
+                if (btn) btn.click();
+                successText.textContent = "Running Leaving Home routine.";
+                executed = true;
+            } 
+            else if (command.includes('movie')) {
+                const btn = document.querySelector('.run-routine-btn[data-routine="movie"]');
+                if (btn) btn.click();
+                successText.textContent = "Running Movie Time routine.";
+                executed = true;
+            }
+            
+            else if (command.includes('off')) {
+                if (command.includes('all device') || command.includes('everything')) {
+                    document.getElementById('macro-all-off').click();
+                    successText.textContent = "Turning off all devices.";
+                    executed = true;
+                } else if (command.includes('all light')) {
+                    document.getElementById('macro-lights-off').click();
+                    successText.textContent = "Turning off all lights.";
+                    executed = true;
+                } else if (command.includes('room light')) {
+                    if(lightsOn && document.getElementById('light-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-lights-btn').click();
+                    }
+                    successText.textContent = "Turning off room lights.";
+                    executed = true;
+                } else if (command.includes('desk lamp') || command.includes('lamp')) {
+                    if(deskLampOn && document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-desk-lamp-btn').click();
+                    }
+                    successText.textContent = "Turning off desk lamp.";
+                    executed = true;
+                } else if (command.includes('tv') || command.includes('television')) {
+                    if(tvOn && document.getElementById('tv-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-tv-btn').click();
+                    }
+                    successText.textContent = "Turning off TV.";
+                    executed = true;
+                } else if (command.includes('fan') || command.includes('dyson')) {
+                    if(fanOn && document.getElementById('fan-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-fan-btn').click();
+                    }
+                    successText.textContent = "Turning off fan.";
+                    executed = true;
+                } else if (command.includes('speaker') || command.includes('sonos')) {
+                    if(speakerOn && document.getElementById('speaker-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-speaker-btn').click();
+                    }
+                    successText.textContent = "Turning off speaker.";
+                    executed = true;
+                } else if (command.includes('heat') || command.includes('boiler')) {
+                    if(heatingOn && document.getElementById('heating-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-heating-btn').click();
+                    }
+                    successText.textContent = "Turning off heating.";
+                    executed = true;
+                } else if (command.includes('light')) {
+                    document.getElementById('macro-lights-off').click();
+                    successText.textContent = "Turning off lights.";
+                    executed = true;
+                }
+            } 
+            
+            else if (command.includes('on')) {
+                if (command.includes('all device') || command.includes('everything')) {
+                    document.getElementById('macro-all-on').click();
+                    successText.textContent = "Turning on all devices.";
+                    executed = true;
+                } else if (command.includes('all light')) {
+                    document.getElementById('macro-lights-on').click();
+                    successText.textContent = "Turning on all lights.";
+                    executed = true;
+                } else if (command.includes('room light')) {
+                    if(!lightsOn && document.getElementById('light-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-lights-btn').click();
+                    }
+                    successText.textContent = "Turning on room lights.";
+                    executed = true;
+                } else if (command.includes('desk lamp') || command.includes('lamp')) {
+                    if(!deskLampOn && document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-desk-lamp-btn').click();
+                    }
+                    successText.textContent = "Turning on desk lamp.";
+                    executed = true;
+                } else if (command.includes('tv') || command.includes('television')) {
+                    if(!tvOn && document.getElementById('tv-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-tv-btn').click();
+                    }
+                    successText.textContent = "Turning on TV.";
+                    executed = true;
+                } else if (command.includes('fan') || command.includes('dyson')) {
+                    if(!fanOn && document.getElementById('fan-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-fan-btn').click();
+                    }
+                    successText.textContent = "Turning on fan.";
+                    executed = true;
+                } else if (command.includes('speaker') || command.includes('sonos')) {
+                    if(!speakerOn && document.getElementById('speaker-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-speaker-btn').click();
+                    }
+                    successText.textContent = "Turning on speaker.";
+                    executed = true;
+                } else if (command.includes('heat') || command.includes('boiler')) {
+                    if(!heatingOn && document.getElementById('heating-card').getAttribute('data-offline') === 'false') {
+                        document.getElementById('toggle-heating-btn').click();
+                    }
+                    successText.textContent = "Turning on heating.";
+                    executed = true;
+                } else if (command.includes('light')) {
+                    document.getElementById('macro-lights-on').click();
+                    successText.textContent = "Turning on lights.";
+                    executed = true;
+                }
+            }
+            
+            else if (command.includes('eco') || (command.includes('heat') && command.includes('save'))) {
+                document.getElementById('macro-eco').click();
+                successText.textContent = "Setting heating to Eco mode.";
+                executed = true;
+            }
         }
 
         // Output formatting
         const iconSpan = stateSuccess.querySelector('.material-icons');
         if (!executed) {
-            successText.textContent = "Command not recognized. Try 'Turn on the fan'.";
+            successText.textContent = "Command not recognized. Try 'Set room lights to 50%'.";
             successText.style.color = '#d93025';
             iconSpan.textContent = 'error';
             iconSpan.style.color = '#d93025';
@@ -1613,10 +1696,12 @@ function processVoiceCommand() {
             addLog(`🎤 Voice Command: "${voiceInput.value}" executed.`);
             setTimeout(() => {
                 if (voiceModal.style.display === 'flex') voiceModal.style.display = 'none';
-            }, 2000);
+            }, 2500);
+            
+            updateEnergyDraw(); // Re-calculate energy after voice command changes things!
         }
 
-    }, 1500); // 1.5s simulated processing delay
+    }, 1500); 
 }
 
 // Initial setups

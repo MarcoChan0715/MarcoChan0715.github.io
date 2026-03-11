@@ -253,9 +253,10 @@ document.body.addEventListener('click', (e) => {
             toggleBtn.textContent = 'Connection Lost';
             
             errorBtn.innerHTML = '<span class="material-icons" style="font-size:16px;">wifi</span> Reconnect';
-            addLog(`⚠️ Connection lost to "${deviceName}".`);
+            addLog(`Connection lost to "${deviceName}".`);
             updateEnergyDraw(); 
         } else {
+            // SHOW CONNECTING STATE
             statusEl.innerHTML = '<span class="material-icons spin-icon" style="font-size: 14px; vertical-align: middle;">sync</span> Reconnecting...';
             statusEl.style.color = '#f29900'; 
             toggleBtn.textContent = 'Connecting...';
@@ -289,7 +290,7 @@ document.body.addEventListener('click', (e) => {
                 errorBtn.innerHTML = '<span class="material-icons" style="font-size:16px;">wifi_off</span> Force Offline';
                 errorBtn.style.pointerEvents = 'auto'; 
                 
-                addLog(`✅ "${deviceName}" reconnected successfully.`);
+                addLog(`"${deviceName}" reconnected successfully.`);
                 updateEnergyDraw(); 
             }, 2000); 
         }
@@ -1462,13 +1463,11 @@ function processVoiceCommand() {
         let executed = false;
         
         // 0. SMART NUMBER EXTRACTION (Regex)
-        // Looks for any digits in the spoken sentence
         const match = command.match(/(\d+)/);
         const extractedNum = match ? parseInt(match[0]) : null;
 
         // 1. Check for specific slider commands IF a number was found!
         if (extractedNum !== null) {
-            // LIGHTS BRIGHTNESS
             if (command.includes('light') || command.includes('brightness')) {
                 let val = extractedNum;
                 if (val > 100) val = 100;
@@ -1503,7 +1502,6 @@ function processVoiceCommand() {
                 }
             }
             
-            // HEATING TEMPERATURE
             else if (command.includes('heat') || command.includes('boiler') || command.includes('temperature') || command.includes('degrees')) {
                 if(document.getElementById('heating-card').getAttribute('data-offline') === 'false') {
                     let val = extractedNum;
@@ -1523,7 +1521,6 @@ function processVoiceCommand() {
                 }
             }
             
-            // VOLUME (TV or Speaker)
             else if (command.includes('volume') || command.includes('tv') || command.includes('speaker') || command.includes('sonos')) {
                 let val = extractedNum;
                 if (val > 100) val = 100;
@@ -1547,18 +1544,17 @@ function processVoiceCommand() {
                 }
             }
 
-            // NEW: FAN SPEED (Dyson)
             else if (command.includes('fan') || command.includes('dyson') || command.includes('speed')) {
                 if(document.getElementById('fan-card').getAttribute('data-offline') === 'false') {
                     let val = extractedNum;
-                    if (val > 10) val = 10; // Max speed is 10
-                    if (val < 1) val = 1;   // Min speed is 1
+                    if (val > 10) val = 10; 
+                    if (val < 1) val = 1;   
                     
                     document.getElementById('fan-speed-slider').value = val;
                     document.getElementById('fan-speed-val').textContent = val;
                     updateSliderFill(document.getElementById('fan-speed-slider'));
                     
-                    if(!fanOn) document.getElementById('toggle-fan-btn').click(); // Turn on if off
+                    if(!fanOn) document.getElementById('toggle-fan-btn').click(); 
                     
                     successText.textContent = `Set fan speed to ${val}.`;
                     executed = true;
@@ -1706,15 +1702,15 @@ function processVoiceCommand() {
             iconSpan.textContent = 'error';
             iconSpan.style.color = '#d93025';
         } else {
-            successText.style.color = '#202124';
+            successText.style.color = ''; 
             iconSpan.textContent = 'check_circle';
             iconSpan.style.color = '#34a853';
-            addLog(`🎤 Voice Command: "${voiceInput.value}" executed.`);
+            addLog(`Voice Command: "${voiceInput.value}" executed.`);
             setTimeout(() => {
                 if (voiceModal.style.display === 'flex') voiceModal.style.display = 'none';
             }, 2500);
             
-            updateEnergyDraw(); // Re-calculate energy after voice command changes things!
+            updateEnergyDraw(); 
         }
 
     }, 1500); 

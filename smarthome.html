@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SmartHome Layouts - Marco's Site</title>
+  <link rel="stylesheet" href="Coursework.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" type="image/png" href="icon.png?v=2">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    /* Styling specific to the layout selection buttons */
+    .dashboard-selection-container {
+        text-align: center;
+        margin-top: 80px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .dashboard-selection-container h1 {
+        margin-bottom: 40px;
+        color: #333;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap; /* Helps with mobile responsiveness */
+    }
+
+    .layout-btn {
+        display: inline-block;
+        padding: 20px 40px;
+        font-size: 18px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        background-color: #2c3e50;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .layout-btn:hover {
+        background-color: #1a252f;
+        transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body>
+    <div class="header-container">
+        <a href="index.html">
+            <img src="images/Coursework/Black_logo.PNG" class="logo" alt="Logo">
+        </a>
+        <div class="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="simple.html">SmartHome</a></li>
+                <li><a href="Video.html">Video</a></li>
+                <li><a href="app.html">Apps</a></li>
+                <li><a href="Clock.html">Clock</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content-spacer">
+        <div class="dashboard-selection-container">
+            <h1>Select SmartHome Dashboard</h1>
+            <p style="margin-bottom: 30px; color: #666;">Please select a dashboard layout to begin the experiment.</p>
+            
+            <div class="button-group">
+                <a href="simple_dashboard.html" class="layout-btn">Simple Layout</a>
+                <a href="complex_dashboard.html" class="layout-btn">Complex Layout</a>
+            </div>
+        </div>
+    </div>
+
+  <script src="Coursework.js"></script>
+</body>
+</html>

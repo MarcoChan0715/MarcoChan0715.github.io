@@ -1,28 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SmartHome Layouts - Marco's Site</title>
+  <title>SmartHome FYP - Marco's Site</title>
   <link rel="stylesheet" href="Coursework.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon" type="image/png" href="icon.png?v=2">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <style>
-    /* Styling specific to the layout selection buttons */
-    .button-group {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap; 
-        margin-top: 30px;
+    /* FYP Description Styling */
+    .fyp-intro {
+        margin: 15px auto 30px auto;
+        max-width: 700px;
+        line-height: 1.6;
+        color: #555;
+        font-size: 16px;
     }
 
+    body.dark-mode .fyp-intro {
+        color: #ddd !important;
+    }
+
+    /* App-like Card Grid Layout */
+    .card-grid {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap; 
+        margin-top: 20px;
+    }
+
+    /* Individual Card Styling */
+    .app-card {
+        background: rgba(240, 240, 240, 0.6); 
+        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 15px;
+        padding: 25px;
+        width: 320px;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body.dark-mode .app-card {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: rgba(255,255,255,0.05);
+    }
+
+    .app-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    /* Card Header (Icon + Title) */
+    .app-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .app-icon {
+        width: 50px;
+        height: 50px;
+        background: #009688; /* Matches your theme */
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .app-header h3 {
+        margin: 0;
+        font-size: 20px;
+        color: #333;
+    }
+
+    body.dark-mode .app-header h3 {
+        color: #fff !important;
+    }
+
+    /* Card Description */
+    .app-card p {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 25px;
+        flex-grow: 1;
+        line-height: 1.5;
+    }
+
+    body.dark-mode .app-card p {
+        color: #ccc !important;
+    }
+
+    /* Launch Button inside Card */
     .layout-btn {
-        display: inline-block;
-        padding: 15px 35px;
-        font-size: 16px;
+        display: block;
+        text-align: center;
+        padding: 12px 20px;
+        font-size: 15px;
         font-family: 'Poppins', sans-serif;
         font-weight: 600;
         background-color: #009688; /* Matches your theme */
@@ -36,8 +120,11 @@
 
     .layout-btn:hover {
         background-color: #00796b;
-        transform: translateY(-3px);
         color: #ffffff !important;
+    }
+    
+    .layout-btn i {
+        margin-right: 8px;
     }
   </style>
 </head>
@@ -59,13 +146,40 @@
 
     <div class="main-content-spacer">
         <div class="home-container">
-            <h1>Select SmartHome Dashboard</h1>
-            <p style="margin-top: 15px;">Please select a dashboard layout to begin the experiment.</p>
+            <h1>Final Year Project</h1>
             
-            <div class="button-group">
-                <a href="simple_dashboard.html" class="layout-btn">Simple Layout</a>
-                <a href="complex_dashboard.html" class="layout-btn">Complex Layout</a>
+            <p class="fyp-intro">
+                Welcome to my SmartHome usability experiment! This project investigates how different dashboard interface designs affect user efficiency and satisfaction. Please select a layout below to begin the trial.
+            </p>
+            
+            <div class="card-grid">
+                <div class="app-card">
+                    <div class="app-header">
+                        <div class="app-icon">
+                            <i class="fa-solid fa-house-chimney-window"></i>
+                        </div>
+                        <h3>Simple Layout</h3>
+                    </div>
+                    <p>A streamlined, minimalist dashboard designed for quick access to core SmartHome functions. Ideal for straightforward tasks.</p>
+                    <a href="simple_dashboard.html" class="layout-btn">
+                        <i class="fa-solid fa-play"></i> Launch Simple
+                    </a>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-header">
+                        <div class="app-icon">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <h3>Complex Layout</h3>
+                    </div>
+                    <p>An advanced, feature-rich dashboard providing granular control and detailed analytics for your entire SmartHome ecosystem.</p>
+                    <a href="complex_dashboard.html" class="layout-btn">
+                        <i class="fa-solid fa-play"></i> Launch Complex
+                    </a>
+                </div>
             </div>
+
         </div>
     </div>
 

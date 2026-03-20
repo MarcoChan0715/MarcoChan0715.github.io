@@ -14,19 +14,68 @@
   <style>
     .fyp-intro { margin: 15px auto 30px auto; max-width: 700px; line-height: 1.6; color: #555; font-size: 16px; }
     body.dark-mode .fyp-intro { color: #ddd !important; }
+    
     .card-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 20px; }
+    
     .app-card { background: rgba(240, 240, 240, 0.6); border: 1px solid rgba(0,0,0,0.05); border-radius: 15px; padding: 25px; width: 320px; text-align: left; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
     body.dark-mode .app-card { background: rgba(0, 0, 0, 0.2); border-color: rgba(255,255,255,0.05); }
     .app-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    
     .app-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
     .app-icon { width: 50px; height: 50px; background: #009688; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    
     .app-header h3 { margin: 0; font-size: 20px; color: #333; }
     body.dark-mode .app-header h3 { color: #fff !important; }
+    
     .app-card p { font-size: 14px; color: #666; margin-bottom: 25px; flex-grow: 1; line-height: 1.5; }
     body.dark-mode .app-card p { color: #ccc !important; }
+    
     .layout-btn { display: block; text-align: center; padding: 12px 20px; font-size: 15px; font-family: 'Poppins', sans-serif; font-weight: 600; background-color: #009688; color: #ffffff !important; text-decoration: none; border-radius: 20px; transition: background-color 0.3s ease, transform 0.2s ease; border: none; cursor: pointer; }
     .layout-btn:hover { background-color: #00796b; color: #ffffff !important; }
     .layout-btn i { margin-right: 8px; }
+
+    /* --- NEW SURVEY SECTION STYLES --- */
+    .survey-section {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 2px solid rgba(0,0,0,0.05);
+        text-align: center;
+    }
+    body.dark-mode .survey-section {
+        border-top-color: rgba(255,255,255,0.1);
+    }
+    .survey-section h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    .survey-section p {
+        color: #555;
+        margin-bottom: 25px;
+        font-size: 15px;
+    }
+    body.dark-mode .survey-section p {
+        color: #bbb !important;
+    }
+    .survey-btn {
+        display: inline-block;
+        padding: 15px 35px;
+        font-size: 16px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        background-color: #2c3e50; /* Distinct color for the survey */
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 25px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .survey-btn:hover {
+        background-color: #1a252f;
+        transform: translateY(-3px);
+    }
+    .survey-btn i {
+        margin-right: 8px;
+    }
   </style>
 </head>
 <body>
@@ -38,7 +87,7 @@
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="smarthome.html">SmartHome</a></li>
-                <li><a href="Video.html">Portfolio</a></li>
+                <li><a href="Video.html">Video</a></li>
                 <li><a href="app.html">Apps</a></li>
                 <li><a href="Clock.html">Clock</a></li>
             </ul>
@@ -79,6 +128,14 @@
                         <i class="fa-solid fa-play"></i> Launch Complex
                     </a>
                 </div>
+            </div>
+
+            <div class="survey-section">
+                <h2>Experiment Survey</h2>
+                <p>Once you have finished testing both dashboard layouts, please complete the survey to submit your feedback.</p>
+                <a href="https://universityofsussex.eu.qualtrics.com/jfe/form/SV_4NPazfII24a0zyK" target="_blank" class="survey-btn">
+                    <i class="fa-solid fa-clipboard-list"></i> Take the Survey
+                </a>
             </div>
 
         </div>

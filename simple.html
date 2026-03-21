@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Smart Home Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="simple.css">
+</head>
+<body>
+    <div class="app-layout">
+        
+        <aside class="sidebar">
+            <div class="nav-item active" id="nav-home">
+                <span class="material-icons">home</span> Home
+            </div>
+            <div class="nav-item" id="nav-activity">
+                <span class="material-icons">show_chart</span> Activity
+            </div>
+            <div class="nav-item" id="nav-energy">
+                <span class="material-icons">bolt</span> Energy
+            </div>
+            <div class="nav-item" id="nav-automations">
+                <span class="material-icons">auto_awesome</span> Automations
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="main-header">
+                <div class="header-text">
+                    <h1>My Smart Home</h1>
+                </div>
+                <div id="header-actions">
+<button id="theme-toggle-btn" class="header-action-btn icon-btn" title="Toggle Dark Mode">
+                        <span class="material-icons" id="theme-icon">dark_mode</span>
+                    </button>
+                    
+                    <button id="edit-layout-btn" class="header-action-btn" style="background-color: #f1f3f4; color: #5f6368;">
+                        <span class="material-icons">edit</span> Edit Layout
+                    </button>
+                    
+                    <button id="add-device-btn" class="header-action-btn">
+                        <span class="material-icons">add</span> Add Device
+                    </button>
+                    <button id="add-automation-btn" class="header-action-btn" style="display: none;">
+                        <span class="material-icons">add</span> Add Automation
+                    </button>
+                </div>
+            </header>
+
+            <div id="home-view">
+                
+                <section class="quick-macros">
+                    <h2>Quick Actions</h2>
+                    <div class="macro-container">
+                        <button class="macro-btn" id="macro-lights-on"><span class="material-icons">lightbulb</span> All Lights ON</button>
+                        <button class="macro-btn" id="macro-lights-off"><span class="material-icons">lightbulb_outline</span> All Lights OFF</button>
+                        <button class="macro-btn" id="macro-all-on"><span class="material-icons">power</span> All Devices ON</button>
+                        <button class="macro-btn" id="macro-all-off"><span class="material-icons">power_settings_new</span> All Devices OFF</button>
+                        <button class="macro-btn" id="macro-eco"><span class="material-icons">eco</span> Eco Heating</button>
+                    </div>
+                </section>
+
+                <div class="filters">
+                    <button class="pill active" data-filter="all">
+                        <span class="material-icons">grid_view</span> All devices
+                    </button>
+                    <button class="pill" data-filter="favourites">
+                        <span class="material-icons">favorite</span> Favourites
+                    </button>
+                    <button class="pill" data-filter="lights">
+                        <span class="material-icons">lightbulb</span> Lights
+                    </button>
+                    <button class="pill" data-filter="climate">
+                        <span class="material-icons">thermostat</span> Climate
+                    </button>
+                    <button class="pill" data-filter="media">
+                        <span class="material-icons">tv</span> Media
+                    </button>
+                </div>
+
+                <section class="device-grid">
+                    
+                    <div class="device-card" id="light-card" data-category="lights" data-favorite="true" data-removed="false" data-offline="false">
+                        <div class="card-header">
+                            <div class="icon-circle"><span class="material-icons">lightbulb</span></div>
+                            <div class="device-info">
+                                <h3 id="light-name">Room Lights</h3>
+                                <span class="status" id="light-status">OFF</span>
+                            </div>
+                            <div class="fav-btn"><span class="material-icons fav-icon" style="color: #1a73e8;">favorite</span></div>
+                            <div class="menu-container">
+                                <div class="menu-dots" id="light-menu-btn"><span class="material-icons">more_vert</span></div>
+                                <div class="popup-menu" id="light-popup" style="display: none;">
+                                    <div class="popup-item" id="light-rename-opt"><span class="material-icons" style="font-size:16px;">edit</span> Rename</div>
+                                    <div class="popup-item" id="light-adv-opt"><span class="material-icons" style="font-size:16px;">settings</span> Advanced Options</div>
+                                    <div class="popup-item simulate-error-opt"><span class="material-icons" style="font-size:16px;">wifi_off</span> Force Offline</div>
+                                    <div class="popup-item remove-device-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-controls">
+                            <button id="toggle-lights-btn" class="action-btn">Turn Lights ON</button>
+                            <div class="slider-container">
+                                <label for="brightness-slider">Brightness: <span id="brightness-val">0%</span></label>
+                                <input type="range" id="brightness-slider" min="0" max="100" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="device-card" id="heating-card" data-category="climate" data-favorite="true" data-removed="false" data-offline="false">
+                        <div class="card-header">
+                            <div class="icon-circle"><span class="material-icons">thermostat</span></div>
+                            <div class="device-info">
+                                <h3 id="heating-name">Heating System</h3>
+                                <span class="status" id="temp-status">20°C</span>
+                            </div>
+                            <div class="fav-btn"><span class="material-icons fav-icon" style="color: #1a73e8;">favorite</span></div>
+                            <div class="menu-container">
+                                <div class="menu-dots" id="heating-menu-btn"><span class="material-icons">more_vert</span></div>
+                                <div class="popup-menu" id="heating-popup" style="display: none;">
+                                    <div class="popup-item" id="heating-rename-opt"><span class="material-icons" style="font-size:16px;">edit</span> Rename</div>
+                                    <div class="popup-item" id="heating-adv-opt"><span class="material-icons" style="font-size:16px;">settings</span> Advanced Options</div>
+                                    <div class="popup-item simulate-error-opt"><span class="material-icons" style="font-size:16px;">wifi_off</span> Force Offline</div>
+                                    <div class="popup-item remove-device-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-controls">
+                            <button id="toggle-heating-btn" class="action-btn">Turn Heating ON</button>
+                            <div class="slider-container">
+                                <label for="temp-slider">Target: <span id="target-temp-val">20°C</span></label>
+                                <input type="range" id="temp-slider" min="10" max="35" value="20">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="device-card" id="desk-lamp-card" data-category="lights" data-favorite="false" data-removed="false" data-offline="false">
+                        <div class="card-header">
+                            <div class="icon-circle"><span class="material-icons">tungsten</span></div>
+                            <div class="device-info">
+                                <h3 id="lamp-name">Desk Lamp</h3>
+                                <span class="status" id="desk-lamp-status">OFF</span>
+                            </div>
+                            <div class="fav-btn"><span class="material-icons fav-icon" style="color: #ccc;">favorite_border</span></div>
+                            <div class="menu-container">
+                                <div class="menu-dots" id="desk-lamp-menu-btn"><span class="material-icons">more_vert</span></div>
+                                <div class="popup-menu" id="lamp-popup" style="display: none;">
+                                    <div class="popup-item" id="lamp-rename-opt"><span class="material-icons" style="font-size:16px;">edit</span> Rename</div>
+                                    <div class="popup-item" id="lamp-adv-opt"><span class="material-icons" style="font-size:16px;">settings</span> Advanced Options</div>
+                                    <div class="popup-item simulate-error-opt"><span class="material-icons" style="font-size:16px;">wifi_off</span> Force Offline</div>
+                                    <div class="popup-item remove-device-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-controls">
+                            <button id="toggle-desk-lamp-btn" class="action-btn">Turn Lamp ON</button>
+                            <div class="slider-container">
+                                <label>Brightness: <span id="desk-lamp-val">0%</span></label>
+                                <input type="range" id="desk-lamp-slider" min="0" max="100" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="device-card" id="tv-card" data-category="media" data-favorite="false" data-removed="false" data-offline="false">
+                        <div class="card-header">
+                            <div class="icon-circle"><span class="material-icons">tv</span></div>
+                            <div class="device-info">
+                                <h3 id="tv-name">Smart TV</h3>
+                                <span class="status" id="tv-status">OFF</span>
+                                <span id="tv-now-playing" style="display:none; font-size: 12px; color: #1a73e8; margin-top:2px;"></span>
+                            </div>
+                            <div class="fav-btn"><span class="material-icons fav-icon" style="color: #ccc;">favorite_border</span></div>
+                            <div class="menu-container">
+                                <div class="menu-dots" id="tv-menu-btn"><span class="material-icons">more_vert</span></div>
+                                <div class="popup-menu" id="tv-popup" style="display: none;">
+                                    <div class="popup-item" id="tv-rename-opt"><span class="material-icons" style="font-size:16px;">edit</span> Rename</div>
+                                    <div class="popup-item" id="tv-adv-opt"><span class="material-icons" style="font-size:16px;">settings</span> Advanced Options</div>
+                                    <div class="popup-item simulate-error-opt"><span class="material-icons" style="font-size:16px;">wifi_off</span> Force Offline</div>
+                                    <div class="popup-item remove-device-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-controls">
+                            <button id="toggle-tv-btn" class="action-btn">Turn TV ON</button>
+                            <div class="slider-container">
+                                <label>Volume: <span id="tv-vol-val">15</span></label>
+                                <input type="range" id="tv-vol-slider" min="0" max="100" value="15">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="device-card" id="fan-card" data-category="climate" data-favorite="false" data-removed="true" data-offline="false" style="display: none;">
+                        <div class="card-header">
+                            <div class="icon-circle"><span class="material-icons">air</span></div>
+                            <div class="device-info">
+                                <h3 id="fan-name">Dyson Pure Cool</h3>
+                                <span class="status" id="fan-status">OFF</span>
+                            </div>
+                            <div class="fav-btn"><span class="material-icons fav-icon" style="color: #ccc;">favorite_border</span></div>
+                            <div class="menu-container">
+                                <div class="menu-dots" id="fan-menu-btn"><span class="material-icons">more_vert</span></div>
+                                <div class="popup-menu" id="fan-popup" style="display: none;">
+                                    <div class="popup-item" id="fan-rename-opt"><span class="material-icons" style="font-size:16px;">edit</span> Rename</div>
+                                    <div class="popup-item" id="fan-adv-opt"><span class="material-icons" style="font-size:16px;">settings</span> Advanced Options</div>
+                                    <div class="popup-item simulate-error-opt"><span class="material-icons" style="font-size:16px;">wifi_off</span> Force Offline</div>
+                                    <div class="popup-item remove-device-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-controls">
+                            <button id="toggle-fan-btn" class="action-btn">Turn Fan ON</button>
+                            <div class="slider-container">
+                                <label>Fan Speed: <span id="fan-speed-val">1</span></label>
+                                <input type="range" id="fan-speed-slider" min="1" max="10" value="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="device-card" id="speaker-card" data-category="media" data-favorite="false" data-removed="true" data-offline="false" style="display: none;">
+                        <div class="card-header">
+                            <div class="icon-circle"><span class="material-icons">speaker</span></div>
+                            <div class="device-info">
+                                <h3 id="speaker-name">Sonos One</h3>
+                                <span class="status" id="speaker-status">OFF</span>
+                            </div>
+                            <div class="fav-btn"><span class="material-icons fav-icon" style="color: #ccc;">favorite_border</span></div>
+                            <div class="menu-container">
+                                <div class="menu-dots" id="speaker-menu-btn"><span class="material-icons">more_vert</span></div>
+                                <div class="popup-menu" id="speaker-popup" style="display: none;">
+                                    <div class="popup-item" id="speaker-rename-opt"><span class="material-icons" style="font-size:16px;">edit</span> Rename</div>
+                                    <div class="popup-item" id="speaker-adv-opt"><span class="material-icons" style="font-size:16px;">settings</span> Advanced Options</div>
+                                    <div class="popup-item simulate-error-opt"><span class="material-icons" style="font-size:16px;">wifi_off</span> Force Offline</div>
+                                    <div class="popup-item remove-device-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-controls">
+                            <button id="toggle-speaker-btn" class="action-btn">Turn Speaker ON</button>
+                            <div class="slider-container">
+                                <label>Volume: <span id="speaker-vol-val">20</span></label>
+                                <input type="range" id="speaker-vol-slider" min="0" max="100" value="20">
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+
+            </div>
+
+            <div id="automations-view" style="display: none;">
+                <section class="automations-section">
+                    <h2>Daily Routines</h2>
+                    <p style="color: #5f6368; margin-top: -10px; margin-bottom: 25px;">Activate a scene to control multiple devices at once.</p>
+                    
+                    <div class="device-grid" id="routines-grid">
+                        
+                        <div class="device-card routine-morning">
+                            <div class="card-header">
+                                <div class="icon-circle"><span class="material-icons">wb_sunny</span></div>
+                                <div class="device-info">
+                                    <h3>Good Morning</h3>
+                                    <span class="status" style="font-weight: normal; color: #1a73e8; font-size: 12px; display: block; margin-bottom: 2px;">At 07:00 AM</span>
+                                    <span class="status" style="font-weight: normal;">Lights ON (70%), Heating 22°C</span>
+                                </div>
+                                <div class="menu-container" style="margin-left: auto;">
+                                    <div class="menu-dots routine-menu-btn"><span class="material-icons">more_vert</span></div>
+                                    <div class="popup-menu routine-popup" style="display: none;">
+                                        <div class="popup-item edit-routine-opt"><span class="material-icons" style="font-size:16px;">edit</span> Edit</div>
+                                        <div class="popup-item delete-routine-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="action-btn run-routine-btn" data-routine="morning">Run Routine</button>
+                        </div>
+
+                        <div class="device-card routine-leaving">
+                            <div class="card-header">
+                                <div class="icon-circle"><span class="material-icons">directions_run</span></div>
+                                <div class="device-info">
+                                    <h3>Leaving Home</h3>
+                                    <span class="status" style="font-weight: normal; color: #1a73e8; font-size: 12px; display: block; margin-bottom: 2px;">When I leave home</span>
+                                    <span class="status" style="font-weight: normal;">All OFF, Heating Eco</span>
+                                </div>
+                                <div class="menu-container" style="margin-left: auto;">
+                                    <div class="menu-dots routine-menu-btn"><span class="material-icons">more_vert</span></div>
+                                    <div class="popup-menu routine-popup" style="display: none;">
+                                        <div class="popup-item edit-routine-opt"><span class="material-icons" style="font-size:16px;">edit</span> Edit</div>
+                                        <div class="popup-item delete-routine-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="action-btn run-routine-btn" data-routine="leaving">Run Routine</button>
+                        </div>
+                        
+                        <div class="device-card routine-movie">
+                            <div class="card-header">
+                                <div class="icon-circle"><span class="material-icons">movie</span></div>
+                                <div class="device-info">
+                                    <h3>Movie Time</h3>
+                                    <span class="status" style="font-weight: normal; color: #1a73e8; font-size: 12px; display: block; margin-bottom: 2px;">Manual trigger</span>
+                                    <span class="status" style="font-weight: normal;">TV ON, Lights 10%</span>
+                                </div>
+                                <div class="menu-container" style="margin-left: auto;">
+                                    <div class="menu-dots routine-menu-btn"><span class="material-icons">more_vert</span></div>
+                                    <div class="popup-menu routine-popup" style="display: none;">
+                                        <div class="popup-item edit-routine-opt"><span class="material-icons" style="font-size:16px;">edit</span> Edit</div>
+                                        <div class="popup-item delete-routine-opt" style="color: #d93025;"><span class="material-icons" style="font-size:16px;">delete</span> Remove</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="action-btn run-routine-btn" data-routine="movie">Run Routine</button>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+            <div id="activity-view" style="display: none;">
+                <section class="log-section">
+                    <h2>System Activity</h2>
+                    <ul id="log-list">
+                        <li id="initial-log" style="color: #5f6368; font-style: italic;">None</li>
+                    </ul>
+                </section>
+            </div>
+
+            <div id="energy-view" style="display: none;">
+                <section class="energy-section">
+                    <h2>Energy Dashboard</h2>
+                    <div class="device-grid">
+                        <div class="stat-card" style="display: inline-block; width: 100%; box-sizing: border-box;">
+                            <h3>Usage in February</h3>
+                            <p class="big-number">342 <span class="unit">kWh</span></p>
+                            <p class="sub-text">12% lower than January</p>
+                        </div>
+                        <div class="stat-card" style="display: inline-block; width: 100%; box-sizing: border-box;">
+                            <h3>Current Draw</h3>
+                            <p class="big-number"><span id="current-draw-val">0.30</span> <span class="unit">kW</span></p>
+                            <p class="sub-text" id="current-draw-status">Normal levels</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="panel-backdrop" class="panel-backdrop"></div>
+    <div id="side-panels-container">
+        
+        <div class="advanced-settings" id="light-advanced">
+            <div class="panel-header">
+                <h2>Advanced Options</h2>
+                <span class="material-icons close-panel-btn">close</span>
+            </div>
+            <div class="slider-container">
+                <label>Colour Temp: <span>Warm - Cool</span></label>
+                <input type="range" id="color-temp-slider" min="1" max="100" value="50">
+            </div>
+            <hr class="divider">
+            <div class="device-info-block">
+                <p><span>Product Name:</span> Smart LED Bulb Colour</p>
+                <p><span>Manufacturer:</span> Philips Hue</p>
+                <p><span>Firmware:</span> v1.45.2</p>
+                <p><span>Serial No:</span> HU-882-901X</p>
+            </div>
+        </div>
+
+        <div class="advanced-settings" id="heating-advanced">
+            <div class="panel-header">
+                <h2>Advanced Options</h2>
+                <span class="material-icons close-panel-btn">close</span>
+            </div>
+            <div class="toggle-row">
+                <span><span class="material-icons" style="vertical-align: middle; font-size: 18px;">eco</span> Eco Mode</span>
+                <button class="secondary-btn small-btn" id="eco-mode-btn">Enable</button>
+            </div>
+            <div class="toggle-row">
+                <span><span class="material-icons" style="vertical-align: middle; font-size: 18px;">air</span> Fan Speed</span>
+                <select id="fan-speed" class="dropdown-select">
+                    <option value="Auto">Auto</option>
+                    <option value="Low">Low</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+            <hr class="divider">
+            <div class="device-info-block">
+                <p><span>Product Name:</span> Learning Thermostat V3</p>
+                <p><span>Manufacturer:</span> Nest</p>
+                <p><span>Firmware:</span> v6.2.11</p>
+                <p><span>Serial No:</span> NT-551-332A</p>
+            </div>
+        </div>
+
+        <div class="advanced-settings" id="desk-lamp-advanced">
+            <div class="panel-header">
+                <h2>Sleep Timer</h2>
+                <span class="material-icons close-panel-btn">close</span>
+            </div>
+            <div class="toggle-row">
+                <span><span class="material-icons" style="vertical-align: middle; font-size: 18px;">schedule</span> Duration</span>
+                <select id="desk-lamp-timer-select" class="dropdown-select">
+                    <option value="30">30 minutes</option>
+                    <option value="60">1 hour</option>
+                    <option value="120">2 hours</option>
+                </select>
+            </div>
+            <button class="secondary-btn" id="desk-lamp-timer-btn">Start Timer</button>
+            <p id="desk-lamp-timer-display" style="display:none; text-align:center; margin-top:15px; font-weight:bold; color:#1a73e8; font-family:monospace; font-size:16px;"></p>
+            <hr class="divider">
+            <div class="device-info-block">
+                <p><span>Product Name:</span> Tradfri Smart Plug</p>
+                <p><span>Manufacturer:</span> IKEA</p>
+                <p><span>Firmware:</span> v1.1.0</p>
+            </div>
+        </div>
+
+        <div class="advanced-settings" id="tv-advanced">
+            <div class="panel-header">
+                <h2>Advanced Options</h2>
+                <span class="material-icons close-panel-btn">close</span>
+            </div>
+            <div class="toggle-row">
+                <span><span class="material-icons" style="vertical-align: middle; font-size: 18px;">input</span> Source</span>
+                <select id="tv-input" class="dropdown-select">
+                    <option value="TV / Apps">TV / Apps</option>
+                    <option value="HDMI 1">HDMI 1</option>
+                    <option value="HDMI 2">HDMI 2</option>
+                </select>
+            </div>
+            
+            <div id="tv-remote-wrapper" style="display: none;">
+                <hr class="divider">
+                <h4>Remote Control</h4>
+                <div class="tv-remote">
+                    <div class="remote-row">
+                        <button class="remote-btn" id="tv-ch-up" title="Channel Up"><span class="material-icons">keyboard_arrow_up</span></button>
+                    </div>
+                    <div class="remote-row">
+                        <button class="remote-btn" id="tv-vol-down" title="Volume Down"><span class="material-icons">volume_down</span></button>
+                        <button class="remote-btn" id="tv-mute" title="Mute"><span class="material-icons">volume_off</span></button>
+                        <button class="remote-btn" id="tv-vol-up" title="Volume Up"><span class="material-icons">volume_up</span></button>
+                    </div>
+                    <div class="remote-row">
+                        <button class="remote-btn" id="tv-ch-down" title="Channel Down"><span class="material-icons">keyboard_arrow_down</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+            <div class="device-info-block">
+                <p><span>Product Name:</span> The Frame 55"</p>
+                <p><span>Manufacturer:</span> Samsung</p>
+                <p><span>Firmware:</span> Tizen 6.5</p>
+            </div>
+        </div>
+
+        <div class="advanced-settings" id="fan-advanced">
+            <div class="panel-header">
+                <h2>Advanced Options</h2>
+                <span class="material-icons close-panel-btn">close</span>
+            </div>
+            <div class="toggle-row">
+                <span><span class="material-icons" style="vertical-align: middle; font-size: 18px;">autorenew</span> Oscillation</span>
+                <button class="secondary-btn small-btn" id="fan-osc-btn">Enable</button>
+            </div>
+            <hr class="divider">
+            <div class="device-info-block">
+                <p><span>Product Name:</span> Pure Cool Tower</p>
+                <p><span>Manufacturer:</span> Dyson</p>
+                <p><span>Firmware:</span> v2.0.4</p>
+            </div>
+        </div>
+
+        <div class="advanced-settings" id="speaker-advanced">
+            <div class="panel-header">
+                <h2>Advanced Options</h2>
+                <span class="material-icons close-panel-btn">close</span>
+            </div>
+            <hr class="divider">
+            <div class="device-info-block">
+                <p><span>Product Name:</span> Sonos One Gen 2</p>
+                <p><span>Manufacturer:</span> Sonos</p>
+                <p><span>Firmware:</span> v15.1</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="add-device-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Device</h2>
+                <span class="material-icons close-modal" id="close-modal-btn">close</span>
+            </div>
+            
+            <div id="modal-state-searching" class="modal-state">
+                <div class="spinner"></div>
+                <p>Searching for nearby devices...</p>
+                <p style="font-size: 12px; color: #5f6368;">Make sure your device is in pairing mode.</p>
+            </div>
+
+            <div id="modal-state-results" class="modal-state" style="display: none;">
+                <p id="found-devices-text" style="margin-top: 0; text-align: left; font-weight: bold;"></p>
+                <ul class="device-list" id="available-devices-list">
+                    </ul>
+            </div>
+
+            <div id="modal-state-connecting" class="modal-state" style="display: none;">
+                <div class="spinner"></div>
+                <p>Connecting to device...</p>
+                <p style="font-size: 12px; color: #5f6368;">This may take a moment.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-automation-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="auto-modal-title">Create Custom Routine</h2>
+                <span class="material-icons close-modal" id="close-auto-modal-btn">close</span>
+            </div>
+            <div class="automation-form">
+                <label style="font-size: 14px; color: #5f6368;">Routine Name:</label>
+                <input type="text" id="auto-name-input" placeholder="e.g., Dinner Time" class="text-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color-dark); margin-top: 5px; margin-bottom: 20px; box-sizing: border-box; font-family: inherit;">
+
+                <label style="font-size: 14px; color: #5f6368; margin-bottom: 5px; display: block;">When should this run?</label>
+                <select id="auto-trigger-select" class="dropdown-select" style="width: 100%; margin-bottom: 20px; padding: 10px;">
+                    <option value="manual">Manual (When I click "Run Routine")</option>
+                    <option value="time_morning">At Sunrise (06:30 AM)</option>
+                    <option value="time_evening">At Sunset (18:00 PM)</option>
+                    <option value="temp_drop">When inside temp drops below 18°C</option>
+                    <option value="location_leave">When I leave home</option>
+                    <option value="location_arrive">When I arrive home</option>
+                </select>
+
+                <label style="font-size: 14px; color: #5f6368; margin-bottom: 10px; display: block;">Select Actions:</label>
+                <div class="auto-actions-list">
+                    
+                    <div class="auto-action-item">
+                        <input type="checkbox" id="auto-light-check" value="light" style="cursor: pointer;">
+                        <label for="auto-light-check" style="flex: 1; cursor: pointer; font-weight: 500;">Room Lights</label>
+                        <select id="auto-light-state" class="dropdown-select">
+                            <option value="on">Turn ON</option>
+                            <option value="off">Turn OFF</option>
+                        </select>
+                    </div>
+
+                    <div class="auto-action-item">
+                        <input type="checkbox" id="auto-heat-check" value="heat" style="cursor: pointer;">
+                        <label for="auto-heat-check" style="flex: 1; cursor: pointer; font-weight: 500;">Heating System</label>
+                        <select id="auto-heat-state" class="dropdown-select">
+                            <option value="on">Turn ON</option>
+                            <option value="off">Turn OFF</option>
+                        </select>
+                    </div>
+
+                    <div class="auto-action-item">
+                        <input type="checkbox" id="auto-lamp-check" value="lamp" style="cursor: pointer;">
+                        <label for="auto-lamp-check" style="flex: 1; cursor: pointer; font-weight: 500;">Desk Lamp</label>
+                        <select id="auto-lamp-state" class="dropdown-select">
+                            <option value="on">Turn ON</option>
+                            <option value="off">Turn OFF</option>
+                        </select>
+                    </div>
+                    
+                    <div class="auto-action-item">
+                        <input type="checkbox" id="auto-tv-check" value="tv" style="cursor: pointer;">
+                        <label for="auto-tv-check" style="flex: 1; cursor: pointer; font-weight: 500;">Smart TV</label>
+                        <select id="auto-tv-state" class="dropdown-select">
+                            <option value="on">Turn ON</option>
+                            <option value="off">Turn OFF</option>
+                        </select>
+                    </div>
+                    
+                    <div class="auto-action-item">
+                        <input type="checkbox" id="auto-fan-check" value="fan" style="cursor: pointer;">
+                        <label for="auto-fan-check" style="flex: 1; cursor: pointer; font-weight: 500;">Dyson Fan</label>
+                        <select id="auto-fan-state" class="dropdown-select">
+                            <option value="on">Turn ON</option>
+                            <option value="off">Turn OFF</option>
+                        </select>
+                    </div>
+                    
+                    <div class="auto-action-item">
+                        <input type="checkbox" id="auto-speaker-check" value="speaker" style="cursor: pointer;">
+                        <label for="auto-speaker-check" style="flex: 1; cursor: pointer; font-weight: 500;">Smart Speaker</label>
+                        <select id="auto-speaker-state" class="dropdown-select">
+                            <option value="on">Turn ON</option>
+                            <option value="off">Turn OFF</option>
+                        </select>
+                    </div>
+
+                </div>
+                <button class="action-btn" id="save-automation-btn" style="margin-top: 25px; background-color: #34a853; color: white; border: none;">Save Routine</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

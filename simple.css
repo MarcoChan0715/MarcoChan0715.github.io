@@ -1,0 +1,1037 @@
+/* --- Global Styles --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5; 
+    color: #202124;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden; 
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* --- App Layout --- */
+.app-layout {
+    display: flex;
+    height: 100vh;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 240px;
+    background-color: #f0f2f5;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: background-color 0.3s;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 20px; 
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #5f6368;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-item .material-icons {
+    font-size: 22px;
+}
+
+.nav-item:hover {
+    background-color: #e8eaed;
+}
+
+.nav-item.active {
+    background-color: #e8eaed;
+    color: #1a73e8; 
+    font-weight: 600;
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    flex: 1;
+    background-color: #ffffff;
+    border-top-left-radius: 30px; 
+    border-bottom-left-radius: 30px;
+    padding: 40px 60px;
+    overflow-y: auto;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.03);
+    transition: background-color 0.3s;
+}
+
+/* Header Layout */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.header-text h1 {
+    font-size: 32px;
+    margin: 0 0 5px 0;
+}
+
+.env-status {
+    display: flex;
+    gap: 15px;
+    color: #5f6368;
+    font-size: 14px;
+    margin-top: 5px;
+    align-items: center;
+}
+
+.env-status span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Header Dynamic Buttons */
+.header-action-btn {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.header-action-btn:hover {
+    background-color: #1557b0;
+}
+
+.icon-btn {
+    padding: 12px;
+    border-radius: 50%;
+    background-color: #f1f3f4;
+    color: #5f6368;
+}
+
+.icon-btn:hover {
+    background-color: #e8eaed;
+}
+
+/* --- Filter Pills --- */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #f1f3f4;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #3c4043;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pill .material-icons {
+    font-size: 18px;
+}
+
+.pill.active {
+    background-color: #c2e7ff; 
+    color: #001d35;
+}
+
+/* Edit Mode for the Filter Pills (Tabs) */
+.filters.edit-mode .pill {
+    cursor: grab;
+    border: 1px dashed #1a73e8;
+}
+
+.filters.edit-mode .pill:active {
+    cursor: grabbing;
+}
+
+.filters.edit-mode .pill.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* --- Device Cards Grid --- */
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+    gap: 24px;
+    margin-bottom: 40px;
+    align-items: start; 
+}
+
+.device-card {
+    background: #f8f9fa;
+    border-radius: 24px; 
+    padding: 24px;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, border-color 0.3s, opacity 0.2s;
+    border: 1px solid #f1f3f4;
+}
+
+.device-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+/* ==================================================== */
+/* --- EDIT MODE (DRAG AND DROP) STYLES ---             */
+/* ==================================================== */
+
+.device-grid.edit-mode .device-card {
+    cursor: grab;
+    border: 2px dashed #1a73e8;
+    background: #ffffff; 
+    opacity: 0.9;
+}
+
+.device-grid.edit-mode .device-card:active {
+    cursor: grabbing;
+}
+
+.device-grid.edit-mode .device-card.dragging {
+    opacity: 0.4;
+    border: 2px solid #1a73e8;
+    transform: scale(0.95);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+/* Disable interaction with inner elements while dragging */
+.device-grid.edit-mode .action-btn,
+.device-grid.edit-mode input[type="range"],
+.device-grid.edit-mode .menu-dots,
+.device-grid.edit-mode .fav-btn {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* ==================================================== */
+/* --- OFFLINE ERROR STATE STYLES ---                   */
+/* ==================================================== */
+
+.device-card.offline {
+    background-color: #f8f9fa !important;
+    border-color: #dadce0 !important;
+}
+
+.device-card.offline .icon-circle {
+    background-color: #e8eaed !important;
+}
+
+.device-card.offline .icon-circle .material-icons {
+    color: #9aa0a6 !important;
+}
+
+/* Lock out the controls visually */
+.device-card.offline .card-controls {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.device-card.offline .status {
+    color: #d93025 !important; 
+    font-weight: bold;
+}
+
+/* ==================================================== */
+/* --- QUICK MACROS ---                                 */
+/* ==================================================== */
+
+.quick-macros {
+    margin: 8px 0 28px;
+}
+
+.quick-macros h2 {
+    font-size: 18px;
+    color: #202124;
+    margin-bottom: 15px;
+}
+
+.macro-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: stretch;
+}
+
+.macro-btn {
+    background-color: #f1f3f4;
+    border: 1px solid #dadce0;
+    color: #3c4043;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.macro-btn .material-icons {
+    font-size: 20px;
+}
+
+.macro-btn:hover {
+    background-color: #e8eaed;
+}
+
+/* Edit Mode styling specifically for Macro Buttons! */
+.macro-container.edit-mode .macro-btn {
+    cursor: grab;
+    border: 1px dashed #1a73e8;
+    pointer-events: auto;
+}
+
+.macro-container.edit-mode .macro-btn:active {
+    cursor: grabbing;
+}
+
+.macro-container.edit-mode .macro-btn.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* ==================================================== */
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: background-color 0.3s;
+}
+
+.icon-circle .material-icons {
+    font-size: 26px;
+    color: #5f6368;
+}
+
+.device-info h3 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    color: #202124;
+}
+
+.status {
+    font-size: 14px;
+    color: #5f6368;
+    font-weight: 600;
+}
+
+/* Heart/Fav Button */
+.fav-btn {
+    margin-left: auto;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: transform 0.1s;
+    display: flex;
+}
+.fav-btn:active {
+    transform: scale(0.8);
+}
+
+/* 3-Dot Menu Button & Popup */
+.menu-container {
+    position: relative;
+}
+
+.menu-dots {
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    display: flex;
+    color: #5f6368;
+}
+.menu-dots:hover {
+    background-color: #e8eaed;
+}
+
+.popup-menu {
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 100;
+    min-width: 180px;
+    overflow: hidden;
+}
+
+.popup-item {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #3c4043;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.popup-item:hover {
+    background-color: #f1f3f4;
+}
+
+/* --- Controls inside cards --- */
+.action-btn {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #dadce0;
+    color: #1a73e8;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #f1f3f4;
+}
+
+.slider-container label {
+    font-size: 14px;
+    color: #5f6368;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+/* DYNAMIC SLIDER TRACK STYLING */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #dadce0; 
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #1a73e8;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #1a73e8;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* ==================================================== */
+/* --- RIGHT-SIDE PANEL (ADVANCED SETTINGS) ---     */
+/* ==================================================== */
+
+.panel-backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 900;
+    display: none;
+}
+
+.advanced-settings {
+    position: fixed;
+    top: 0;
+    right: -450px; 
+    width: 400px;
+    max-width: 90%;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
+    padding: 40px 30px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.advanced-settings.open {
+    right: 0; 
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 15px;
+}
+
+.panel-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #202124;
+}
+
+.close-panel-btn {
+    cursor: pointer;
+    color: #5f6368;
+    background: #f1f3f4;
+    border-radius: 50%;
+    padding: 5px;
+    display: flex;
+    transition: background 0.2s;
+}
+
+.close-panel-btn:hover {
+    background: #e8eaed;
+}
+
+.toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 16px;
+}
+
+.secondary-btn {
+    background: #e8eaed;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    color: #3c4043;
+    transition: all 0.2s;
+}
+
+.secondary-btn:hover {
+    background: #dadce0;
+}
+
+.small-btn {
+    width: auto;
+    padding: 8px 16px;
+}
+
+.dropdown-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #dadce0;
+    font-size: 15px;
+    background: white;
+}
+
+.text-input {
+    background: white;
+    color: #202124;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #dadce0;
+    margin: 30px 0;
+}
+
+.device-info-block {
+    background: rgba(0, 0, 0, 0.03); 
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #5f6368;
+}
+
+.device-info-block p {
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.device-info-block span {
+    font-weight: 600;
+    color: #3c4043;
+}
+
+/* Remove Device Button */
+.danger-btn {
+    background-color: #fce8e6;
+    color: #d93025;
+    border: 1px solid #fad2cf;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    transition: all 0.2s;
+}
+
+.danger-btn:hover {
+    background: #fad2cf;
+}
+
+/* --- TV Remote Control Styles --- */
+.tv-remote {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background: #f1f3f4;
+    padding: 20px;
+    border-radius: 16px;
+    margin-top: 10px;
+}
+.remote-row {
+    display: flex;
+    gap: 15px;
+}
+.remote-btn {
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #5f6368;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.remote-btn:hover {
+    background: #e8eaed;
+    color: #1a73e8;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.remote-btn:active {
+    transform: scale(0.9);
+}
+
+/* --- Energy Stats Section --- */
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #e8eaed;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.stat-card h3 {
+    font-size: 16px;
+    color: #5f6368;
+    margin-top: 0;
+}
+
+.big-number {
+    font-size: 42px;
+    font-weight: bold;
+    color: #1a73e8;
+    margin: 10px 0;
+}
+
+.unit {
+    font-size: 20px;
+    color: #5f6368;
+    font-weight: normal;
+}
+
+.sub-text {
+    font-size: 14px;
+    color: #34a853; 
+    margin: 0;
+}
+
+/* --- Activity Log --- */
+.log-section h2, .energy-section h2, .automations-section h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.log-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.log-section li {
+    padding: 10px 0;
+    border-bottom: 1px solid #e8eaed;
+    font-size: 14px;
+    color: #3c4043;
+}
+
+.log-section li:last-child {
+    border-bottom: none;
+}
+
+/* --- Active Device States --- */
+.device-card.active-light { background-color: rgba(253, 226, 147, 0.1); border-color: #fde293; }
+.device-card.active-light .icon-circle { background-color: #fde293; }
+.device-card.active-light .icon-circle .material-icons { color: #e65100; }
+
+.device-card.active-heat { background-color: rgba(250, 210, 207, 0.1); border-color: #fad2cf; }
+.device-card.active-heat .icon-circle { background-color: #fad2cf; }
+.device-card.active-heat .icon-circle .material-icons { color: #d93025; }
+
+.device-card.active-media { background-color: rgba(138, 180, 248, 0.1); border-color: #8ab4f8; }
+.device-card.active-media .icon-circle { background-color: #8ab4f8; }
+.device-card.active-media .icon-circle .material-icons { color: #1a73e8; }
+
+
+/* --- Modals Styles --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 24px;
+    width: 450px;
+    max-width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 { margin: 0; font-size: 20px; border: none; padding: 0; }
+.close-modal { cursor: pointer; color: #5f6368; }
+
+.modal-state { text-align: center; padding: 20px 0; }
+
+.spinner {
+    border: 4px solid #f1f3f4;
+    border-top: 4px solid #1a73e8;
+    border-radius: 50%;
+    width: 45px; height: 45px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+.spin-icon {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    70% { box-shadow: 0 0 0 20px rgba(217, 48, 37, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0); }
+}
+
+
+.device-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0;
+    text-align: left;
+}
+
+.device-list-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #e8eaed;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.list-item-text { flex: 1; }
+.list-item-text strong { font-size: 16px; color: #202124; }
+.list-item-text small { color: #5f6368; }
+
+.connect-btn {
+    width: auto;
+    padding: 8px 15px;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Custom Automation Modal Adjustments */
+.auto-action-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e8eaed;
+    margin-bottom: 10px;
+}
+
+/* --- Routine Cards Styling --- */
+.routine-morning { border-left: 4px solid #f29900 !important; }
+.routine-morning .icon-circle { background-color: #fef7e0 !important; }
+.routine-morning .icon-circle .material-icons { color: #f29900 !important; }
+
+.routine-leaving { border-left: 4px solid #1a73e8 !important; }
+.routine-leaving .icon-circle { background-color: #e8f0fe !important; }
+.routine-leaving .icon-circle .material-icons { color: #1a73e8 !important; }
+
+.routine-movie { border-left: 4px solid #9c27b0 !important; }
+.routine-movie .icon-circle { background-color: #f3e5f5 !important; }
+.routine-movie .icon-circle .material-icons { color: #9c27b0 !important; }
+
+.routine-custom { border-left: 4px solid #34a853 !important; }
+.routine-custom .icon-circle { background-color: #e6f4ea !important; }
+.routine-custom .icon-circle .material-icons { color: #34a853 !important; }
+
+/* ==================================================== */
+/* --- DARK MODE OVERRIDES ---                          */
+/* ==================================================== */
+body.dark-mode {
+    background-color: #121212;
+    color: #e8eaed;
+}
+body.dark-mode .sidebar { background-color: #121212; }
+body.dark-mode .main-content { background-color: #1e1e1e; box-shadow: -5px 0 15px rgba(0,0,0,0.5); }
+body.dark-mode .device-card { background: #282828; border-color: #3c4043; }
+body.dark-mode .device-info h3, body.dark-mode header h1 { color: #e8eaed; }
+body.dark-mode header p, body.dark-mode .status, body.dark-mode .env-status { color: #9aa0a6; }
+body.dark-mode .icon-circle { background: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+body.dark-mode .icon-circle .material-icons { color: #e8eaed; }
+body.dark-mode .action-btn { background: #333; border-color: #5f6368; color: #8ab4f8; }
+body.dark-mode .action-btn:hover { background: #3c4043; }
+body.dark-mode .pill { background-color: #333; color: #e8eaed; }
+body.dark-mode .pill.active { background-color: #8ab4f8; color: #202124; }
+body.dark-mode .nav-item { color: #9aa0a6; }
+body.dark-mode .nav-item:hover, body.dark-mode .nav-item.active { background-color: #333; color: #8ab4f8; }
+body.dark-mode .popup-menu, body.dark-mode .modal-content, body.dark-mode .advanced-settings { background: #282828; border-color: #3c4043; color: #e8eaed; }
+body.dark-mode .popup-item, body.dark-mode .panel-header h2 { color: #e8eaed; }
+body.dark-mode .popup-item:hover { background: #333; }
+body.dark-mode .menu-dots:hover, body.dark-mode .close-panel-btn:hover { background-color: #3c4043; }
+body.dark-mode .log-section ul, body.dark-mode .tv-remote, body.dark-mode .device-list-item, body.dark-mode .auto-action-item { background: #282828; border-color: #3c4043; }
+body.dark-mode .log-section li { border-color: #3c4043; color: #e8eaed; }
+body.dark-mode .device-info-block { background: rgba(255,255,255,0.05); color: #e8eaed; }
+body.dark-mode .device-info-block span { color: #fff; }
+body.dark-mode .remote-btn { background: #333; border-color: #5f6368; color: #e8eaed; }
+body.dark-mode .remote-btn:hover { background: #3c4043; color: #8ab4f8; }
+body.dark-mode .stat-card { background: #282828; border-color: #3c4043; }
+body.dark-mode .stat-card h3, body.dark-mode .unit { color: #9aa0a6; }
+body.dark-mode .big-number { color: #8ab4f8; }
+body.dark-mode .secondary-btn, body.dark-mode .dropdown-select, body.dark-mode .text-input { background: #333; color: #e8eaed; border-color: #5f6368; }
+body.dark-mode .divider { border-top-color: #3c4043; }
+body.dark-mode .header-action-btn { background-color: #8ab4f8; color: #202124; }
+body.dark-mode .header-action-btn:hover { background-color: #aecbfa; }
+body.dark-mode .panel-header { border-bottom-color: #3c4043; }
+body.dark-mode .icon-btn { background-color: #333; color: #e8eaed; }
+body.dark-mode .icon-btn:hover { background-color: #3c4043; }
+
+/* Dark Mode Macro Buttons */
+body.dark-mode .quick-macros h2 { color: #e8eaed; }
+body.dark-mode .macro-btn { background-color: #333; border-color: #5f6368; color: #e8eaed; }
+body.dark-mode .macro-btn:hover { background-color: #3c4043; }
+
+/* Keep active colors bright in dark mode */
+body.dark-mode .device-card.active-light:not(.offline) { background-color: rgba(253, 226, 147, 0.1); border-color: #fde293; }
+body.dark-mode .device-card.active-light:not(.offline) .icon-circle { background-color: #fde293 !important; }
+body.dark-mode .device-card.active-light:not(.offline) .icon-circle .material-icons { color: #e65100 !important; }
+
+body.dark-mode .device-card.active-heat:not(.offline) { background-color: rgba(250, 210, 207, 0.1); border-color: #fad2cf; }
+body.dark-mode .device-card.active-heat:not(.offline) .icon-circle { background-color: #fad2cf !important; }
+body.dark-mode .device-card.active-heat:not(.offline) .icon-circle .material-icons { color: #d93025 !important; }
+
+body.dark-mode .device-card.active-media:not(.offline) { background-color: rgba(138, 180, 248, 0.1); border-color: #8ab4f8; }
+body.dark-mode .device-card.active-media:not(.offline) .icon-circle { background-color: #8ab4f8 !important; }
+body.dark-mode .device-card.active-media:not(.offline) .icon-circle .material-icons { color: #202124 !important; }
+
+body.dark-mode .list-item-text strong { color: #e8eaed; }
+
+/* Fix dark mode dragged items */
+body.dark-mode .device-grid.edit-mode .device-card { background: #282828; border-color: #8ab4f8; }
+body.dark-mode .device-grid.edit-mode .device-card.dragging { box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
+body.dark-mode .filters.edit-mode .pill { border-color: #8ab4f8; }
+body.dark-mode .macro-container.edit-mode .macro-btn { border-color: #8ab4f8; }
+
+/* Ensure Routine Icons look bright and clear in Dark Mode */
+body.dark-mode .routine-morning .icon-circle { background-color: rgba(242, 153, 0, 0.2) !important; }
+body.dark-mode .routine-morning .icon-circle .material-icons { color: #fbbc04 !important; }
+
+body.dark-mode .routine-leaving .icon-circle { background-color: rgba(26, 115, 232, 0.2) !important; }
+body.dark-mode .routine-leaving .icon-circle .material-icons { color: #8ab4f8 !important; }
+
+body.dark-mode .routine-movie .icon-circle { background-color: rgba(156, 39, 176, 0.2) !important; }
+body.dark-mode .routine-movie .icon-circle .material-icons { color: #c58af9 !important; }
+
+body.dark-mode .routine-custom .icon-circle { background-color: rgba(52, 168, 83, 0.2) !important; }
+body.dark-mode .routine-custom .icon-circle .material-icons { color: #81c995 !important; }
+
+/* Dark Mode Offline State Override */
+body.dark-mode .device-card.offline { background-color: #1a1a1a !important; border-color: #333 !important; }
+body.dark-mode .device-card.offline .icon-circle { background-color: #282828 !important; }
+body.dark-mode .device-card.offline .icon-circle .material-icons { color: #5f6368 !important; }
+
+
+
+/* Keep the top quick actions section clear from the filters below */
+.filters {
+    margin-top: 8px;
+}
+
+/* --- Touch-friendly layout editing on iPad / tablets --- */
+.device-grid.edit-mode .device-card,
+.filters.edit-mode .pill,
+.macro-container.edit-mode .macro-btn {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: none;
+}
+
+
+
+/* --- Animated touch drag feedback for iPad / tablets --- */
+.drag-placeholder {
+    border: 2px dashed #8ab4f8;
+    background: rgba(138, 180, 248, 0.12);
+    animation: dragPlaceholderPulse 0.95s ease-in-out infinite alternate;
+}
+
+.device-card-placeholder {
+    min-height: 120px;
+}
+
+.pill-placeholder,
+.macro-btn-placeholder {
+    display: inline-flex;
+}
+
+.touch-dragging {
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18) !important;
+    opacity: 0.98 !important;
+    cursor: grabbing !important;
+}
+
+@keyframes dragPlaceholderPulse {
+    from {
+        background: rgba(138, 180, 248, 0.10);
+        transform: scale(0.985);
+    }
+    to {
+        background: rgba(138, 180, 248, 0.18);
+        transform: scale(1);
+    }
+}
+
+body.dark-mode .drag-placeholder {
+    border-color: #8ab4f8;
+    background: rgba(138, 180, 248, 0.16);
+}
+
+body.dark-mode .touch-dragging {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55) !important;
+}
+
+
+/* --- iPad tap/zoom prevention for interactive controls --- */
+.header-action-btn,
+.macro-btn,
+.pill,
+.action-btn,
+.secondary-btn,
+.danger-btn,
+.remote-btn,
+.connect-btn,
+.menu-dots,
+.fav-btn,
+.popup-item,
+input[type="range"],
+select,
+input[type="number"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tv-remote,
+.remote-row {
+    touch-action: manipulation;
+}
+
+
+/* --- iPad drag fix: lock scroll while dragging layout items --- */
+.device-grid.edit-mode,
+.filters.edit-mode,
+.macro-container.edit-mode {
+    touch-action: none;
+    overscroll-behavior: contain;
+}
+
+body.drag-edit-lock,
+body.drag-edit-lock .main-content {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+}
+
+body.drag-edit-lock .main-content {
+    touch-action: none !important;
+    -webkit-overflow-scrolling: auto;
+}

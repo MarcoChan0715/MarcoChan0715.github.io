@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Smart Home Dashboard (Pro Mode)</title>
+    <title>Smart Home Dashboard (Complex)</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="complex.css">
 </head>
 <body>
     <div class="app-layout">
         
+        <!--Sidebar-->
         <aside class="sidebar">
             <div class="nav-item active" id="nav-home">
                 <span class="material-icons">home</span> Home
@@ -25,37 +26,37 @@
             </div>
         </aside>
 
+        <!--Main Page Content-->
         <main class="main-content">
-            
+             <!--Main Page Top Functions-->
             <header class="main-header">
                 <div class="header-text">
                     <h1>Smart Home Control Panel</h1>
                 </div>
+                <!--Dark Mode Toggle-->
                 <div id="header-actions">
                     <button id="theme-toggle-btn" class="header-action-btn icon-btn" title="Toggle Dark Mode">
                         <span class="material-icons" id="theme-icon">dark_mode</span>
                     </button>
+                     <!--Edit Layout Button-->
                     <button id="edit-layout-btn" class="header-action-btn">
                         <span class="material-icons">edit</span> Edit Layout
                     </button>
-                    
-
-
+                    <!--Add Device Button-->
                     <button id="add-device-btn" class="header-action-btn">
                         <span class="material-icons">add</span> Add Device
                     </button>
+                    <!--Add Automation Button, Only appears in Automation Page-->
                     <button id="add-automation-btn" class="header-action-btn" style="display: none;">
                         <span class="material-icons">add</span> Add Automation
                     </button>
-
-
-
-
                 </div>
             </header>
 
+            <!--Home Page-->
             <div id="home-view">
                 
+                <!--Quick Actions-->
                 <section class="quick-macros">
                     <h2>Macros</h2>
                     <div class="macro-container">
@@ -67,6 +68,7 @@
                     </div>
                 </section>
 
+                <!--Device Categories Without Material Icons-->
                 <div class="filters">
                     <button class="pill active" data-filter="all">All Devices</button>
                     <button class="pill" data-filter="favourites">Favourites</button>
@@ -75,8 +77,10 @@
                     <button class="pill" data-filter="media">Entertainment</button>
                 </div>
 
+                <!--Device Cards--> 
                 <section class="device-grid">
                     
+                    <!--Room Lights Device Card-->
                     <div class="device-card" id="light-card" data-category="lights" data-favorite="true" data-removed="false" data-offline="false">
                         <div class="card-header">
                             <div class="device-info">
@@ -87,8 +91,10 @@
                             <div class="fav-btn"><span class="material-icons fav-icon" style="color: #1a73e8;">favorite</span></div>
                         </div>
                         
+                        <!--Room Lights Advanced Options On Device Card-->
                         <div class="card-body-complex">
-                            <div class="complex-col-left">
+                            <!--Left Hand Side of Device Card-->
+                            <div class="complexLeft">
                                 <div class="form-group">
                                     <label>DEVICE CONTROLS</label>
                                     <button class="pro-btn" id="toggle-lights-btn">Turn Room Lights ON</button>
@@ -108,8 +114,8 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="complex-col-right">
+                            <!--Right Hand Side of Device Card-->
+                            <div class="complexRight">
                                 <div class="form-group">
                                     <label>CONNECTION DETAILS</label>
                                     <div class="dense-readout">
@@ -120,7 +126,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>ADVANCED SETTINGS</label>
-                                    <label class="fake-checkbox"><input type="checkbox" checked> Enable Usage Telemetry</label>
+                                    <label class="fake-checkbox"><input type="checkbox" checked> Track Device Usage </label>
                                     <label class="fake-checkbox"><input type="checkbox"> Allow Local Access</label>
                                 </div>
                                 <div class="form-group" style="margin-top: auto;">
@@ -135,6 +141,7 @@
                         </div>
                     </div>
 
+                    <!--Heating System Device Card-->
                     <div class="device-card" id="heating-card" data-category="climate" data-favorite="true" data-removed="false" data-offline="false">
                         <div class="card-header">
                             <div class="device-info">
@@ -145,8 +152,10 @@
                             <div class="fav-btn"><span class="material-icons fav-icon" style="color: #1a73e8;">favorite</span></div>
                         </div>
                         
+                        <!--Heating System Advanced Options On Device Card-->
                         <div class="card-body-complex">
-                            <div class="complex-col-left">
+                            <!--Left Hand Side of Device Card-->
+                            <div class="complexLeft">
                                 <div class="form-group">
                                     <label>HVAC DEVICE CONTROLS</label>
                                     <button class="pro-btn" id="toggle-heating-btn">Turn Heating System ON</button>
@@ -169,8 +178,8 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="complex-col-right">
+                            <!--Right Hand Side of Device Card-->
+                            <div class="complexRight">
                                 <div class="form-group">
                                     <label>SYSTEM STATUS</label>
                                     <div class="dense-readout">
@@ -196,6 +205,7 @@
                         </div>
                     </div>
 
+                    <!--Desk Lamp Device Card-->
                     <div class="device-card" id="desk-lamp-card" data-category="lights" data-favorite="false" data-removed="false" data-offline="false">
                         <div class="card-header">
                             <div class="device-info">
@@ -205,9 +215,11 @@
                             </div>
                             <div class="fav-btn"><span class="material-icons fav-icon" style="color: #ccc;">favorite_border</span></div>
                         </div>
-                        
+
+                        <!--Desk Lamp Advanced Options On Device Card-->
                         <div class="card-body-complex">
-                            <div class="complex-col-left">
+                            <!--Left Hand Side of Device Card-->
+                            <div class="complexLeft">
                                 <div class="form-group">
                                     <label>DEVICE CONTROLS</label>
                                     <button class="pro-btn" id="toggle-desk-lamp-btn">Turn Desk Lamp ON</button>
@@ -227,9 +239,9 @@
                                     <button class="secondary-btn" id="desk-lamp-timer-btn" style="width: 100%;">Start Timer</button>
                                     <p id="desk-lamp-timer-display" style="display:none; text-align:center; font-weight:bold; color:#1a73e8; margin-top:5px;"></p>
                                 </div>
-                            </div>
-
-                            <div class="complex-col-right">
+                            </div> 
+                            <!--Right Hand Side of Device Card-->
+                            <div class="complexRight">
                                 <div class="form-group">
                                     <label>CONNECTION DETAILS</label>
                                     <div class="dense-readout">
@@ -250,6 +262,7 @@
                         </div>
                     </div>
 
+                    <!--Smart TV Decice Card-->
                     <div class="device-card" id="tv-card" data-category="media" data-favorite="false" data-removed="false" data-offline="false">
                         <div class="card-header">
                             <div class="device-info">
@@ -261,8 +274,10 @@
                             <div class="fav-btn"><span class="material-icons fav-icon" style="color: #ccc;">favorite_border</span></div>
                         </div>
                         
+                        <!--Smart TV Advanced Options On Device Card-->
                         <div class="card-body-complex">
-                            <div class="complex-col-left">
+                            <!--Left Hand Side of Device Card-->
+                            <div class="complexLeft">
                                 <div class="form-group">
                                     <label>DISPLAY POWER</label>
                                     <button class="pro-btn" id="toggle-tv-btn">Turn Smart TV ON</button>
@@ -282,9 +297,9 @@
                                         <option value="HDMI 2">PORT_HDMI_2</option>
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="complex-col-right">
+                            </div>  
+                            <!--Right Hand Side of Device Card-->
+                            <div class="complexRight">
                                 <div class="form-group">
                                     <label>REMOTE INTERFACE PANEL</label>
                                     <div class="tv-remote">
@@ -309,6 +324,7 @@
                         </div>
                     </div>
 
+                    <!--Dyson Pure Cool Device Card, Hidden By Default-->
                     <div class="device-card" id="fan-card" data-category="climate" data-favorite="false" data-removed="true" data-offline="false" style="display: none;">
                         <div class="card-header">
                             <div class="device-info">
@@ -318,8 +334,11 @@
                             </div>
                             <div class="fav-btn"><span class="material-icons fav-icon" style="color: #ccc;">favorite_border</span></div>
                         </div>
+
+                        <!--Dyson Pure Cool  Advanced Options On Device Card-->
                         <div class="card-body-complex">
-                            <div class="complex-col-left">
+                            <!--Left Hand Side of Device Card-->
+                            <div class="complexLeft">
                                 <div class="form-group">
                                     <label>FAN DEVICE CONTROLS</label>
                                     <button class="pro-btn" id="toggle-fan-btn">Turn Dyson Pure Cool ON</button>
@@ -336,8 +355,8 @@
                                     <button class="secondary-btn" id="fan-osc-btn" style="width: 100%;">Enable</button>
                                 </div>
                             </div>
-
-                            <div class="complex-col-right">
+                            <!--Right Hand Side of Device Card-->
+                            <div class="complexRight">
                                 <div class="form-group">
                                     <label>CONNECTION DETAILS</label>
                                     <div class="dense-readout">
@@ -357,6 +376,7 @@
                         </div>
                     </div>
 
+                    <!--Sonos One Device Card, Hidden By Default-->
                     <div class="device-card" id="speaker-card" data-category="media" data-favorite="false" data-removed="true" data-offline="false" style="display: none;">
                         <div class="card-header">
                             <div class="device-info">
@@ -366,8 +386,11 @@
                             </div>
                             <div class="fav-btn"><span class="material-icons fav-icon" style="color: #ccc;">favorite_border</span></div>
                         </div>
+
+                        <!--Sonos One Advanced Options On Device Card-->
                         <div class="card-body-complex">
-                            <div class="complex-col-left">
+                            <!--Left Hand Side of Device Card-->
+                            <div class="complexLeft">
                                 <div class="form-group">
                                     <label>AUDIO DEVICE CONTROLS</label>
                                     <button class="pro-btn" id="toggle-speaker-btn">Turn Sonos One ON</button>
@@ -380,8 +403,8 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="complex-col-right">
+                            <!--Right Hand Side of Device Card-->
+                            <div class="complexRight">
                                 <div class="form-group">
                                     <label>CONNECTION DETAILS</label>
                                     <div class="dense-readout">
@@ -404,6 +427,87 @@
                 </section>
             </div>
 
+            <!--Activitty Page, System Activity Log-->
+            <div id="activity-view" style="display: none;">
+                <section class="log-section">
+                    <h2>System Activity Log</h2>
+                    <ul id="log-list">
+                        <li id="initial-log" style="color: #5f6368; font-style: italic;">None</li>
+                    </ul>
+                </section>
+            </div>
+
+            <!--Energy Page-->
+            <div id="energy-view" style="display: none;">
+                <section class="energy-section">
+                    <h2>Energy Overview</h2>
+                    
+                    <!--Live System Performance Overview-->
+                    <section class="usage-panel">
+                        <div class="usage-title">LIVE SYSTEM PERFORMANCE</div>
+                        <div class="css-chart">
+                            <div class="css-bar bar-1"></div><div class="css-bar bar-2"></div>
+                            <div class="css-bar bar-3"></div><div class="css-bar bar-4"></div>
+                            <div class="css-bar bar-5"></div><div class="css-bar bar-6"></div>
+                            <div class="css-bar bar-7"></div><div class="css-bar bar-8"></div>
+                            <div class="css-bar bar-9"></div><div class="css-bar bar-10"></div>
+                            <div class="css-bar bar-11"></div><div class="css-bar bar-12"></div>
+                            <div class="css-bar bar-13"></div><div class="css-bar bar-14"></div>
+                            <div class="css-bar bar-15"></div><div class="css-bar bar-16"></div>
+                            <div class="css-bar bar-17"></div><div class="css-bar bar-18"></div>
+                            <div class="css-bar bar-19"></div><div class="css-bar bar-20"></div>
+                        </div>
+                        <div class="usage-stats">
+                            <p>PACKET LOSS: <span style="color: #34a853;">0.01%</span></p>
+                            <p>CPU ALLOC: <span style="color: #f29900;">74.2%</span></p>
+                            <p>LATENCY: <span>14ms</span></p>
+                        </div>
+                    </section>
+
+                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        
+                        <!--Monthly Usage Card-->
+                        <div class="stat-card">
+                            <h3>30-Day Energy Usage</h3>
+                            <p class="big-number">342 <span class="unit">kWh</span></p>
+                            <p class="sub-text">Change from Last Month: -12%</p>
+                        </div>
+                        <!--Current Energy Usage Card-->
+                        <div class="stat-card">
+                            <h3>Current Power Use</h3>
+                            <p class="big-number"><span id="current-usage-val">0.30</span> <span class="unit">kW</span></p>
+                            <p class="sub-text" id="current-usage-status" style="color: #34a853;">Status: Nominal</p>
+                        </div>
+                        <!--Reactive Power Card-->
+                        <div class="stat-card">
+                            <h3>Reactive Power</h3>
+                            <p class="big-number">14.2 <span class="unit">kVAR</span></p>
+                            <p class="sub-text" style="color: #5f6368;">Load Type</p>
+                        </div>
+                        <!--Voltage Card-->
+                        <div class="stat-card">
+                            <h3>Voltage</h3>
+                            <p class="big-number">239.4 <span class="unit">V</span></p>
+                            <p class="sub-text" style="color: #5f6368;">Within Normal Range</p>
+                        </div>
+                        <!--Power Frequency Card-->
+                        <div class="stat-card">
+                            <h3>Power Frequency</h3>
+                            <p class="big-number">50.01 <span class="unit">Hz</span></p>
+                            <p class="sub-text" style="color: #5f6368;">Stable Supply</p>
+                        </div>
+                        <!--Power Efficiency Card-->
+                        <div class="stat-card">
+                            <h3>Power Efficiency</h3>
+                            <p class="big-number">0.98 <span class="unit">λ</span></p>
+                            <p class="sub-text" style="color: #5f6368;">Efficient Usage</p>
+                        </div>
+
+                        </div>
+                    </section>
+            </div>
+
+            <!--Automation Page-->
             <div id="automations-view" style="display: none;">
                 <section class="automations-section">
                     <h2>Daily Routines</h2>
@@ -411,6 +515,7 @@
                     
                     <div class="device-grid" id="routines-grid">
                         
+                        <!--Routine: Good Morning Automation Card-->
                         <div class="device-card routine-morning">
                             <div class="card-header">
                                 <div class="device-info">
@@ -419,7 +524,7 @@
                                 </div>
                             </div>
                             <div class="card-body-complex">
-                                <div class="complex-col-left">
+                                <div class="complexLeft">
                                     <div class="form-group">
                                         <label>RUN ACTION</label>
                                         <button class="pro-btn run-routine-btn" data-routine="morning">Run Routine</button>
@@ -429,7 +534,7 @@
                                         <div class="dense-readout"><p>Runs at 07:00 AM</p></div>
                                     </div>
                                 </div>
-                                <div class="complex-col-right">
+                                <div class="complexRight">
                                     <div class="form-group">
                                         <label>ROUTINE SETTINGS</label>
                                         <div class="dense-readout">
@@ -447,6 +552,7 @@
                             </div>
                         </div>
 
+                        <!--Routine: Laaving Home Automation Card-->
                         <div class="device-card routine-leaving">
                             <div class="card-header">
                                 <div class="device-info">
@@ -455,7 +561,7 @@
                                 </div>
                             </div>
                             <div class="card-body-complex">
-                                <div class="complex-col-left">
+                                <div class="complexLeft">
                                     <div class="form-group">
                                         <label>RUN ACTION</label>
                                         <button class="pro-btn run-routine-btn" data-routine="leaving">Run Routine</button>
@@ -465,7 +571,7 @@
                                         <div class="dense-readout"><p>When I Leave Home</p></div>
                                     </div>
                                 </div>
-                                <div class="complex-col-right">
+                                <div class="complexRight">
                                     <div class="form-group">
                                         <label>ROUTINE SETTINGS</label>
                                         <div class="dense-readout">
@@ -483,6 +589,7 @@
                             </div>
                         </div>
                         
+                        <!--Routine: Movie Time Automation Card-->
                         <div class="device-card routine-movie">
                             <div class="card-header">
                                 <div class="device-info">
@@ -491,7 +598,7 @@
                                 </div>
                             </div>
                             <div class="card-body-complex">
-                                <div class="complex-col-left">
+                                <div class="complexLeft">
                                     <div class="form-group">
                                         <label>RUN ACTION</label>
                                         <button class="pro-btn run-routine-btn" data-routine="movie">Run Routine</button>
@@ -501,7 +608,7 @@
                                         <div class="dense-readout"><p>Manual Only</p></div>
                                     </div>
                                 </div>
-                                <div class="complex-col-right">
+                                <div class="complexRight">
                                     <div class="form-group">
                                         <label>ROUTINE SETTINGS</label>
                                         <div class="dense-readout">
@@ -522,84 +629,11 @@
                     </div>
                 </section>
             </div>
-
-            <div id="activity-view" style="display: none;">
-                <section class="log-section">
-                    <h2>System Activity Log</h2>
-                    <ul id="log-list">
-                        <li id="initial-log" style="color: #5f6368; font-style: italic;">None</li>
-                    </ul>
-                </section>
-            </div>
-
-            <div id="energy-view" style="display: none;">
-                <section class="energy-section">
-                    <h2>Energy Overview</h2>
-                    
-                    <section class="telemetry-panel">
-                        <div class="telemetry-title">LIVE SYSTEM PERFORMANCE</div>
-                        <div class="css-chart">
-                            <div class="css-bar bar-1"></div><div class="css-bar bar-2"></div>
-                            <div class="css-bar bar-3"></div><div class="css-bar bar-4"></div>
-                            <div class="css-bar bar-5"></div><div class="css-bar bar-6"></div>
-                            <div class="css-bar bar-7"></div><div class="css-bar bar-8"></div>
-                            <div class="css-bar bar-9"></div><div class="css-bar bar-10"></div>
-                            <div class="css-bar bar-11"></div><div class="css-bar bar-12"></div>
-                            <div class="css-bar bar-13"></div><div class="css-bar bar-14"></div>
-                            <div class="css-bar bar-15"></div><div class="css-bar bar-16"></div>
-                            <div class="css-bar bar-17"></div><div class="css-bar bar-18"></div>
-                            <div class="css-bar bar-19"></div><div class="css-bar bar-20"></div>
-                        </div>
-                        <div class="telemetry-stats">
-                            <p>PACKET LOSS: <span style="color: #34a853;">0.01%</span></p>
-                            <p>CPU ALLOC: <span style="color: #f29900;">74.2%</span></p>
-                            <p>LATENCY: <span>14ms</span></p>
-                        </div>
-                    </section>
-
-                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-                        
-                        <div class="stat-card">
-                            <h3>30-Day Energy Usage</h3>
-                            <p class="big-number">342 <span class="unit">kWh</span></p>
-                            <p class="sub-text">Change from Last Month: -12%</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Current Power Use</h3>
-                            <p class="big-number"><span id="current-draw-val">0.30</span> <span class="unit">kW</span></p>
-                            <p class="sub-text" id="current-draw-status" style="color: #34a853;">Status: Nominal</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Reactive Power</h3>
-                            <p class="big-number">14.2 <span class="unit">kVAR</span></p>
-                            <p class="sub-text" style="color: #5f6368;">Load Type</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Voltage</h3>
-                            <p class="big-number">239.4 <span class="unit">V</span></p>
-                            <p class="sub-text" style="color: #5f6368;">Within Normal Range</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Power Frequency</h3>
-                            <p class="big-number">50.01 <span class="unit">Hz</span></p>
-                            <p class="sub-text" style="color: #5f6368;">Stable Supply</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Power Efficiency</h3>
-                            <p class="big-number">0.98 <span class="unit">λ</span></p>
-                            <p class="sub-text" style="color: #5f6368;">Efficient Usage</p>
-                        </div>
-
-                    </div>
-                </section>
-            </div>
-
         </main>
     </div>
 
-    <div id="panel-backdrop" class="panel-backdrop" style="display:none;"></div>
 
-
+    <!--Add Device-->
     <div id="add-device-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -607,17 +641,20 @@
                 <span class="material-icons close-modal" id="close-modal-btn">close</span>
             </div>
 
+            <!--Searching State-->
             <div id="modal-state-searching" class="modal-state">
                 <div class="spinner"></div>
                 <p>Searching for nearby devices...</p>
                 <p style="font-size: 12px; color: #5f6368;">Make sure your device is in pairing mode.</p>
             </div>
 
+            <!--Search Results-->
             <div id="modal-state-results" class="modal-state" style="display: none;">
                 <p id="found-devices-text" style="margin-top: 0; text-align: left; font-weight: bold;"></p>
                 <ul class="device-list" id="available-devices-list"></ul>
             </div>
 
+            <!--Device Connecting-->
             <div id="modal-state-connecting" class="modal-state" style="display: none;">
                 <div class="spinner"></div>
                 <p>Connecting to device...</p>
@@ -626,6 +663,7 @@
         </div>
     </div>
 
+    <!--Add Custom Routine-->
     <div id="add-automation-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -636,6 +674,7 @@
                 <label style="font-size: 14px; color: #5f6368;">Routine Name:</label>
                 <input type="text" id="auto-name-input" placeholder="e.g., Dinner Time" class="text-input" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #dadce0; margin-top: 5px; margin-bottom: 20px; box-sizing: border-box; font-family: inherit;">
 
+                <!--Routing Time Option-->
                 <label style="font-size: 14px; color: #5f6368; margin-bottom: 5px; display: block;">When should this run?</label>
                 <select id="auto-trigger-select" class="dropdown-select" style="width: 100%; margin-bottom: 20px; padding: 10px;">
                     <option value="manual">Manual (When I click &quot;Run Routine&quot;)</option>
@@ -646,8 +685,11 @@
                     <option value="location_arrive">When I arrive home</option>
                 </select>
 
+                 <!--Automation Device Selection (Switching  On/Off)-->
                 <label style="font-size: 14px; color: #5f6368; margin-bottom: 10px; display: block;">Select Actions:</label>
                 <div class="auto-actions-list">
+
+                    <!--Room Lights Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-light-check" value="light" style="cursor: pointer;">
                         <label for="auto-light-check" style="flex: 1; cursor: pointer; font-weight: 500;">Room Lights</label>
@@ -657,6 +699,7 @@
                         </select>
                     </div>
 
+                    <!--Heating System Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-heat-check" value="heat" style="cursor: pointer;">
                         <label for="auto-heat-check" style="flex: 1; cursor: pointer; font-weight: 500;">Heating System</label>
@@ -666,6 +709,7 @@
                         </select>
                     </div>
 
+                    <!--Desk Lamp Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-lamp-check" value="lamp" style="cursor: pointer;">
                         <label for="auto-lamp-check" style="flex: 1; cursor: pointer; font-weight: 500;">Desk Lamp</label>
@@ -675,6 +719,7 @@
                         </select>
                     </div>
                     
+                    <!--Smart TV Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-tv-check" value="tv" style="cursor: pointer;">
                         <label for="auto-tv-check" style="flex: 1; cursor: pointer; font-weight: 500;">Smart TV</label>
@@ -684,6 +729,7 @@
                         </select>
                     </div>
 
+                    <!--Dyson Pure Cool Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-fan-check" value="fan" style="cursor: pointer;">
                         <label for="auto-fan-check" style="flex: 1; cursor: pointer; font-weight: 500;">Dyson Pure Cool</label>
@@ -693,6 +739,7 @@
                         </select>
                     </div>
 
+                    <!--Sonos One Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-speaker-check" value="speaker" style="cursor: pointer;">
                         <label for="auto-speaker-check" style="flex: 1; cursor: pointer; font-weight: 500;">Sonos One</label>
@@ -703,13 +750,12 @@
                     </div>
                 </div>
 
+                <!--Save Actions Button-->
                 <button id="save-automation-btn" class="pro-btn" style="margin-top: 20px; background: #34a853; border-color: #34a853; color: white;">Save Routine</button>
             </div>
         </div>
     </div>
 
-    <script src="complex.js"></script>
-
-        
+    <script src="complex.js"></script>      
 </body>
 </html>

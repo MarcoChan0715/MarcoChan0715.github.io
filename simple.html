@@ -7,10 +7,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="simple.css">
 </head>
-<body>
-    <div class="app-layout">
+<body>  
+    <div class="app-layout"> 
         
-        <aside class="sidebar">
+        <!--Sidebar-->
+        <aside class="sidebar"> 
             <div class="nav-item active" id="nav-home">
                 <span class="material-icons">home</span> Home
             </div>
@@ -25,32 +26,37 @@
             </div>
         </aside>
 
+        <!--Main Page Content-->
         <main class="main-content">
-            
+            <!--Main Page Top Functions-->
             <header class="main-header">
                 <div class="header-text">
                     <h1>My Smart Home</h1>
                 </div>
                 <div id="header-actions">
-<button id="theme-toggle-btn" class="header-action-btn icon-btn" title="Toggle Dark Mode">
+                    <!--Dark Mode Toggle-->
+                    <button id="theme-toggle-btn" class="header-action-btn icon-btn" title="Toggle Dark Mode">
                         <span class="material-icons" id="theme-icon">dark_mode</span>
                     </button>
-                    
+                    <!--Edit Layout Button-->
                     <button id="edit-layout-btn" class="header-action-btn" style="background-color: #f1f3f4; color: #5f6368;">
                         <span class="material-icons">edit</span> Edit Layout
                     </button>
-                    
+                    <!--Add Device Button-->
                     <button id="add-device-btn" class="header-action-btn">
                         <span class="material-icons">add</span> Add Device
                     </button>
+                    <!--Add Automation Button, Only appears in Automation Page-->
                     <button id="add-automation-btn" class="header-action-btn" style="display: none;">
                         <span class="material-icons">add</span> Add Automation
                     </button>
                 </div>
             </header>
 
+            <!--Home Page-->
             <div id="home-view">
                 
+                <!--Quick Actions-->
                 <section class="quick-macros">
                     <h2>Quick Actions</h2>
                     <div class="macro-container">
@@ -62,6 +68,7 @@
                     </div>
                 </section>
 
+                <!--Device Categories-->
                 <div class="filters">
                     <button class="pill active" data-filter="all">
                         <span class="material-icons">grid_view</span> All devices
@@ -80,8 +87,10 @@
                     </button>
                 </div>
 
+                <!--Device Cards-->    
                 <section class="device-grid">
-                    
+
+                    <!--Room Lights Device Card-->
                     <div class="device-card" id="light-card" data-category="lights" data-favorite="true" data-removed="false" data-offline="false">
                         <div class="card-header">
                             <div class="icon-circle"><span class="material-icons">lightbulb</span></div>
@@ -100,6 +109,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--Rooms Light Switch and Brightness Slider -->
                         <div class="card-controls">
                             <button id="toggle-lights-btn" class="action-btn">Turn Lights ON</button>
                             <div class="slider-container">
@@ -109,6 +120,7 @@
                         </div>
                     </div>
 
+                    <!--Heating System Device Card-->
                     <div class="device-card" id="heating-card" data-category="climate" data-favorite="true" data-removed="false" data-offline="false">
                         <div class="card-header">
                             <div class="icon-circle"><span class="material-icons">thermostat</span></div>
@@ -127,6 +139,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--Heating System Switch and Temperature Slider -->
                         <div class="card-controls">
                             <button id="toggle-heating-btn" class="action-btn">Turn Heating ON</button>
                             <div class="slider-container">
@@ -136,6 +150,7 @@
                         </div>
                     </div>
 
+                    <!--Desk Lamp Device Card-->
                     <div class="device-card" id="desk-lamp-card" data-category="lights" data-favorite="false" data-removed="false" data-offline="false">
                         <div class="card-header">
                             <div class="icon-circle"><span class="material-icons">tungsten</span></div>
@@ -154,6 +169,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--Desk Lamp Switch and Brightness Slider-->
                         <div class="card-controls">
                             <button id="toggle-desk-lamp-btn" class="action-btn">Turn Lamp ON</button>
                             <div class="slider-container">
@@ -163,6 +180,7 @@
                         </div>
                     </div>
 
+                    <!--Smart TV Device Card-->
                     <div class="device-card" id="tv-card" data-category="media" data-favorite="false" data-removed="false" data-offline="false">
                         <div class="card-header">
                             <div class="icon-circle"><span class="material-icons">tv</span></div>
@@ -182,6 +200,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--Smart TV Power On/Off and Volume Slider -->
                         <div class="card-controls">
                             <button id="toggle-tv-btn" class="action-btn">Turn TV ON</button>
                             <div class="slider-container">
@@ -191,6 +211,7 @@
                         </div>
                     </div>
 
+                    <!--Dyson Pure Cool Device Card, Hidden By Default-->
                     <div class="device-card" id="fan-card" data-category="climate" data-favorite="false" data-removed="true" data-offline="false" style="display: none;">
                         <div class="card-header">
                             <div class="icon-circle"><span class="material-icons">air</span></div>
@@ -209,6 +230,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--Dyson Pure Cool Switch and Fan Speed Slider -->
                         <div class="card-controls">
                             <button id="toggle-fan-btn" class="action-btn">Turn Fan ON</button>
                             <div class="slider-container">
@@ -218,6 +241,7 @@
                         </div>
                     </div>
 
+                    <!--Sonos One Device Card, Hidden By Default-->
                     <div class="device-card" id="speaker-card" data-category="media" data-favorite="false" data-removed="true" data-offline="false" style="display: none;">
                         <div class="card-header">
                             <div class="icon-circle"><span class="material-icons">speaker</span></div>
@@ -236,6 +260,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--Sonos One Power On/Off and Volume Slider -->
                         <div class="card-controls">
                             <button id="toggle-speaker-btn" class="action-btn">Turn Speaker ON</button>
                             <div class="slider-container">
@@ -246,10 +272,42 @@
                     </div>
 
                 </section>
-
-
             </div>
 
+            <!--Activitty Page, System Activity Log-->
+            <div id="activity-view" style="display: none;">
+                <section class="log-section">
+                    <h2>System Activity</h2>
+                    <ul id="log-list">
+                        <li id="initial-log" style="color: #5f6368; font-style: italic;">None</li>
+                    </ul>
+                </section>
+            </div>
+
+            <!--Energy Page-->
+            <div id="energy-view" style="display: none;">
+                <section class="energy-section">
+                    <h2>Energy Dashboard</h2>
+
+                    <!--Monthly Usage Card-->
+                    <div class="device-grid">
+                        <div class="stat-card" style="display: inline-block; width: 100%; box-sizing: border-box;">
+                            <h3>Usage in the last 30 days</h3>
+                            <p class="big-number">342 <span class="unit">kWh</span></p>
+                            <p class="sub-text">12% lower than February</p>
+                        </div>
+
+                    <!--Current Energy Usage Card-->
+                        <div class="stat-card" style="display: inline-block; width: 100%; box-sizing: border-box;">
+                            <h3>Current usage</h3>
+                            <p class="big-number"><span id="current-usage-val">0.30</span> <span class="unit">kW</span></p>
+                            <p class="sub-text" id="current-usage-status">Normal levels</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!--Automation Page-->
             <div id="automations-view" style="display: none;">
                 <section class="automations-section">
                     <h2>Daily Routines</h2>
@@ -257,6 +315,7 @@
                     
                     <div class="device-grid" id="routines-grid">
                         
+                        <!--Routine: Good Morning Automation Card-->
                         <div class="device-card routine-morning">
                             <div class="card-header">
                                 <div class="icon-circle"><span class="material-icons">wb_sunny</span></div>
@@ -265,6 +324,8 @@
                                     <span class="status" style="font-weight: normal; color: #1a73e8; font-size: 12px; display: block; margin-bottom: 2px;">At 07:00 AM</span>
                                     <span class="status" style="font-weight: normal;">Lights ON (70%), Heating 22°C</span>
                                 </div>
+
+                                <!--Good Morning Hidden Menu-->
                                 <div class="menu-container" style="margin-left: auto;">
                                     <div class="menu-dots routine-menu-btn"><span class="material-icons">more_vert</span></div>
                                     <div class="popup-menu routine-popup" style="display: none;">
@@ -276,6 +337,7 @@
                             <button class="action-btn run-routine-btn" data-routine="morning">Run Routine</button>
                         </div>
 
+                        <!--Routine: Laaving Home Automation Card-->
                         <div class="device-card routine-leaving">
                             <div class="card-header">
                                 <div class="icon-circle"><span class="material-icons">directions_run</span></div>
@@ -284,6 +346,8 @@
                                     <span class="status" style="font-weight: normal; color: #1a73e8; font-size: 12px; display: block; margin-bottom: 2px;">When I leave home</span>
                                     <span class="status" style="font-weight: normal;">All OFF, Heating Eco</span>
                                 </div>
+
+                                <!--Leaving Home Hidden Menu-->
                                 <div class="menu-container" style="margin-left: auto;">
                                     <div class="menu-dots routine-menu-btn"><span class="material-icons">more_vert</span></div>
                                     <div class="popup-menu routine-popup" style="display: none;">
@@ -295,6 +359,7 @@
                             <button class="action-btn run-routine-btn" data-routine="leaving">Run Routine</button>
                         </div>
                         
+                        <!--Routine: Movie Time Automation Card-->
                         <div class="device-card routine-movie">
                             <div class="card-header">
                                 <div class="icon-circle"><span class="material-icons">movie</span></div>
@@ -303,6 +368,8 @@
                                     <span class="status" style="font-weight: normal; color: #1a73e8; font-size: 12px; display: block; margin-bottom: 2px;">Manual trigger</span>
                                     <span class="status" style="font-weight: normal;">TV ON, Lights 10%</span>
                                 </div>
+
+                                <!--Movie Time Hidden Menu-->
                                 <div class="menu-container" style="margin-left: auto;">
                                     <div class="menu-dots routine-menu-btn"><span class="material-icons">more_vert</span></div>
                                     <div class="popup-menu routine-popup" style="display: none;">
@@ -317,40 +384,15 @@
                     </div>
                 </section>
             </div>
-
-            <div id="activity-view" style="display: none;">
-                <section class="log-section">
-                    <h2>System Activity</h2>
-                    <ul id="log-list">
-                        <li id="initial-log" style="color: #5f6368; font-style: italic;">None</li>
-                    </ul>
-                </section>
-            </div>
-
-            <div id="energy-view" style="display: none;">
-                <section class="energy-section">
-                    <h2>Energy Dashboard</h2>
-                    <div class="device-grid">
-                        <div class="stat-card" style="display: inline-block; width: 100%; box-sizing: border-box;">
-                            <h3>Usage in March</h3>
-                            <p class="big-number">342 <span class="unit">kWh</span></p>
-                            <p class="sub-text">12% lower than February</p>
-                        </div>
-                        <div class="stat-card" style="display: inline-block; width: 100%; box-sizing: border-box;">
-                            <h3>Current Draw</h3>
-                            <p class="big-number"><span id="current-draw-val">0.30</span> <span class="unit">kW</span></p>
-                            <p class="sub-text" id="current-draw-status">Normal levels</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
         </main>
     </div>
-
+    
+    
     <div id="panel-backdrop" class="panel-backdrop"></div>
+    <!--Side Panel: Advanced Options-->
     <div id="side-panels-container">
         
+        <!--Room Lights Advanced Options, Colour Temperature Toggle and Device Info-->
         <div class="advanced-settings" id="light-advanced">
             <div class="panel-header">
                 <h2>Advanced Options</h2>
@@ -369,6 +411,7 @@
             </div>
         </div>
 
+        <!--Heating System Advanced Options,  Eco Mode Toggle, Fan Speed and Device Info-->
         <div class="advanced-settings" id="heating-advanced">
             <div class="panel-header">
                 <h2>Advanced Options</h2>
@@ -395,6 +438,7 @@
             </div>
         </div>
 
+        <!--Desk Lamp Advanced Options, Duration Button (w Timer) and Device Info-->
         <div class="advanced-settings" id="desk-lamp-advanced">
             <div class="panel-header">
                 <h2>Sleep Timer</h2>
@@ -418,11 +462,14 @@
             </div>
         </div>
 
+        <!--Smart TV  Advanced Options, TV Source, Remote (When device is on) and Device Info-->
         <div class="advanced-settings" id="tv-advanced">
             <div class="panel-header">
                 <h2>Advanced Options</h2>
                 <span class="material-icons close-panel-btn">close</span>
             </div>
+
+            <!--TV Source Changer-->
             <div class="toggle-row">
                 <span><span class="material-icons" style="vertical-align: middle; font-size: 18px;">input</span> Source</span>
                 <select id="tv-input" class="dropdown-select">
@@ -432,6 +479,7 @@
                 </select>
             </div>
             
+            <!--TV Remote-->
             <div id="tv-remote-wrapper" style="display: none;">
                 <hr class="divider">
                 <h4>Remote Control</h4>
@@ -458,6 +506,7 @@
             </div>
         </div>
 
+        <!--Dyson Pure Cool Advanced Options, Oscillation toggle and Device Info-->
         <div class="advanced-settings" id="fan-advanced">
             <div class="panel-header">
                 <h2>Advanced Options</h2>
@@ -475,6 +524,7 @@
             </div>
         </div>
 
+        <!--Sonos One Advanced Options, Only Device Info-->
         <div class="advanced-settings" id="speaker-advanced">
             <div class="panel-header">
                 <h2>Advanced Options</h2>
@@ -490,6 +540,8 @@
 
     </div>
 
+
+<!--Add Device-->
     <div id="add-device-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -497,18 +549,21 @@
                 <span class="material-icons close-modal" id="close-modal-btn">close</span>
             </div>
             
+            <!--Searching State-->
             <div id="modal-state-searching" class="modal-state">
                 <div class="spinner"></div>
                 <p>Searching for nearby devices...</p>
                 <p style="font-size: 12px; color: #5f6368;">Make sure your device is in pairing mode.</p>
             </div>
 
+            <!--Search Results-->
             <div id="modal-state-results" class="modal-state" style="display: none;">
                 <p id="found-devices-text" style="margin-top: 0; text-align: left; font-weight: bold;"></p>
                 <ul class="device-list" id="available-devices-list">
-                    </ul>
+                </ul>
             </div>
 
+            <!--Device Connecting-->
             <div id="modal-state-connecting" class="modal-state" style="display: none;">
                 <div class="spinner"></div>
                 <p>Connecting to device...</p>
@@ -517,6 +572,7 @@
         </div>
     </div>
 
+    <!--Add Custom Routine-->
     <div id="add-automation-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -527,6 +583,7 @@
                 <label style="font-size: 14px; color: #5f6368;">Routine Name:</label>
                 <input type="text" id="auto-name-input" placeholder="e.g., Dinner Time" class="text-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color-dark); margin-top: 5px; margin-bottom: 20px; box-sizing: border-box; font-family: inherit;">
 
+                <!--Routing Time Option-->
                 <label style="font-size: 14px; color: #5f6368; margin-bottom: 5px; display: block;">When should this run?</label>
                 <select id="auto-trigger-select" class="dropdown-select" style="width: 100%; margin-bottom: 20px; padding: 10px;">
                     <option value="manual">Manual (When I click "Run Routine")</option>
@@ -537,9 +594,11 @@
                     <option value="location_arrive">When I arrive home</option>
                 </select>
 
+                <!--Automation Device Selection (Switching  On/Off)-->
                 <label style="font-size: 14px; color: #5f6368; margin-bottom: 10px; display: block;">Select Actions:</label>
                 <div class="auto-actions-list">
                     
+                    <!--Room Lights Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-light-check" value="light" style="cursor: pointer;">
                         <label for="auto-light-check" style="flex: 1; cursor: pointer; font-weight: 500;">Room Lights</label>
@@ -549,6 +608,7 @@
                         </select>
                     </div>
 
+                    <!--Heating System Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-heat-check" value="heat" style="cursor: pointer;">
                         <label for="auto-heat-check" style="flex: 1; cursor: pointer; font-weight: 500;">Heating System</label>
@@ -558,6 +618,7 @@
                         </select>
                     </div>
 
+                    <!--Desk Lamp Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-lamp-check" value="lamp" style="cursor: pointer;">
                         <label for="auto-lamp-check" style="flex: 1; cursor: pointer; font-weight: 500;">Desk Lamp</label>
@@ -567,6 +628,7 @@
                         </select>
                     </div>
                     
+                    <!--Smart TV Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-tv-check" value="tv" style="cursor: pointer;">
                         <label for="auto-tv-check" style="flex: 1; cursor: pointer; font-weight: 500;">Smart TV</label>
@@ -576,6 +638,7 @@
                         </select>
                     </div>
                     
+                    <!--Dyson Pure Cool Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-fan-check" value="fan" style="cursor: pointer;">
                         <label for="auto-fan-check" style="flex: 1; cursor: pointer; font-weight: 500;">Dyson Fan</label>
@@ -585,6 +648,7 @@
                         </select>
                     </div>
                     
+                    <!--Sonos One Actions-->
                     <div class="auto-action-item">
                         <input type="checkbox" id="auto-speaker-check" value="speaker" style="cursor: pointer;">
                         <label for="auto-speaker-check" style="flex: 1; cursor: pointer; font-weight: 500;">Smart Speaker</label>
@@ -595,11 +659,13 @@
                     </div>
 
                 </div>
+
+                <!--Save Actions Button-->
                 <button class="action-btn" id="save-automation-btn" style="margin-top: 25px; background-color: #34a853; color: white; border: none;">Save Routine</button>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="simple.js"></script>
 </body>
 </html>

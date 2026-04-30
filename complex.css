@@ -1,6 +1,4 @@
-/* ========================================= */
-/* --- Global Styles --- */
-/* ========================================= */
+/* Global Styles */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background-color: #ebecf0; 
@@ -12,14 +10,13 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* App Layout */
 .app-layout {
     display: flex;
     height: 100vh;
 }
 
-/* ========================================= */
-/* --- Sidebar --- */
-/* ========================================= */
+/*  Sidebar */
 .sidebar {
     width: 200px;
     background-color: #ffffff; 
@@ -42,14 +39,18 @@ body {
     color: #5f6368;
 }
 
+/* Sidebar Hovering Effect */
+.nav-item:hover {
+    background-color: #e8eaed;
+}
+
+/* Sidebar Active State */
 .nav-item.active { 
     background-color: #e8f0fe; 
     color: #1a73e8; 
 }
 
-/* ========================================= */
-/* --- Main Content Area --- */
-/* ========================================= */
+/* Main Page Content */
 .main-content {
     flex: 1;
     background-color: #ebecf0; 
@@ -58,6 +59,7 @@ body {
     transition: background-color 0.3s;
 }
 
+/* Main Page Top Functions */
 .main-header {
     background-color: #ffffff;
     padding: 15px 20px;
@@ -69,17 +71,20 @@ body {
     border: 1px solid #dadce0;
 }
 
+/* h1 Smart Home Control Panel */
 .header-text h1 { 
     font-size: 20px; 
     margin: 0; 
     color: #202124; 
 }
 
+/* Top Buttons */
 #header-actions { 
     display: flex; 
     gap: 8px; 
 }
 
+/* Header Action Buttons */
 .header-action-btn {
     border-radius: 4px; 
     background-color: #f8f9fa;
@@ -94,88 +99,17 @@ body {
     gap: 5px;
 }
 
+/* Header Action Buttons Hovering Effect */
 .header-action-btn:hover { 
     background-color: #e8eaed; 
 }
 
+/* Icon Button (Dark Mode Toggle) */
 .icon-btn { 
     padding: 8px; 
 }
 
-/* ========================================= */
-/* --- FAKE TELEMETRY CHART --- */
-/* ========================================= */
-.telemetry-panel {
-    background: #ffffff;
-    border: 1px solid #dadce0;
-    border-radius: 4px;
-    padding: 15px 20px;
-    margin-bottom: 20px;
-}
-
-.telemetry-title {
-    font-size: 11px;
-    font-weight: 800;
-    color: #5f6368;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-}
-
-.css-chart {
-    display: flex;
-    align-items: flex-end;
-    gap: 4px;
-    height: 40px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #dadce0;
-    padding-bottom: 5px;
-}
-
-.css-bar {
-    flex: 1;
-    background: #1a73e8;
-    opacity: 0.8;
-    animation: bar-pulse 1s infinite alternate ease-in-out;
-}
-
-.bar-1 { animation-delay: 0.1s; height: 40%; } 
-.bar-2 { animation-delay: 0.5s; height: 80%; }
-.bar-3 { animation-delay: 0.2s; height: 20%; } 
-.bar-4 { animation-delay: 0.7s; height: 60%; }
-.bar-5 { animation-delay: 0.3s; height: 90%; } 
-.bar-6 { animation-delay: 0.1s; height: 30%; }
-.bar-7 { animation-delay: 0.8s; height: 50%; } 
-.bar-8 { animation-delay: 0.4s; height: 70%; }
-.bar-9 { animation-delay: 0.2s; height: 10%; } 
-.bar-10 { animation-delay: 0.6s; height: 100%; }
-.bar-11 { animation-delay: 0.5s; height: 40%; } 
-.bar-12 { animation-delay: 0.9s; height: 80%; }
-.bar-13 { animation-delay: 0.3s; height: 20%; } 
-.bar-14 { animation-delay: 0.1s; height: 60%; }
-.bar-15 { animation-delay: 0.7s; height: 90%; } 
-.bar-16 { animation-delay: 0.4s; height: 30%; }
-.bar-17 { animation-delay: 0.2s; height: 50%; } 
-.bar-18 { animation-delay: 0.8s; height: 70%; }
-.bar-19 { animation-delay: 0.6s; height: 10%; } 
-.bar-20 { animation-delay: 0.3s; height: 100%; }
-
-@keyframes bar-pulse { 
-    0% { transform: scaleY(0.2); transform-origin: bottom; } 
-    100% { transform: scaleY(1); transform-origin: bottom; } 
-}
-
-.telemetry-stats {
-    display: flex;
-    justify-content: space-between;
-    font-family: monospace;
-    font-size: 11px;
-    font-weight: bold;
-    color: #5f6368;
-}
-
-/* ========================================= */
-/* --- Quick Macros --- */
-/* ========================================= */
+/* Quick Actions(Macros) */
 .quick-macros { 
     margin-bottom: 20px; 
     border: 1px solid #dadce0; 
@@ -199,6 +133,7 @@ body {
     gap: 8px; 
 }
 
+/* Quick Actions Button */
 .macro-btn {
     background-color: #f8f9fa;
     border: 1px solid #bdc1c6;
@@ -221,9 +156,7 @@ body {
     background-color: #e8eaed; 
 }
 
-/* ========================================= */
-/* --- Filters --- */
-/* ========================================= */
+/* Device Categories Filter */
 .filters {
     display: flex;
     gap: 0; 
@@ -234,6 +167,7 @@ body {
     overflow: hidden;
 }
 
+/* Categories Filter Pill */
 .pill {
     flex: 1; 
     background-color: #ffffff;
@@ -251,14 +185,13 @@ body {
     border-right: none; 
 }
 
+/* Active Filter Pill */
 .pill.active { 
     background-color: #1a73e8; 
     color: #ffffff; 
 }
 
-/* ========================================= */
-/* --- Device Cards Grid (2-COLUMN FIX) --- */
-/* ========================================= */
+/* Device Cards */
 .device-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -266,6 +199,7 @@ body {
     margin-bottom: 40px;
 }
 
+/* Specific Device Card */
 .device-card {
     background: #ffffff;
     border-radius: 4px; 
@@ -273,6 +207,69 @@ body {
     box-shadow: none;
 }
 
+/* Active Device Card (ON) States */
+.device-card.active-light { 
+    border-color: #fde293; 
+}
+
+.device-card.active-heat { 
+    border-color: #fad2cf; 
+}
+
+.device-card.active-media { 
+    border-color: #8ab4f8; 
+}
+
+/* Device Card Offline */
+.device-card.offline { 
+    border-color: #dadce0 !important; 
+    opacity: 0.7; 
+}
+
+.device-card.offline .status { 
+    color: #d93025 !important; 
+    background: rgba(217, 48, 37, 0.1); 
+}
+
+/* Lock out the controls visually */
+.device-card.offline .complexLeft { 
+    opacity: 0.4; 
+    pointer-events: none; 
+}
+
+/* ------------------------ */
+/*  Edit Layout Actions CSS */
+
+/* Edit Layout for the Device Cards */
+.device-grid.edit-mode .device-card,
+.filters.edit-mode .pill,
+.macro-container.edit-mode .macro-btn { 
+    cursor: grab !important; 
+    border: 2px dashed #1a73e8 !important; 
+    user-select: none !important; 
+    -webkit-user-drag: element !important;
+}
+
+/* Disable interaction When Editing Layout */
+.device-grid.edit-mode .device-card *,
+.filters.edit-mode .pill *,
+.macro-container.edit-mode .macro-btn * { 
+    pointer-events: none !important; 
+}
+
+/* Dragging  */
+.device-grid.edit-mode .device-card.dragging,
+.filters.edit-mode .pill.dragging,
+.macro-container.edit-mode .macro-btn.dragging { 
+    opacity: 0.4 !important; 
+    transform: scale(0.98) !important; 
+}
+
+/*  End of Edit Layout Actions CSS */
+/* ------------------------------- */
+
+/* -------------------------- */
+/* Device Card list Internals */
 .card-header {
     background: #f8f9fa;
     padding: 15px 20px;
@@ -299,18 +296,20 @@ body {
     border-radius: 4px;
 }
 
+/* Room Lights Status (Default OFF) */
 #light-status { 
     color: #5f6368; 
     background: #e8eaed; 
 } 
 
+/* Favourite Button */
 .fav-btn { 
     cursor: pointer; 
     color: #1a73e8; 
     display: flex;
 }
 
-/* This creates the two dense columns INSIDE each card */
+/* Two Dense Columns Inside Each Card */
 .card-body-complex {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -318,14 +317,12 @@ body {
     padding: 20px;
 }
 
-.complex-col-left, .complex-col-right {
+.complexLeft, .complexRight {
     display: flex;
     flex-direction: column;
 }
 
-/* ========================================= */
-/* --- FORM STYLING --- */
-/* ========================================= */
+/* Form Group Label */
 .form-group {
     margin-bottom: 20px;
 }
@@ -340,9 +337,7 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* ========================================= */
-/* --- PRO CONTROLS --- */
-/* ========================================= */
+/* Pro Button (Main Toggle Button on Card) */
 .pro-btn {
     width: 100%;
     background-color: #ffffff;
@@ -361,24 +356,25 @@ body {
     background-color: #e8f0fe; 
 }
 
+/* Slider Row (Slider + Number Box Together) */
 .slider-group { 
     display: flex; 
     align-items: center; 
     gap: 15px; 
 }
 
-/* BUG FIX: Slider Dot Alignment! */
+/* Slider Input */
 input[type="range"] {
     flex: 1;
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 6px; /* Thickened to hold dot securely */
+    height: 6px;
     background: #dadce0; 
     border-radius: 3px;
     outline: none;
     cursor: pointer;
-    margin: 10px 0; /* Gives thumb space so it doesn't clip */
+    margin: 10px 0;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -389,10 +385,11 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 50%;
     background: #1a73e8;
     cursor: pointer;
-    border: 2px solid #ffffff; /* Adds a nice white border to make it look premium */
+    border: 2px solid #ffffff;
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
+/* Text Input */
 .text-input {
     background: white; 
     color: #202124; 
@@ -400,6 +397,7 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 4px;
 }
 
+/* Number Input Box */
 .num-box {
     width: 50px;
     padding: 6px;
@@ -411,6 +409,7 @@ input[type="range"]::-webkit-slider-thumb {
     color: #202124;
 }
 
+/* Dropdown Select */
 .dropdown-select {
     padding: 8px;
     border-radius: 4px;
@@ -420,6 +419,7 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
 }
 
+/* Connection Details Readout */
 .dense-readout {
     background: transparent;
     border: 1px solid #dadce0;
@@ -434,6 +434,7 @@ input[type="range"]::-webkit-slider-thumb {
     margin: 5px 0; 
 }
 
+/* Mock-up Checkboxes */
 .fake-checkbox {
     display: flex;
     align-items: center;
@@ -445,9 +446,7 @@ input[type="range"]::-webkit-slider-thumb {
     text-transform: none !important;
 }
 
-/* ========================================= */
-/* --- ADMIN BUTTONS --- */
-/* ========================================= */
+/* Management Row (Rename, Disconnect, Remove) */
 .admin-buttons { 
     display: flex; 
     gap: 8px; 
@@ -469,6 +468,7 @@ input[type="range"]::-webkit-slider-thumb {
     background: #e8eaed; 
 }
 
+/* Remove Device Button */
 .danger-btn { 
     background-color: #ffffff; 
     color: #d93025; 
@@ -485,9 +485,7 @@ input[type="range"]::-webkit-slider-thumb {
     background: #fce8e6; 
 }
 
-/* ========================================= */
-/* --- TV Remote styling --- */
-/* ========================================= */
+/* TV Remote Control */
 .tv-remote { 
     display: flex; 
     flex-direction: column; 
@@ -524,120 +522,115 @@ input[type="range"]::-webkit-slider-thumb {
     color: #1a73e8; 
 }
 
+/* End of Device Card list Internals */
+/* --------------------------------- */
 
-/* --- iPad tap/zoom guard for participant testing --- */
-.header-action-btn,
-.macro-btn,
-.pill,
-.pro-btn,
-.secondary-btn,
-.danger-btn,
-.remote-btn,
-.connect-btn,
-input[type="range"],
-select,
-input[type="number"] {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+/* ----------------- */
+/* Activity Page Log */
+.log-section ul { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+    background: #ffffff; 
+    border: 1px solid #dadce0; 
+    border-radius: 4px; 
+    padding: 20px; 
+    max-height: 500px; 
+    overflow-y: auto; 
 }
 
-.tv-remote,
-.remote-row {
-    touch-action: manipulation;
+.log-section li { 
+    padding: 10px 0; 
+    border-bottom: 1px solid #e8eaed; 
+    font-size: 13px; 
+    color: #3c4043; 
+    font-family: monospace; 
 }
 
-/* ========================================= */
-/* --- Edit Mode Drag & Drop --- */
-/* ========================================= */
-
-.device-grid.edit-mode .device-card,
-.filters.edit-mode .pill,
-.macro-container.edit-mode .macro-btn { 
-    cursor: grab !important; 
-    border: 2px dashed #1a73e8 !important; 
-    user-select: none !important; 
-    -webkit-user-drag: element !important;
+.log-section li:last-child { 
+    border-bottom: none; 
 }
 
-.device-grid.edit-mode .device-card *,
-.filters.edit-mode .pill *,
-.macro-container.edit-mode .macro-btn * { 
-    pointer-events: none !important; 
+/* End of Activity Page Log */
+/* ------------------------ */
+
+/* ----------- */
+/* Energy Page */
+
+/* Live System Performance Chart */
+.usage-panel {
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
 }
 
-.device-grid.edit-mode .device-card.dragging,
-.filters.edit-mode .pill.dragging,
-.macro-container.edit-mode .macro-btn.dragging { 
-    opacity: 0.4 !important; 
-    transform: scale(0.98) !important; 
+.usage-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: #5f6368;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
 
-
-/* --- Touch-friendly layout editing on iPad / tablets --- */
-.device-grid.edit-mode .device-card,
-.filters.edit-mode .pill,
-.macro-container.edit-mode .macro-btn {
-    -webkit-user-select: none !important;
-    user-select: none !important;
-    -webkit-touch-callout: none !important;
-    touch-action: none !important;
+/* Animated Bar Chart */
+.css-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 40px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #dadce0;
+    padding-bottom: 5px;
 }
 
-/* --- Animated touch drag feedback for iPad / tablets --- */
-.drag-placeholder {
-    border: 2px dashed #8ab4f8;
-    background: rgba(138, 180, 248, 0.12);
-    animation: dragPlaceholderPulse 0.95s ease-in-out infinite alternate;
+.css-bar {
+    flex: 1;
+    background: #1a73e8;
+    opacity: 0.8;
+    animation: bar-pulse 1s infinite alternate ease-in-out;
 }
 
-.device-card-placeholder {
-    min-height: 120px;
+/* Bar Heights (1 to 20) */
+.bar-1 { animation-delay: 0.1s; height: 40%; } 
+.bar-2 { animation-delay: 0.5s; height: 80%; }
+.bar-3 { animation-delay: 0.2s; height: 20%; } 
+.bar-4 { animation-delay: 0.7s; height: 60%; }
+.bar-5 { animation-delay: 0.3s; height: 90%; } 
+.bar-6 { animation-delay: 0.1s; height: 30%; }
+.bar-7 { animation-delay: 0.8s; height: 50%; } 
+.bar-8 { animation-delay: 0.4s; height: 70%; }
+.bar-9 { animation-delay: 0.2s; height: 10%; } 
+.bar-10 { animation-delay: 0.6s; height: 100%; }
+.bar-11 { animation-delay: 0.5s; height: 40%; } 
+.bar-12 { animation-delay: 0.9s; height: 80%; }
+.bar-13 { animation-delay: 0.3s; height: 20%; } 
+.bar-14 { animation-delay: 0.1s; height: 60%; }
+.bar-15 { animation-delay: 0.7s; height: 90%; } 
+.bar-16 { animation-delay: 0.4s; height: 30%; }
+.bar-17 { animation-delay: 0.2s; height: 50%; } 
+.bar-18 { animation-delay: 0.8s; height: 70%; }
+.bar-19 { animation-delay: 0.6s; height: 10%; } 
+.bar-20 { animation-delay: 0.3s; height: 100%; }
+
+/* Bar Chart Animation */
+@keyframes bar-pulse { 
+    0% { transform: scaleY(0.2); transform-origin: bottom; } 
+    100% { transform: scaleY(1); transform-origin: bottom; } 
 }
 
-.pill-placeholder,
-.macro-btn-placeholder {
-    display: inline-flex;
+/* Chart Stats Row */
+.usage-stats {
+    display: flex;
+    justify-content: space-between;
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: bold;
+    color: #5f6368;
 }
 
-.touch-dragging {
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18) !important;
-    opacity: 0.98 !important;
-    cursor: grabbing !important;
-}
-
-@keyframes dragPlaceholderPulse {
-    from {
-        background: rgba(138, 180, 248, 0.10);
-        transform: scale(0.985);
-    }
-    to {
-        background: rgba(138, 180, 248, 0.18);
-        transform: scale(1);
-    }
-}
-
-
-/* ========================================= */
-/* --- Offline Styles --- */
-/* ========================================= */
-.device-card.offline { 
-    border-color: #dadce0 !important; 
-    opacity: 0.7; 
-}
-
-.device-card.offline .status { 
-    color: #d93025 !important; 
-    background: rgba(217, 48, 37, 0.1); 
-}
-
-.device-card.offline .complex-col-left { 
-    opacity: 0.4; 
-    pointer-events: none; 
-}
-
-/* ========================================= */
-/* --- Energy Stat Cards --- */
-/* ========================================= */
+/* --- Energy Stats Section --- */
 .stat-card { 
     background: #ffffff; 
     border: 1px solid #dadce0; 
@@ -673,36 +666,13 @@ input[type="number"] {
     margin: 0; 
 }
 
-/* ========================================= */
-/* --- Activity Log --- */
-/* ========================================= */
-.log-section ul { 
-    list-style: none; 
-    padding: 0; 
-    margin: 0; 
-    background: #ffffff; 
-    border: 1px solid #dadce0; 
-    border-radius: 4px; 
-    padding: 20px; 
-    max-height: 500px; 
-    overflow-y: auto; 
-}
+/* End of Energy Page  */
+/* ------------------- */
 
-.log-section li { 
-    padding: 10px 0; 
-    border-bottom: 1px solid #e8eaed; 
-    font-size: 13px; 
-    color: #3c4043; 
-    font-family: monospace; 
-}
+/* ----------------------- */
+/* Add Device and Automation Section */
 
-.log-section li:last-child { 
-    border-bottom: none; 
-}
-
-/* ========================================= */
-/* --- Modal Styles --- */
-/* ========================================= */
+/* Add Device */
 .modal-overlay { 
     position: fixed; 
     top: 0; 
@@ -737,7 +707,7 @@ input[type="number"] {
 .modal-header h2 { 
     margin: 0; 
     font-size: 18px; 
-    color:#202124;
+    color: #202124;
 }
 
 .close-modal { 
@@ -745,9 +715,27 @@ input[type="number"] {
     color: #5f6368; 
 }
 
-/* ========================================= */
-/* --- Pairing List --- */
-/* ========================================= */
+.modal-state {
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Searching Spinner */
+.spinner { 
+    border: 4px solid #f1f3f4; 
+    border-top: 4px solid #1a73e8; 
+    border-radius: 50%; 
+    width: 40px; 
+    height: 40px; 
+    animation: spin 1s linear infinite; 
+    margin: 0 auto 15px; 
+}
+
+@keyframes spin { 
+    0% { transform: rotate(0deg); } 
+    100% { transform: rotate(360deg); } 
+}
+/* Device Pairing List */
 .device-list { 
     list-style: none; 
     padding: 0; 
@@ -777,19 +765,17 @@ input[type="number"] {
     background-color: #f8f9fa !important;
 }
 
-.spinner { 
-    border: 4px solid #f1f3f4; 
-    border-top: 4px solid #1a73e8; 
-    border-radius: 50%; 
-    width: 40px; 
-    height: 40px; 
-    animation: spin 1s linear infinite; 
-    margin: 0 auto 15px; 
+
+/* Custom Automation Modal Adjustments */
+.automation-form {
+    display: flex;
+    flex-direction: column;
 }
 
-@keyframes spin { 
-    0% { transform: rotate(0deg); } 
-    100% { transform: rotate(360deg); } 
+.auto-actions-list {
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 4px;
 }
 
 .auto-action-item { 
@@ -804,39 +790,53 @@ input[type="number"] {
     font-size: 13px;
 }
 
-/* ========================================= */
-/* --- Mic Pulse --- */
-/* ========================================= */
-.mic-pulse-container { 
-    width: 80px; 
-    height: 80px; 
-    background: #e8f0fe; 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin: 0 auto; 
-    transition: all 0.3s; 
-}
+/* --- Routine Cards Styling --- */
+.routine-morning {
+    border-left: 4px solid #f29900;
+ }
+ 
+ 
+ .routine-morning .card-header {
+    background: #fef7e0;
+ }
+ 
+ 
+ .routine-leaving {
+    border-left: 4px solid #1a73e8;
+ }
+ 
+ 
+ .routine-leaving .card-header {
+    background: #e8f0fe;
+ }
+ 
+ 
+ .routine-movie {
+    border-left: 4px solid #9c27b0;
+ }
+ 
+ 
+ .routine-movie .card-header {
+    background: #f3e5f5;
+ }
+ 
+ 
+ .routine-custom {
+    border-left: 4px solid #34a853;
+ }
+ 
+ 
+ .routine-custom .card-header {
+    background: #edf7ee;
+ }
+ 
 
-.mic-pulse-container.listening { 
-    background: #fce8e6; 
-    animation: pulse 1.5s infinite; 
-}
+/* End of Add Device and Automation Section */
+/* ----------------------------------------- */
 
-.mic-pulse-container.listening .material-icons { 
-    color: #d93025 !important; 
-}
 
-@keyframes pulse { 
-    0% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0.4); } 
-    70% { box-shadow: 0 0 0 20px rgba(217, 48, 37, 0); } 
-    100% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0); } 
-}
-
-/* ==================================================== */
-/* THE ULTIMATE PRO DARK MODE (FLATTENED)               */
-/* ==================================================== */
+/* ------------------ */
+/* Dark Mode Settings */
 body.dark-mode { 
     background-color: #121212 !important; 
     color: #e8eaed; 
@@ -881,15 +881,7 @@ body.dark-mode .icon-btn:hover {
     background-color: #333333; 
 }
 
-body.dark-mode .telemetry-panel { 
-    background: #1e1e1e; 
-    border-color: #333333; 
-}
-
-body.dark-mode .css-chart { 
-    border-bottom-color: #333333; 
-}
-
+/* Dark Mode Macros Buttons*/
 body.dark-mode .quick-macros { 
     background: #1e1e1e; 
     border-color: #333333; 
@@ -909,6 +901,7 @@ body.dark-mode .macro-btn:hover {
     background-color: #333333; 
 }
 
+/* Dark Mode Filter Pills */
 body.dark-mode .filters { 
     background-color: #1e1e1e; 
     border-color: #333333; 
@@ -926,17 +919,17 @@ body.dark-mode .pill.active {
     border-color: #8ab4f8; 
 }
 
+/* Dark Mode Sidebar */
 body.dark-mode .nav-item { 
     color: #9aa0a6; 
 }
 
-body.dark-mode .nav-item:hover, 
-body.dark-mode .nav-item.active { 
+body.dark-mode .nav-item:hover, body.dark-mode .nav-item.active { 
     background-color: #282828; 
     color: #8ab4f8; 
 }
 
-/* CARDS FLATTENED */
+/* Dark Mode Device Cards */
 body.dark-mode .device-card { 
     background: #1e1e1e; 
     border-color: #333333; 
@@ -975,10 +968,7 @@ body.dark-mode .pro-btn:hover {
     background: #282828; 
 }
 
-body.dark-mode .secondary-btn, 
-body.dark-mode .dropdown-select, 
-body.dark-mode .text-input, 
-body.dark-mode .num-box { 
+body.dark-mode .secondary-btn, body.dark-mode .dropdown-select, body.dark-mode .text-input, body.dark-mode .num-box { 
     background: transparent; 
     color: #e8eaed; 
     border-color: #444444; 
@@ -1014,6 +1004,81 @@ body.dark-mode .remote-btn:hover {
     color: #8ab4f8; 
 }
 
+/* Active Colours Remains Bright in Dark Mode */
+body.dark-mode .device-card.active-light:not(.offline) { 
+    border-color: #fde293; 
+}
+
+body.dark-mode .device-card.active-heat:not(.offline) { 
+    border-color: #fad2cf; 
+}
+
+body.dark-mode .device-card.active-media:not(.offline) { 
+    border-color: #8ab4f8; 
+}
+
+body.dark-mode .device-grid.edit-mode .device-card,
+body.dark-mode .filters.edit-mode .pill,
+body.dark-mode .macro-container.edit-mode .macro-btn { 
+    border-color: #8ab4f8 !important; 
+}
+
+body.dark-mode .log-section ul { 
+    background: #1e1e1e; 
+    border-color: #333333; 
+}
+
+body.dark-mode .log-section li { 
+    border-color: #333333; 
+    color: #e8eaed; 
+}
+
+body.dark-mode .usage-panel { 
+    background: #1e1e1e; 
+    border-color: #333333; 
+}
+
+body.dark-mode .css-chart { 
+    border-bottom-color: #333333; 
+}
+
+body.dark-mode .stat-card { 
+    background: #1e1e1e; 
+    border-color: #333333; 
+}
+
+body.dark-mode .routine-morning {
+    border-left-color: #fbbc04;
+}
+
+body.dark-mode .routine-morning .card-header {
+    background: #2a2000;
+}
+
+body.dark-mode .routine-leaving {
+    border-left-color: #8ab4f8;
+}
+
+body.dark-mode .routine-leaving .card-header {
+    background: #1a2a40;
+}
+
+body.dark-mode .routine-movie {
+    border-left-color: #c58af9;
+}
+
+body.dark-mode .routine-movie .card-header {
+    background: #2a1a3a;
+}
+
+body.dark-mode .routine-custom {
+    border-left-color: #81c995;
+}
+
+body.dark-mode .routine-custom .card-header {
+    background: #203124;
+}
+
 body.dark-mode .modal-content { 
     background: #1e1e1e; 
     border-color: #333333; 
@@ -1046,104 +1111,4 @@ body.dark-mode .list-item-text strong {
 body.dark-mode .auto-action-item { 
     background: transparent; 
     border-color: #444444; 
-}
-
-body.dark-mode .log-section ul { 
-    background: #1e1e1e; 
-    border-color: #333333; 
-}
-
-body.dark-mode .log-section li { 
-    border-color: #333333; 
-    color: #e8eaed; 
-}
-
-body.dark-mode .mic-pulse-container { 
-    background: #1a2a40; 
-}
-
-body.dark-mode .mic-pulse-container.listening { 
-    background: #401a1a; 
-}
-
-body.dark-mode .stat-card { 
-    background: #1e1e1e; 
-    border-color: #333333; 
-}
-
-/* FIX DARK MODE EDIT LAYOUT BLOCKS FORCING THE OVERRIDE */
-body.dark-mode .device-grid.edit-mode .device-card,
-body.dark-mode .filters.edit-mode .pill,
-body.dark-mode .macro-container.edit-mode .macro-btn { 
-    border-color: #8ab4f8 !important; 
-}
-
-/* Active States */
-body.dark-mode .device-card.active-light:not(.offline) { 
-    border-color: #fde293; 
-}
-
-body.dark-mode .device-card.active-heat:not(.offline) { 
-    border-color: #fad2cf; 
-}
-
-body.dark-mode .device-card.active-media:not(.offline) { 
-    border-color: #8ab4f8; 
-}
-
-/* ========================================= */
-/* --- Automation Modal Enhancements --- */
-/* ========================================= */
-.automation-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.auto-actions-list {
-    max-height: 320px;
-    overflow-y: auto;
-    padding-right: 4px;
-}
-
-.modal-state {
-    text-align: center;
-    padding: 20px 0;
-}
-
-.routine-custom {
-    border-left: 4px solid #34a853;
-}
-
-.routine-custom .card-header {
-    background: #edf7ee;
-}
-
-body.dark-mode .routine-custom {
-    border-left-color: #81c995;
-}
-
-body.dark-mode .routine-custom .card-header {
-    background: #203124;
-}
-
-
-body.dark-mode .drag-placeholder {
-    border-color: #8ab4f8;
-    background: rgba(138, 180, 248, 0.16);
-}
-
-body.dark-mode .touch-dragging {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55) !important;
-}
-
-.drag-proxy {
-    will-change: left, top, transform;
-}
-
-.drag-source-hidden {
-    visibility: hidden !important;
-}
-
-.main-content.drag-scroll-lock {
-    overflow: hidden !important;
 }

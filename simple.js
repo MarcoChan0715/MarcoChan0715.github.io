@@ -1,25 +1,6 @@
-// --- iPad double-tap zoom guard ---
-(function preventDoubleTapZoom() {
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', (event) => {
-        const target = event.target.closest('.remote-btn, .header-action-btn, .macro-btn, .pill, .action-btn, .secondary-btn, .danger-btn, .connect-btn, .menu-dots, .fav-btn, .popup-item');
-        if (!target) return;
-        const now = Date.now();
-        if (now - lastTouchEnd <= 300) {
-            event.preventDefault();
-        }
-        lastTouchEnd = now;
-    }, { passive: false });
-
-    document.addEventListener('dblclick', (event) => {
-        const target = event.target.closest('.remote-btn, .header-action-btn, .macro-btn, .pill, .action-btn, .secondary-btn, .danger-btn, .connect-btn, .menu-dots, .fav-btn, .popup-item');
-        if (target) event.preventDefault();
-    }, { passive: false });
-})();
-
-// --- 1. Global Setup & Logging ---
+// 1. Global Setup and Activity Page Logging
 const logList = document.getElementById('log-list');
-let isEditMode = false; // Tracks if the grid/tabs are currently draggable
+let isEditMode = false; 
 
 function addLog(message) {
     const initialLog = document.getElementById('initial-log');
@@ -35,7 +16,7 @@ function addLog(message) {
     logList.prepend(newLogItem);
 }
 
-// --- DYNAMIC SLIDER FILL COLOR ---
+// 2. Shared Slider Helper
 function updateSliderFill(slider) {
     const min = parseFloat(slider.min) || 0;
     const max = parseFloat(slider.max) || 100;
@@ -50,11 +31,10 @@ document.querySelectorAll('input[type="range"]').forEach(slider => {
 });
 
 
-// --- DYNAMIC ENERGY CALCULATION ---
-function updateEnergyDraw() {
-    let totalDraw = 0.30; 
+// 3. Shared Energy Calculation Helper
+function updateEnergyUsage() {
+    let totalUsage = 0.30; 
 
-    // SMART LOGIC: Now checks if the device is OFF, REMOVED, *OR* OFFLINE!
     const isDeviceActive = (cardId, stateVar) => {
         const card = document.getElementById(cardId);
         if (!card || card.getAttribute('data-removed') === 'true' || card.getAttribute('data-offline') === 'true') return false;
@@ -63,34 +43,34 @@ function updateEnergyDraw() {
 
     if (isDeviceActive('light-card', lightsOn)) {
         const bright = parseInt(document.getElementById('brightness-slider').value) || 0;
-        totalDraw += 0.05 * (bright / 100); 
+        totalUsage += 0.05 * (bright / 100); 
     }
     if (isDeviceActive('heating-card', heatingOn)) {
-        totalDraw += 2.00; 
+        totalUsage += 2.00; 
     }
     if (isDeviceActive('desk-lamp-card', deskLampOn)) {
         const bright = parseInt(document.getElementById('desk-lamp-slider').value) || 0;
-        totalDraw += 0.01 * (bright / 100); 
+        totalUsage += 0.01 * (bright / 100); 
     }
     if (isDeviceActive('tv-card', tvOn)) {
-        totalDraw += 0.15; 
+        totalUsage += 0.15; 
     }
     if (isDeviceActive('fan-card', fanOn)) {
         const speed = parseInt(document.getElementById('fan-speed-slider').value) || 1;
-        totalDraw += 0.04 * (speed / 10); 
+        totalUsage += 0.04 * (speed / 10); 
     }
     if (isDeviceActive('speaker-card', speakerOn)) {
         const vol = parseInt(document.getElementById('speaker-vol-slider').value) || 0;
-        totalDraw += 0.02 * (vol / 100); 
+        totalUsage += 0.02 * (vol / 100); 
     }
 
-    document.getElementById('current-draw-val').textContent = totalDraw.toFixed(2);
+    document.getElementById('current-usage-val').textContent = totalUsage.toFixed(2);
 
-    const statusEl = document.getElementById('current-draw-status');
-    if (totalDraw > 2.3) {
+    const statusEl = document.getElementById('current-usage-status');
+    if (totalUsage > 2.3) {
         statusEl.textContent = 'High usage';
         statusEl.style.color = '#d93025'; 
-    } else if (totalDraw > 1.0) {
+    } else if (totalUsage > 1.0) {
         statusEl.textContent = 'Moderate usage';
         statusEl.style.color = '#f29900'; 
     } else {
@@ -99,81 +79,133 @@ function updateEnergyDraw() {
     }
 }
 
-// --- 2. Popup Menus, Renaming, & Side Panel Logic ---
-const panelBackdrop = document.getElementById('panel-backdrop');
+// 4. Sidebar Navigation and Page Switching
+const navHome = document.getElementById('nav-home');
+const navActivity = document.getElementById('nav-activity');
+const navEnergy = document.getElementById('nav-energy'); 
+const navAutomations = document.getElementById('nav-automations'); 
 
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.menu-container')) {
-        document.querySelectorAll('.popup-menu, .routine-popup').forEach(popup => popup.style.display = 'none');
-    }
-});
+const homeView = document.getElementById('home-view');
+const activityView = document.getElementById('activity-view');
+const energyView = document.getElementById('energy-view'); 
+const automationsView = document.getElementById('automations-view'); 
 
-panelBackdrop.addEventListener('click', () => {
-    document.querySelectorAll('.advanced-settings.open').forEach(panel => {
-        panel.classList.remove('open');
-    });
-    panelBackdrop.style.display = 'none';
-});
+const topAddDeviceBtn = document.getElementById('add-device-btn');
+const topAddAutoBtn = document.getElementById('add-automation-btn');
+const editLayoutBtn = document.getElementById('edit-layout-btn'); 
 
-function setupDeviceMenu(menuBtnId, popupId, renameOptId, advOptId, nameElId, advSectionId) {
-    const menuBtn = document.getElementById(menuBtnId);
-    const popup = document.getElementById(popupId);
-    const renameOpt = document.getElementById(renameOptId);
-    const advOpt = document.getElementById(advOptId);
-    const nameEl = document.getElementById(nameElId);
-    const advSection = document.getElementById(advSectionId);
+function switchView(activeNav, viewToShow) {
+    navHome.classList.remove('active');
+    navActivity.classList.remove('active');
+    navEnergy.classList.remove('active');
+    navAutomations.classList.remove('active');
     
-    if(!menuBtn || !popup || !advSection) return;
+    homeView.style.display = 'none';
+    activityView.style.display = 'none';
+    energyView.style.display = 'none';
+    automationsView.style.display = 'none';
     
-    const closePanelBtn = advSection.querySelector('.close-panel-btn');
+    activeNav.classList.add('active');
+    viewToShow.style.display = 'block';
 
-    menuBtn.addEventListener('click', () => {
-        document.querySelectorAll('.popup-menu').forEach(p => {
-            if (p !== popup) p.style.display = 'none';
-        });
-        popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
-    });
-
-    renameOpt.addEventListener('click', () => {
-        popup.style.display = 'none'; 
-        const currentName = nameEl.textContent;
-        const newName = prompt(`Enter a new name for ${currentName}:`, currentName);
-        
-        if (newName && newName.trim() !== "") {
-            nameEl.textContent = newName.trim();
-            addLog(`Device renamed from "${currentName}" to "${newName.trim()}".`);
-            
-            const toggleBtn = document.getElementById(nameElId.replace('-name', '-toggle-btn')) || nameEl.closest('.device-card').querySelector('.action-btn');
-            if (toggleBtn && toggleBtn.textContent.includes('Turn')) {
-                const isOn = toggleBtn.textContent.includes('OFF'); 
-                toggleBtn.textContent = `Turn ${newName.trim()} ${isOn ? 'OFF' : 'ON'}`;
-            }
-        }
-    });
-
-    advOpt.addEventListener('click', () => {
-        popup.style.display = 'none'; 
-        advSection.classList.add('open');
-        panelBackdrop.style.display = 'block';
-    });
-
-    if(closePanelBtn) {
-        closePanelBtn.addEventListener('click', () => {
-            advSection.classList.remove('open');
-            panelBackdrop.style.display = 'none';
-        });
+    topAddDeviceBtn.style.display = (viewToShow === homeView) ? 'flex' : 'none';
+    editLayoutBtn.style.display = (viewToShow === homeView) ? 'flex' : 'none'; 
+    topAddAutoBtn.style.display = (viewToShow === automationsView) ? 'flex' : 'none';
+    
+    if (viewToShow !== homeView && isEditMode) {
+        editLayoutBtn.click(); 
     }
 }
 
-setupDeviceMenu('light-menu-btn', 'light-popup', 'light-rename-opt', 'light-adv-opt', 'light-name', 'light-advanced');
-setupDeviceMenu('heating-menu-btn', 'heating-popup', 'heating-rename-opt', 'heating-adv-opt', 'heating-name', 'heating-advanced');
-setupDeviceMenu('desk-lamp-menu-btn', 'lamp-popup', 'lamp-rename-opt', 'lamp-adv-opt', 'lamp-name', 'desk-lamp-advanced');
-setupDeviceMenu('tv-menu-btn', 'tv-popup', 'tv-rename-opt', 'tv-adv-opt', 'tv-name', 'tv-advanced');
-setupDeviceMenu('fan-menu-btn', 'fan-popup', 'fan-rename-opt', 'fan-adv-opt', 'fan-name', 'fan-advanced');
-setupDeviceMenu('speaker-menu-btn', 'speaker-popup', 'speaker-rename-opt', 'speaker-adv-opt', 'speaker-name', 'speaker-advanced');
+navHome.addEventListener('click', () => switchView(navHome, homeView));
+navActivity.addEventListener('click', () => switchView(navActivity, activityView));
+navEnergy.addEventListener('click', () => switchView(navEnergy, energyView));
+navAutomations.addEventListener('click', () => switchView(navAutomations, automationsView));
 
 
-// --- 3. Filter Pills, Favourites, Remove Device & OFFLINE Logic ---
+// 5. Header Button: Dark Mode Toggle
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+const themeIcon = document.getElementById('theme-icon');
+
+themeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    
+    if (document.body.classList.contains('dark-mode')) {
+        themeIcon.textContent = 'light_mode';
+        addLog('Theme changed to Dark Mode.');
+    } else {
+        themeIcon.textContent = 'dark_mode';
+        addLog('Theme changed to Light Mode.');
+    }
+});
+
+// 6. Quick Actions / Macros
+document.getElementById('macro-lights-on').addEventListener('click', (e) => {
+    if(isEditMode) { e.preventDefault(); return; } 
+    if (!lightsOn && document.getElementById('light-card').getAttribute('data-offline') === 'false') {
+        document.getElementById('toggle-lights-btn').click();
+    }
+    if (!deskLampOn && document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
+        document.getElementById('toggle-desk-lamp-btn').click();
+    }
+    addLog("Macro: All lights turned ON.");
+});
+
+document.getElementById('macro-lights-off').addEventListener('click', (e) => {
+    if(isEditMode) { e.preventDefault(); return; }
+    if (lightsOn && document.getElementById('light-card').getAttribute('data-offline') === 'false') {
+        document.getElementById('toggle-lights-btn').click();
+    }
+    if (deskLampOn && document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
+        document.getElementById('toggle-desk-lamp-btn').click();
+    }
+    addLog("Macro: All lights turned OFF.");
+});
+
+document.getElementById('macro-all-on').addEventListener('click', (e) => {
+    if(isEditMode) { e.preventDefault(); return; }
+    const checkOn = (isOn, btnId, cardId) => {
+        if (!isOn && document.getElementById(cardId).getAttribute('data-offline') === 'false') {
+            document.getElementById(btnId).click();
+        }
+    };
+    checkOn(lightsOn, 'toggle-lights-btn', 'light-card');
+    checkOn(heatingOn, 'toggle-heating-btn', 'heating-card');
+    checkOn(deskLampOn, 'toggle-desk-lamp-btn', 'desk-lamp-card');
+    checkOn(tvOn, 'toggle-tv-btn', 'tv-card');
+    checkOn(fanOn, 'toggle-fan-btn', 'fan-card');
+    checkOn(speakerOn, 'toggle-speaker-btn', 'speaker-card');
+    addLog("Macro: All devices turned ON.");
+});
+
+document.getElementById('macro-all-off').addEventListener('click', (e) => {
+    if(isEditMode) { e.preventDefault(); return; }
+    const checkOff = (isOn, btnId, cardId) => {
+        if (isOn && document.getElementById(cardId).getAttribute('data-offline') === 'false') {
+            document.getElementById(btnId).click();
+        }
+    };
+    checkOff(lightsOn, 'toggle-lights-btn', 'light-card');
+    checkOff(heatingOn, 'toggle-heating-btn', 'heating-card');
+    checkOff(deskLampOn, 'toggle-desk-lamp-btn', 'desk-lamp-card');
+    checkOff(tvOn, 'toggle-tv-btn', 'tv-card');
+    checkOff(fanOn, 'toggle-fan-btn', 'fan-card');
+    checkOff(speakerOn, 'toggle-speaker-btn', 'speaker-card');
+    addLog("Macro: All devices turned OFF.");
+});
+
+document.getElementById('macro-eco').addEventListener('click', (e) => {
+    if(isEditMode) { e.preventDefault(); return; }
+    
+    if (document.getElementById('heating-card').getAttribute('data-offline') === 'false') {
+        if (!heatingOn) document.getElementById('toggle-heating-btn').click();
+        if (!ecoModeOn) document.getElementById('eco-mode-btn').click();
+        addLog("Macro: Eco Heating mode activated.");
+    }
+});
+
+
+// 7. Home Page: Filters Pills, Favourites, Remove and Offline Logic
 const pills = document.querySelectorAll('.pill');
 
 function refreshGrid() {
@@ -249,11 +281,11 @@ document.body.addEventListener('click', (e) => {
             
             refreshGrid(); 
             addLog(`"${deviceName}" was removed from the dashboard.`);
-            updateEnergyDraw(); 
+            updateEnergyUsage(); 
         }
     }
 
-    // DEVICE OFFLINE LOGIC WITH LOADING ANIMATION
+    //Device Offline
     if (e.target.closest('.simulate-error-opt')) {
         const errorBtn = e.target.closest('.simulate-error-opt');
         const card = errorBtn.closest('.device-card');
@@ -273,9 +305,9 @@ document.body.addEventListener('click', (e) => {
             
             errorBtn.innerHTML = '<span class="material-icons" style="font-size:16px;">wifi</span> Reconnect';
             addLog(`Connection lost to "${deviceName}".`);
-            updateEnergyDraw(); 
+            updateEnergyUsage(); 
         } else {
-            // SHOW CONNECTING STATE
+            // Shoiwing Connecting 
             statusEl.innerHTML = '<span class="material-icons spin-icon" style="font-size: 14px; vertical-align: middle;">sync</span> Reconnecting...';
             statusEl.style.color = '#f29900'; 
             toggleBtn.textContent = 'Connecting...';
@@ -310,13 +342,14 @@ document.body.addEventListener('click', (e) => {
                 errorBtn.style.pointerEvents = 'auto'; 
                 
                 addLog(`"${deviceName}" reconnected successfully.`);
-                updateEnergyDraw(); 
+                updateEnergyUsage(); 
             }, 2000); 
         }
     }
 });
 
-// --- 4. Device Controls: Room Lights ---
+
+// 8. Device Card: Room Lights
 let lightsOn = false;
 const lightCard = document.getElementById('light-card');
 const toggleLightsBtn = document.getElementById('toggle-lights-btn');
@@ -347,7 +380,7 @@ toggleLightsBtn.addEventListener('click', () => {
         lightCard.classList.remove('active-light'); 
         addLog(`"${currentName}" turned OFF.`);
     }
-    updateEnergyDraw(); 
+    updateEnergyUsage(); 
 });
 
 brightnessSlider.addEventListener('input', (e) => {
@@ -364,14 +397,14 @@ brightnessSlider.addEventListener('change', (e) => {
         toggleLightsBtn.click();
     } else {
         addLog(`"${lightNameEl.textContent}" brightness adjusted to ${e.target.value}%.`);
-        updateEnergyDraw(); 
+        updateEnergyUsage(); 
     }
 });
 
 document.getElementById('color-temp-slider').addEventListener('input', (e) => updateSliderFill(e.target));
 
 
-// --- 5. Device Controls: Heating System ---
+// 9. Device Card: Heating System
 let heatingOn = false;
 let ecoModeOn = false;
 const heatingCard = document.getElementById('heating-card');
@@ -396,7 +429,7 @@ toggleHeatingBtn.addEventListener('click', () => {
         heatingCard.classList.remove('active-heat'); 
         addLog(`"${currentName}" turned OFF.`);
     }
-    updateEnergyDraw();
+    updateEnergyUsage();
 });
 
 tempSlider.addEventListener('input', (e) => {
@@ -439,7 +472,7 @@ ecoModeBtn.addEventListener('click', () => {
 });
 
 
-// --- 6. Device Controls: Desk Lamp ---
+// 10. Device Card: Desk Lamp
 let deskLampOn = false;
 const deskLampCard = document.getElementById('desk-lamp-card');
 const toggleDeskLampBtn = document.getElementById('toggle-desk-lamp-btn');
@@ -469,7 +502,7 @@ toggleDeskLampBtn.addEventListener('click', () => {
         deskLampCard.classList.remove('active-light'); 
         addLog(`"${currentName}" turned OFF.`);
     }
-    updateEnergyDraw();
+    updateEnergyUsage();
 });
 
 deskLampSlider.addEventListener('input', (e) => {
@@ -485,7 +518,7 @@ deskLampSlider.addEventListener('change', (e) => {
         toggleDeskLampBtn.click();
     } else {
         addLog(`"${lampNameEl.textContent}" brightness adjusted to ${e.target.value}%.`);
-        updateEnergyDraw();
+        updateEnergyUsage();
     }
 });
 
@@ -544,7 +577,7 @@ lampTimerBtn.addEventListener('click', () => {
 });
 
 
-// --- 7. Device Controls: Smart TV ---
+// 11. Device Card: Smart TV
 let tvOn = false;
 const tvCard = document.getElementById('tv-card');
 const toggleTvBtn = document.getElementById('toggle-tv-btn');
@@ -594,7 +627,7 @@ toggleTvBtn.addEventListener('click', () => {
         addLog(`"${currentName}" turned OFF.`);
     }
     updateTvDisplay();
-    updateEnergyDraw();
+    updateEnergyUsage();
 });
 
 tvInputSelect.addEventListener('change', (e) => {
@@ -610,7 +643,7 @@ tvVolSlider.addEventListener('input', (e) => {
 });
 tvVolSlider.addEventListener('change', (e) => {
     addLog(`"${tvNameEl.textContent}" volume set to ${e.target.value}.`);
-    updateEnergyDraw();
+    updateEnergyUsage();
 });
 
 let isMuted = false;
@@ -644,7 +677,7 @@ document.getElementById('tv-vol-up').addEventListener('click', () => {
         tvVolVal.textContent = tvVolSlider.value;
         updateSliderFill(tvVolSlider);
         addLog(`"${tvNameEl.textContent}" volume increased.`);
-        updateEnergyDraw();
+        updateEnergyUsage();
     }
 });
 
@@ -656,7 +689,7 @@ document.getElementById('tv-vol-down').addEventListener('click', () => {
         tvVolVal.textContent = tvVolSlider.value;
         updateSliderFill(tvVolSlider);
         addLog(`"${tvNameEl.textContent}" volume decreased.`);
-        updateEnergyDraw();
+        updateEnergyUsage();
     }
 });
 
@@ -675,11 +708,175 @@ document.getElementById('tv-mute').addEventListener('click', () => {
         updateSliderFill(tvVolSlider);
         addLog(`"${tvNameEl.textContent}" Unmuted.`);
     }
-    updateEnergyDraw();
+    updateEnergyUsage();
 });
 
 
-// --- 8. Add New Device Modal Logic ---
+// 12. Hidden (By Default) Device Card: Dyson Pure Cool
+let fanOn = false;
+const fanCard = document.getElementById('fan-card');
+const toggleFanBtn = document.getElementById('toggle-fan-btn');
+const fanStatus = document.getElementById('fan-status');
+const fanNameEl = document.getElementById('fan-name');
+const fanSlider = document.getElementById('fan-speed-slider');
+let fanOsc = false;
+
+toggleFanBtn.addEventListener('click', () => {
+    fanOn = !fanOn; 
+    let currentName = fanNameEl.textContent;
+    if (fanOn) {
+        fanStatus.textContent = 'ON';
+        fanStatus.style.color = '#e65100'; 
+        toggleFanBtn.textContent = `Turn ${currentName} OFF`;
+        fanCard.classList.add('active-heat'); 
+        addLog(`"${currentName}" turned ON.`);
+    } else {
+        fanStatus.textContent = 'OFF';
+        fanStatus.style.color = '#5f6368'; 
+        toggleFanBtn.textContent = `Turn ${currentName} ON`;
+        fanCard.classList.remove('active-heat'); 
+        addLog(`"${currentName}" turned OFF.`);
+    }
+    updateEnergyUsage();
+});
+
+fanSlider.addEventListener('input', (e) => {
+    document.getElementById('fan-speed-val').textContent = `${e.target.value}`;
+    updateSliderFill(e.target);
+});
+fanSlider.addEventListener('change', (e) => {
+    addLog(`"${fanNameEl.textContent}" speed adjusted to ${e.target.value}.`);
+    updateEnergyUsage();
+});
+
+document.getElementById('fan-osc-btn').addEventListener('click', (e) => {
+    fanOsc = !fanOsc;
+    if(fanOsc) {
+        e.target.textContent = "Disable";
+        e.target.style.background = '#ceead6';
+        addLog(`"${fanNameEl.textContent}" Oscillation ENABLED.`);
+    } else {
+        e.target.textContent = "Enable";
+        e.target.style.background = '#e8eaed';
+        addLog(`"${fanNameEl.textContent}" Oscillation DISABLED.`);
+    }
+});
+
+
+// 13. Hidden (By Default) Device Card: Sonos One
+let speakerOn = false;
+const speakerCard = document.getElementById('speaker-card');
+const toggleSpeakerBtn = document.getElementById('toggle-speaker-btn');
+const speakerStatus = document.getElementById('speaker-status');
+const speakerNameEl = document.getElementById('speaker-name');
+const speakerSlider = document.getElementById('speaker-vol-slider');
+
+toggleSpeakerBtn.addEventListener('click', () => {
+    speakerOn = !speakerOn; 
+    let currentName = speakerNameEl.textContent;
+    if (speakerOn) {
+        speakerStatus.textContent = 'ON';
+        speakerStatus.style.color = '#1a73e8'; 
+        toggleSpeakerBtn.textContent = `Turn ${currentName} OFF`;
+        speakerCard.classList.add('active-media'); 
+        addLog(`"${currentName}" turned ON.`);
+    } else {
+        speakerStatus.textContent = 'OFF';
+        speakerStatus.style.color = '#5f6368'; 
+        toggleSpeakerBtn.textContent = `Turn ${currentName} ON`;
+        speakerCard.classList.remove('active-media'); 
+        addLog(`"${currentName}" turned OFF.`);
+    }
+    updateEnergyUsage();
+});
+
+speakerSlider.addEventListener('input', (e) => {
+    document.getElementById('speaker-vol-val').textContent = `${e.target.value}`;
+    updateSliderFill(e.target);
+});
+speakerSlider.addEventListener('change', (e) => {
+    addLog(`"${speakerNameEl.textContent}" volume adjusted to ${e.target.value}.`);
+    updateEnergyUsage();
+});
+
+// 14. Device Three-Dot Menus and Advanced Options
+const panelBackdrop = document.getElementById('panel-backdrop');
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.menu-container')) {
+        document.querySelectorAll('.popup-menu, .routine-popup').forEach(popup => popup.style.display = 'none');
+    }
+});
+
+panelBackdrop.addEventListener('click', () => {
+    document.querySelectorAll('.advanced-settings.open').forEach(panel => {
+        panel.classList.remove('open');
+    });
+    panelBackdrop.style.display = 'none';
+});
+
+function setupDeviceMenu(menuBtnId, popupId, renameOptId, advOptId, nameElId, advSectionId) {
+    const menuBtn = document.getElementById(menuBtnId);
+    const popup = document.getElementById(popupId);
+    const renameOpt = document.getElementById(renameOptId);
+    const advOpt = document.getElementById(advOptId);
+    const nameEl = document.getElementById(nameElId);
+    const advSection = document.getElementById(advSectionId);
+    
+    if(!menuBtn || !popup || !advSection) return;
+    
+    const closePanelBtn = advSection.querySelector('.close-panel-btn');
+
+    menuBtn.addEventListener('click', () => {
+        document.querySelectorAll('.popup-menu').forEach(p => {
+            if (p !== popup) p.style.display = 'none';
+        });
+        popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+    });
+
+    renameOpt.addEventListener('click', () => {
+        popup.style.display = 'none'; 
+        const currentName = nameEl.textContent;
+        const newName = prompt(`Enter a new name for ${currentName}:`, currentName);
+        
+        if (newName && newName.trim() !== "") {
+            nameEl.textContent = newName.trim();
+            addLog(`Device renamed from "${currentName}" to "${newName.trim()}".`);
+            
+            const toggleBtn = document.getElementById(nameElId.replace('-name', '-toggle-btn')) || nameEl.closest('.device-card').querySelector('.action-btn');
+            if (toggleBtn && toggleBtn.textContent.includes('Turn')) {
+                const isOn = toggleBtn.textContent.includes('OFF'); 
+                toggleBtn.textContent = `Turn ${newName.trim()} ${isOn ? 'OFF' : 'ON'}`;
+            }
+        }
+    });
+
+    advOpt.addEventListener('click', () => {
+        popup.style.display = 'none'; 
+        advSection.classList.add('open');
+        panelBackdrop.style.display = 'block';
+    });
+
+    if(closePanelBtn) {
+        closePanelBtn.addEventListener('click', () => {
+            advSection.classList.remove('open');
+            panelBackdrop.style.display = 'none';
+        });
+    }
+}
+
+setupDeviceMenu('light-menu-btn', 'light-popup', 'light-rename-opt', 'light-adv-opt', 'light-name', 'light-advanced');
+setupDeviceMenu('heating-menu-btn', 'heating-popup', 'heating-rename-opt', 'heating-adv-opt', 'heating-name', 'heating-advanced');
+setupDeviceMenu('desk-lamp-menu-btn', 'lamp-popup', 'lamp-rename-opt', 'lamp-adv-opt', 'lamp-name', 'desk-lamp-advanced');
+setupDeviceMenu('tv-menu-btn', 'tv-popup', 'tv-rename-opt', 'tv-adv-opt', 'tv-name', 'tv-advanced');
+setupDeviceMenu('fan-menu-btn', 'fan-popup', 'fan-rename-opt', 'fan-adv-opt', 'fan-name', 'fan-advanced');
+setupDeviceMenu('speaker-menu-btn', 'speaker-popup', 'speaker-rename-opt', 'speaker-adv-opt', 'speaker-name', 'speaker-advanced');
+
+
+
+
+
+// 15. Add Device
 const addDeviceBtn = document.getElementById('add-device-btn');
 const addModal = document.getElementById('add-device-modal');
 const closeModalBtn = document.getElementById('close-modal-btn');
@@ -751,100 +948,13 @@ devicesListUl.addEventListener('click', (e) => {
             
             addLog(`Successfully added "${name}" to your smart home.`);
             document.querySelector('.pill[data-filter="all"]').click();
-            updateEnergyDraw(); 
+            updateEnergyUsage();
         }, 2500);
     }
 });
 
 
-// --- 9. Device Controls: Dyson Fan ---
-let fanOn = false;
-const fanCard = document.getElementById('fan-card');
-const toggleFanBtn = document.getElementById('toggle-fan-btn');
-const fanStatus = document.getElementById('fan-status');
-const fanNameEl = document.getElementById('fan-name');
-const fanSlider = document.getElementById('fan-speed-slider');
-let fanOsc = false;
-
-toggleFanBtn.addEventListener('click', () => {
-    fanOn = !fanOn; 
-    let currentName = fanNameEl.textContent;
-    if (fanOn) {
-        fanStatus.textContent = 'ON';
-        fanStatus.style.color = '#e65100'; 
-        toggleFanBtn.textContent = `Turn ${currentName} OFF`;
-        fanCard.classList.add('active-heat'); 
-        addLog(`"${currentName}" turned ON.`);
-    } else {
-        fanStatus.textContent = 'OFF';
-        fanStatus.style.color = '#5f6368'; 
-        toggleFanBtn.textContent = `Turn ${currentName} ON`;
-        fanCard.classList.remove('active-heat'); 
-        addLog(`"${currentName}" turned OFF.`);
-    }
-    updateEnergyDraw();
-});
-
-fanSlider.addEventListener('input', (e) => {
-    document.getElementById('fan-speed-val').textContent = `${e.target.value}`;
-    updateSliderFill(e.target);
-});
-fanSlider.addEventListener('change', (e) => {
-    addLog(`"${fanNameEl.textContent}" speed adjusted to ${e.target.value}.`);
-    updateEnergyDraw();
-});
-
-document.getElementById('fan-osc-btn').addEventListener('click', (e) => {
-    fanOsc = !fanOsc;
-    if(fanOsc) {
-        e.target.textContent = "Disable";
-        e.target.style.background = '#ceead6';
-        addLog(`"${fanNameEl.textContent}" Oscillation ENABLED.`);
-    } else {
-        e.target.textContent = "Enable";
-        e.target.style.background = '#e8eaed';
-        addLog(`"${fanNameEl.textContent}" Oscillation DISABLED.`);
-    }
-});
-
-
-// --- 10. Device Controls: Sonos Speaker ---
-let speakerOn = false;
-const speakerCard = document.getElementById('speaker-card');
-const toggleSpeakerBtn = document.getElementById('toggle-speaker-btn');
-const speakerStatus = document.getElementById('speaker-status');
-const speakerNameEl = document.getElementById('speaker-name');
-const speakerSlider = document.getElementById('speaker-vol-slider');
-
-toggleSpeakerBtn.addEventListener('click', () => {
-    speakerOn = !speakerOn; 
-    let currentName = speakerNameEl.textContent;
-    if (speakerOn) {
-        speakerStatus.textContent = 'ON';
-        speakerStatus.style.color = '#1a73e8'; 
-        toggleSpeakerBtn.textContent = `Turn ${currentName} OFF`;
-        speakerCard.classList.add('active-media'); 
-        addLog(`"${currentName}" turned ON.`);
-    } else {
-        speakerStatus.textContent = 'OFF';
-        speakerStatus.style.color = '#5f6368'; 
-        toggleSpeakerBtn.textContent = `Turn ${currentName} ON`;
-        speakerCard.classList.remove('active-media'); 
-        addLog(`"${currentName}" turned OFF.`);
-    }
-    updateEnergyDraw();
-});
-
-speakerSlider.addEventListener('input', (e) => {
-    document.getElementById('speaker-vol-val').textContent = `${e.target.value}`;
-    updateSliderFill(e.target);
-});
-speakerSlider.addEventListener('change', (e) => {
-    addLog(`"${speakerNameEl.textContent}" volume adjusted to ${e.target.value}.`);
-    updateEnergyDraw();
-});
-
-// --- 11. Automations / Routines Logic ---
+// 16. Automations Page and Add Automation 
 let editingCard = null; 
 
 function updateAutomationModalDevices() {
@@ -875,7 +985,6 @@ function updateAutomationModalDevices() {
     });
 }
 
-// Add event listener to the grid to catch clicks on any dynamically added buttons inside the cards
 document.getElementById('routines-grid').addEventListener('click', (e) => {
     
     if (e.target.closest('.routine-menu-btn')) {
@@ -938,7 +1047,6 @@ document.getElementById('routines-grid').addEventListener('click', (e) => {
         }
     }
 
-    // IMPORTANT: Make sure the Run Routine logic is robust for both default and custom automations
     if (e.target.classList.contains('run-routine-btn')) {
         const btn = e.target;
         const routineType = btn.getAttribute('data-routine');
@@ -1027,7 +1135,7 @@ document.getElementById('routines-grid').addEventListener('click', (e) => {
                 }
             }
 
-            updateEnergyDraw(); 
+            updateEnergyUsage();
 
             btn.textContent = originalText;
             btn.style.backgroundColor = "";
@@ -1137,67 +1245,8 @@ saveAutoBtn.addEventListener('click', () => {
     editingCard = null; 
 });
 
-// --- 12. Sidebar Navigation Logic & Initialization ---
-const navHome = document.getElementById('nav-home');
-const navActivity = document.getElementById('nav-activity');
-const navEnergy = document.getElementById('nav-energy'); 
-const navAutomations = document.getElementById('nav-automations'); 
 
-const homeView = document.getElementById('home-view');
-const activityView = document.getElementById('activity-view');
-const energyView = document.getElementById('energy-view'); 
-const automationsView = document.getElementById('automations-view'); 
-
-const topAddDeviceBtn = document.getElementById('add-device-btn');
-const topAddAutoBtn = document.getElementById('add-automation-btn');
-const editLayoutBtn = document.getElementById('edit-layout-btn'); 
-
-function switchView(activeNav, viewToShow) {
-    navHome.classList.remove('active');
-    navActivity.classList.remove('active');
-    navEnergy.classList.remove('active');
-    navAutomations.classList.remove('active');
-    
-    homeView.style.display = 'none';
-    activityView.style.display = 'none';
-    energyView.style.display = 'none';
-    automationsView.style.display = 'none';
-    
-    activeNav.classList.add('active');
-    viewToShow.style.display = 'block';
-
-    topAddDeviceBtn.style.display = (viewToShow === homeView) ? 'flex' : 'none';
-    editLayoutBtn.style.display = (viewToShow === homeView) ? 'flex' : 'none'; 
-    topAddAutoBtn.style.display = (viewToShow === automationsView) ? 'flex' : 'none';
-    
-    if (viewToShow !== homeView && isEditMode) {
-        editLayoutBtn.click(); 
-    }
-}
-
-navHome.addEventListener('click', () => switchView(navHome, homeView));
-navActivity.addEventListener('click', () => switchView(navActivity, activityView));
-navEnergy.addEventListener('click', () => switchView(navEnergy, energyView));
-navAutomations.addEventListener('click', () => switchView(navAutomations, automationsView));
-
-// --- 13. Dark Mode Toggle Logic ---
-const themeToggleBtn = document.getElementById('theme-toggle-btn');
-const themeIcon = document.getElementById('theme-icon');
-
-themeToggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    
-    if (document.body.classList.contains('dark-mode')) {
-        themeIcon.textContent = 'light_mode';
-        addLog('Theme changed to Dark Mode.');
-    } else {
-        themeIcon.textContent = 'dark_mode';
-        addLog('Theme changed to Light Mode.');
-    }
-});
-
-
-// --- 14. EDIT LAYOUT & DRAG AND DROP LOGIC ---
+// 17. Edit Layout drag-and-drop
 const homeGrid = document.querySelector('#home-view .device-grid');
 const filtersContainer = document.querySelector('.filters'); 
 const macrosContainer = document.querySelector('.macro-container'); 
@@ -1312,378 +1361,5 @@ macrosContainer.addEventListener('dragover', (e) => {
     }
 });
 
-// --- 15. QUICK MACRO ACTIONS ---
-document.getElementById('macro-lights-on').addEventListener('click', (e) => {
-    if(isEditMode) { e.preventDefault(); return; } 
-    if (!lightsOn && document.getElementById('light-card').getAttribute('data-offline') === 'false') {
-        document.getElementById('toggle-lights-btn').click();
-    }
-    if (!deskLampOn && document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
-        document.getElementById('toggle-desk-lamp-btn').click();
-    }
-    addLog("Macro: All lights turned ON.");
-});
-
-document.getElementById('macro-lights-off').addEventListener('click', (e) => {
-    if(isEditMode) { e.preventDefault(); return; }
-    if (lightsOn && document.getElementById('light-card').getAttribute('data-offline') === 'false') {
-        document.getElementById('toggle-lights-btn').click();
-    }
-    if (deskLampOn && document.getElementById('desk-lamp-card').getAttribute('data-offline') === 'false') {
-        document.getElementById('toggle-desk-lamp-btn').click();
-    }
-    addLog("Macro: All lights turned OFF.");
-});
-
-document.getElementById('macro-all-on').addEventListener('click', (e) => {
-    if(isEditMode) { e.preventDefault(); return; }
-    const checkOn = (isOn, btnId, cardId) => {
-        if (!isOn && document.getElementById(cardId).getAttribute('data-offline') === 'false') {
-            document.getElementById(btnId).click();
-        }
-    };
-    checkOn(lightsOn, 'toggle-lights-btn', 'light-card');
-    checkOn(heatingOn, 'toggle-heating-btn', 'heating-card');
-    checkOn(deskLampOn, 'toggle-desk-lamp-btn', 'desk-lamp-card');
-    checkOn(tvOn, 'toggle-tv-btn', 'tv-card');
-    checkOn(fanOn, 'toggle-fan-btn', 'fan-card');
-    checkOn(speakerOn, 'toggle-speaker-btn', 'speaker-card');
-    addLog("Macro: All devices turned ON.");
-});
-
-document.getElementById('macro-all-off').addEventListener('click', (e) => {
-    if(isEditMode) { e.preventDefault(); return; }
-    const checkOff = (isOn, btnId, cardId) => {
-        if (isOn && document.getElementById(cardId).getAttribute('data-offline') === 'false') {
-            document.getElementById(btnId).click();
-        }
-    };
-    checkOff(lightsOn, 'toggle-lights-btn', 'light-card');
-    checkOff(heatingOn, 'toggle-heating-btn', 'heating-card');
-    checkOff(deskLampOn, 'toggle-desk-lamp-btn', 'desk-lamp-card');
-    checkOff(tvOn, 'toggle-tv-btn', 'tv-card');
-    checkOff(fanOn, 'toggle-fan-btn', 'fan-card');
-    checkOff(speakerOn, 'toggle-speaker-btn', 'speaker-card');
-    addLog("Macro: All devices turned OFF.");
-});
-
-document.getElementById('macro-eco').addEventListener('click', (e) => {
-    if(isEditMode) { e.preventDefault(); return; }
-    if (document.getElementById('heating-card').getAttribute('data-offline') === 'false') {
-        if (!heatingOn) document.getElementById('toggle-heating-btn').click();
-        if (!ecoModeOn) document.getElementById('eco-mode-btn').click();
-        addLog("Macro: Eco Heating mode activated.");
-    }
-});
-
-
-// Initial setups
-updateEnergyDraw();
-
-// --- 16. TOUCH / IPAD DRAG-AND-DROP SUPPORT ---
-function shouldInsertAfter(mode, rect, clientX, clientY) {
-    if (mode === 'horizontal') {
-        return clientX > rect.left + (rect.width / 2);
-    }
-
-    // Hybrid rule for wrapped rows / grids: prefer vertical movement,
-    // but use horizontal position as a tie-breaker when items are close.
-    const middleY = rect.top + (rect.height / 2);
-    const middleX = rect.left + (rect.width / 2);
-    return clientY > middleY ||
-           (Math.abs(clientY - middleY) < rect.height / 4 && clientX > middleX);
-}
-
-function isVisibleForReorder(element) {
-    return !!(element && element.getClientRects && element.getClientRects().length);
-}
-
-function getGridDropReference(container, selector, draggingItem, placeholder, dragCenterX, dragCenterY) {
-    const candidates = Array.from(container.querySelectorAll(selector)).filter(item => (
-        item !== draggingItem &&
-        item !== placeholder &&
-        isVisibleForReorder(item)
-    ));
-
-    if (!candidates.length) return null;
-
-    const rows = [];
-    candidates.forEach(item => {
-        const rect = item.getBoundingClientRect();
-        const match = rows.find(row => Math.abs(row.top - rect.top) < Math.max(24, rect.height * 0.35));
-        const entry = { el: item, rect };
-
-        if (match) {
-            match.items.push(entry);
-            match.top = Math.min(match.top, rect.top);
-            match.bottom = Math.max(match.bottom, rect.bottom);
-        } else {
-            rows.push({ top: rect.top, bottom: rect.bottom, items: [entry] });
-        }
-    });
-
-    rows.sort((a, b) => a.top - b.top);
-    rows.forEach(row => {
-        row.items.sort((a, b) => a.rect.left - b.rect.left);
-        row.centerY = (row.top + row.bottom) / 2;
-    });
-
-    const firstOverall = rows[0].items[0].el;
-    const lastOverall = rows[rows.length - 1].items[rows[rows.length - 1].items.length - 1].el;
-    const firstRow = rows[0];
-    const lastRow = rows[rows.length - 1];
-
-    if (dragCenterY <= firstRow.centerY - 20) {
-        return { type: 'before', element: firstOverall };
-    }
-    if (dragCenterY >= lastRow.centerY + 20) {
-        return { type: 'after', element: lastOverall };
-    }
-
-    let targetRow = rows.reduce((closest, row) => {
-        const distance = Math.abs(dragCenterY - row.centerY);
-        if (!closest || distance < closest.distance) {
-            return { row, distance };
-        }
-        return closest;
-    }, null).row;
-
-    const rowItems = targetRow.items;
-    if (dragCenterX <= rowItems[0].rect.left + (rowItems[0].rect.width / 2)) {
-        return { type: 'before', element: rowItems[0].el };
-    }
-
-    for (let i = 1; i < rowItems.length; i += 1) {
-        const entry = rowItems[i];
-        if (dragCenterX <= entry.rect.left + (entry.rect.width / 2)) {
-            return { type: 'before', element: entry.el };
-        }
-    }
-
-    return { type: 'after', element: rowItems[rowItems.length - 1].el };
-}
-
-function setupTouchReorder(container, selector, mode) {
-    if (!container) return;
-
-    let draggingItem = null;
-    let placeholder = null;
-    let activePointerId = null;
-    let offsetX = 0;
-    let offsetY = 0;
-    let dragWidth = 0;
-    let dragHeight = 0;
-    let cleanupTimer = null;
-    let rafId = null;
-    let pendingLeft = 0;
-    let pendingTop = 0;
-    const mainScrollContainer = document.querySelector('.main-content');
-
-    const applyDragPosition = () => {
-        rafId = null;
-        if (!draggingItem) return;
-        draggingItem.style.left = `${pendingLeft}px`;
-        draggingItem.style.top = `${pendingTop}px`;
-    };
-
-    const queueDragPosition = (left, top) => {
-        pendingLeft = left;
-        pendingTop = top;
-        if (rafId === null) {
-            rafId = requestAnimationFrame(applyDragPosition);
-        }
-    };
-
-    const cleanupDraggingStyles = () => {
-        if (!draggingItem) return;
-        draggingItem.classList.remove('dragging', 'touch-dragging');
-        draggingItem.style.position = '';
-        draggingItem.style.left = '';
-        draggingItem.style.top = '';
-        draggingItem.style.width = '';
-        draggingItem.style.height = '';
-        draggingItem.style.zIndex = '';
-        draggingItem.style.pointerEvents = '';
-        draggingItem.style.margin = '';
-        draggingItem.style.transform = '';
-        draggingItem.style.transition = '';
-        draggingItem.style.boxSizing = '';
-    };
-
-    const clearTouchDrag = (pointerId = null) => {
-        if (!draggingItem) return;
-        if (pointerId !== null && activePointerId !== pointerId) return;
-
-        const item = draggingItem;
-        const targetPlaceholder = placeholder;
-        const finishCleanup = () => {
-            if (cleanupTimer) {
-                clearTimeout(cleanupTimer);
-                cleanupTimer = null;
-            }
-            cleanupDraggingStyles();
-            if (targetPlaceholder && targetPlaceholder.parentNode) {
-                targetPlaceholder.parentNode.insertBefore(item, targetPlaceholder);
-                targetPlaceholder.remove();
-            }
-            draggingItem = null;
-            placeholder = null;
-            activePointerId = null;
-            document.body.style.overflow = '';
-            document.body.style.touchAction = '';
-            if (mainScrollContainer) mainScrollContainer.classList.remove('drag-scroll-lock');
-        };
-
-        if (rafId !== null) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
-        }
-
-        if (targetPlaceholder && targetPlaceholder.parentNode) {
-            const targetRect = targetPlaceholder.getBoundingClientRect();
-            item.style.transition = 'left 180ms ease, top 180ms ease, transform 180ms ease, box-shadow 180ms ease';
-            item.style.left = `${targetRect.left}px`;
-            item.style.top = `${targetRect.top}px`;
-            item.style.transform = 'scale(1) rotate(0deg)';
-            cleanupTimer = setTimeout(finishCleanup, 190);
-        } else {
-            finishCleanup();
-        }
-    };
-
-    container.addEventListener('pointerdown', (e) => {
-        if (!isEditMode) return;
-        if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
-
-        const item = e.target.closest(selector);
-        if (!item || !container.contains(item)) return;
-
-        const rect = item.getBoundingClientRect();
-        const computed = window.getComputedStyle(item);
-
-        draggingItem = item;
-        activePointerId = e.pointerId;
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
-        dragWidth = rect.width;
-        dragHeight = rect.height;
-
-        placeholder = document.createElement('div');
-        placeholder.className = 'drag-placeholder';
-        if (item.classList.contains('device-card')) placeholder.classList.add('device-card-placeholder');
-        if (item.classList.contains('pill')) placeholder.classList.add('pill-placeholder');
-        if (item.classList.contains('macro-btn')) placeholder.classList.add('macro-btn-placeholder');
-        placeholder.style.width = `${rect.width}px`;
-        placeholder.style.height = `${rect.height}px`;
-        placeholder.style.borderRadius = computed.borderRadius;
-        placeholder.style.boxSizing = 'border-box';
-
-        item.after(placeholder);
-
-        item.classList.add('dragging', 'touch-dragging');
-        item.style.position = 'fixed';
-        item.style.left = `${rect.left}px`;
-        item.style.top = `${rect.top}px`;
-        item.style.width = `${rect.width}px`;
-        item.style.height = `${rect.height}px`;
-        item.style.margin = '0';
-        item.style.zIndex = '3000';
-        item.style.pointerEvents = 'none';
-        item.style.boxSizing = 'border-box';
-        item.style.transition = 'transform 180ms ease, box-shadow 180ms ease';
-        item.style.transform = 'scale(1.03) rotate(-1deg)';
-
-        document.body.style.overflow = 'hidden';
-        document.body.style.touchAction = 'none';
-        if (mainScrollContainer) mainScrollContainer.classList.add('drag-scroll-lock');
-
-        if (draggingItem.setPointerCapture) {
-            try { draggingItem.setPointerCapture(e.pointerId); } catch (_) {}
-        }
-
-        e.preventDefault();
-    }, { passive: false });
-
-    document.addEventListener('pointermove', (e) => {
-        if (!isEditMode || !draggingItem || activePointerId !== e.pointerId) return;
-
-        const nextLeft = e.clientX - offsetX;
-        const nextTop = e.clientY - offsetY;
-        queueDragPosition(nextLeft, nextTop);
-
-        if (mode === 'grid' && selector === '.device-card') {
-            const dragCenterX = nextLeft + (dragWidth / 2);
-            const dragCenterY = nextTop + (dragHeight / 2);
-            const reference = getGridDropReference(container, selector, draggingItem, placeholder, dragCenterX, dragCenterY);
-
-            if (reference && reference.element && container.contains(reference.element)) {
-                if (reference.type === 'after') reference.element.after(placeholder);
-                else reference.element.before(placeholder);
-            }
-
-            e.preventDefault();
-            return;
-        }
-
-        const elementUnderPointer = document.elementFromPoint(e.clientX, e.clientY);
-        let hoverItem = elementUnderPointer?.closest(selector);
-
-        if (hoverItem && (hoverItem === draggingItem || hoverItem === placeholder || !container.contains(hoverItem))) {
-            hoverItem = null;
-        }
-
-        if (!hoverItem) {
-            const containerRect = container.getBoundingClientRect();
-            const withinContainerBounds = (
-                e.clientX >= containerRect.left - 40 &&
-                e.clientX <= containerRect.right + 40 &&
-                e.clientY >= containerRect.top - 40 &&
-                e.clientY <= containerRect.bottom + 40
-            );
-
-            if (withinContainerBounds) {
-                const candidates = Array.from(container.querySelectorAll(selector)).filter(item => (
-                    item !== draggingItem &&
-                    item !== placeholder &&
-                    isVisibleForReorder(item)
-                ));
-
-                if (candidates.length) {
-                    hoverItem = candidates.reduce((closest, item) => {
-                        const rect = item.getBoundingClientRect();
-                        const centerX = rect.left + rect.width / 2;
-                        const centerY = rect.top + rect.height / 2;
-                        const dx = e.clientX - centerX;
-                        const dy = e.clientY - centerY;
-                        const distance = Math.hypot(dx, dy);
-
-                        if (!closest || distance < closest.distance) {
-                            return { item, distance };
-                        }
-                        return closest;
-                    }, null)?.item || null;
-                }
-            }
-        }
-
-        if (!hoverItem) {
-            e.preventDefault();
-            return;
-        }
-
-        const rect = hoverItem.getBoundingClientRect();
-        const insertAfter = shouldInsertAfter(mode, rect, e.clientX, e.clientY);
-
-        if (insertAfter) hoverItem.after(placeholder);
-        else hoverItem.before(placeholder);
-
-        e.preventDefault();
-    }, { passive: false });
-
-    document.addEventListener('pointerup', (e) => clearTouchDrag(e.pointerId));
-    document.addEventListener('pointercancel', (e) => clearTouchDrag(e.pointerId));
-}
-
-setupTouchReorder(homeGrid, '.device-card', 'grid');
-setupTouchReorder(filtersContainer, '.pill', 'horizontal');
-setupTouchReorder(macrosContainer, '.macro-btn', 'grid');
+// 18. Initial 
+updateEnergyUsage();

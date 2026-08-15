@@ -144,3 +144,119 @@ body {
 * {
     transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
+
+.portfolio-container {
+  width: 85%;
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 28px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.portfolio-header h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.portfolio-header p {
+  max-width: 700px;
+  margin: 0 auto;
+  color: #555;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 26px;
+}
+
+.project-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+}
+
+.featured-project {
+  grid-column: span 2;
+}
+
+.project-card h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+  color: #111;
+}
+
+.project-card p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.project-tags span {
+  background: #e9f5f3;
+  color: #0f766e;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.project-links a {
+  text-decoration: none;
+  background: #0f9d91;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.project-links a:hover {
+  background: #087f75;
+}
+
+@media (max-width: 760px) {
+  .portfolio-container {
+    width: 92%;
+    padding: 24px;
+  }
+
+  .featured-project {
+    grid-column: span 1;
+  }
+
+  .portfolio-header h1 {
+    font-size: 32px;
+  }
+}
